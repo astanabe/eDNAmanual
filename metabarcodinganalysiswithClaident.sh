@@ -1,2 +1,2 @@
-pandoc metabarcodinganalysiswithClaident.md -o metabarcodinganalysiswithClaident.pdf --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.bib --csl=ecology.csl --pdf-engine=lualatex -H template.tex
-pandoc metabarcodinganalysiswithClaident.md -o metabarcodinganalysiswithClaident.docx --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.bib --csl=ecology.csl
+pandoc metabarcodinganalysiswithClaident.md -o metabarcodinganalysiswithClaident.pdf --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.bib --csl=elsevier-harvard.csl --pdf-engine=lualatex -H template.tex
+pandoc metabarcodinganalysiswithClaident.md -o metabarcodinganalysiswithClaident.docx --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.bib --csl=elsevier-harvard.csl

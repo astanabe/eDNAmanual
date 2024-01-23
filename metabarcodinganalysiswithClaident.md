@@ -1,7 +1,7 @@
 ---
 title: Claidentを用いた定量メタバーコーディング解析
 author: 田辺晶史 (東北大学大学院生命科学研究科)
-date: 2024-01-22
+date: 2024-01-24
 output: 
   pdf_document:
     latex_engine: lualatex
@@ -32,17 +32,13 @@ MiFish pipeline [@Sato2018MitoFishMiFishPipeline;@Zhu2023MitoFishMitoAnnotatorMi
 ここでは、Claidentのインストールから内部標準DNAを利用した定量メタバーコーディングの方法を解説します。
 本章のサポートページを下記URLに設置していますので、適宜ご参照下さい。
 
-```
-https://github.com/astanabe/eDNAmanual
-```
+- <https://github.com/astanabe/eDNAmanual>
 
 サンプルデータ、サンプルファイル、本章の原稿ファイル等が置いてあります。
 
 Claidentの詳細については下記URLをご参照下さい。
 
-```
-https://www.claident.org/
-```
+- <https://www.claident.org/>
 
 以下では、Linux・macOSの**ターミナル環境での作業に習熟している方向けに**解説を行っていきます。
 ターミナル環境での作業に不慣れな方は、予め習得しておく必要があります。
@@ -190,10 +186,8 @@ Claidentは大抵のメタバーコードデータの解析に使用可能です
 2nd PCR用のインデックスプライマーは、Illumina社やサードパーティから既製品が販売されています。
 また、筆者が開発したものを下記URLにて公開しています。
 
-```
-https://github.com/astanabe/TruSeqStyleIndexPrimers
-https://github.com/astanabe/NexteraStyleIndexPrimers
-```
+- <https://github.com/astanabe/TruSeqStyleIndexPrimers>
+- <https://github.com/astanabe/NexteraStyleIndexPrimers>
 
 インデックス部分も塩基多様度が低いと正しく解読することができないため、使用するインデックスの組み合わせは慎重に検討する必要があります。
 どの位置でもACとGTの比が1:1に近いことが望ましいとされています。
@@ -413,9 +407,7 @@ TCATGTCT
 `clsplitseq`でのデマルチプレックスを行うには、LinuxマシンにIllumina社が提供するbcl2fastqというプログラムをインストールし、シーケンサのランデータからインデックス配列を含むデマルチプレックスしていないFASTQ (undemultiplexed FASTQ)を生成する必要があります。
 bcl2fastqは以下のURLから取得できます。
 
-```
-https://jp.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html
-```
+- <https://jp.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html>
 
 執筆時点の最新版はv2.20です。
 Debian・Ubuntu・Linux Mintの場合、Linux rpmと書かれている配布ファイルをダウンロードして作業ディレクトリに置き、ターミナルで以下のコマンドを実行することでインストールできます。
@@ -1109,7 +1101,7 @@ clmakeidentdb \
 
 コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
 
-出力ファイル内には分子同定結果(実際には`clidentseq`の結果)が記録されており、`clmakecachedb`と`clidentseq`の実行時に`--identdb`オプションで指定することで、このデータベース内に結果が既にあるOTUにおいて参照配列データベースの検索を飛ばします。
+出力ファイル内には分子同定結果(実際には`clidentseq`の結果)が記録されており、`clmakecachedb`と`clidentseq`の実行時に`--identdb`オプションで指定することで、このデータベース内に結果が既にあるOTUにおいて参照配列データベースの検索を飛ばし、無駄な計算を省きます。
 
 ### clmergeassignによる複数の分子同定結果のマージ
 
@@ -1134,7 +1126,7 @@ clmergeassign \
 
 `--priority`
 : 入力ファイルの優先順位(ASCEND | DESCEND | EQUAL | 式による指定から選択)
-: 式は、入力ファイルに0から始まる数値を割り振り、「0<1=2<3<4」という風に指定します。
+: 式は、入力ファイルに0から始まる数値を割り振り、「`0<1=2<3<4`」という風に指定します。
 : この優先順位は`--preferlower`よりも優先されます
 
 コマンドラインオプションに引き続いて、入力ファイル群、出力ファイルを指定します。
@@ -1187,7 +1179,7 @@ mkdir 12_community
 ```default
 cp \
 10_decontaminated/decontaminated.tsv \
-12_community/sample_otu_matrix_raw.tsv
+12_community/sample_otu_matrix_all.tsv
 ```
 
 ### clfiltersumによるサンプル×OTU表の加工
@@ -1197,7 +1189,7 @@ cp \
 ```default
 clfiltersum \
 --otuseq=standard.fasta \
-12_community/sample_otu_matrix_raw.tsv \
+12_community/sample_otu_matrix_all.tsv \
 12_community/sample_otu_matrix_standard.tsv
 ```
 
@@ -1208,7 +1200,7 @@ clfiltersum \
 
 コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
 
-以下のコマンドを実行すると、分子同定結果に基づいて、`--includetaxa`で指定した分類群(ここでは魚類)のOTUのみの表を作成することができます。
+以下のコマンドを実行すると、分子同定結果に基づいて、`--includetaxa`で指定した分類群(ここでは魚類)のOTUの表を作成することができます。
 
 ```default
 clfiltersum \
@@ -1216,7 +1208,7 @@ clfiltersum \
 --includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
 --includetaxa=subclass,Dipnomorpha \
-12_community/sample_otu_matrix_raw.tsv \
+12_community/sample_otu_matrix_all.tsv \
 12_community/sample_otu_matrix_fishes.tsv
 ```
 
@@ -1230,6 +1222,20 @@ clfiltersum \
 : 分類群名を検索する分類階層を限定することも可能
 : 複数指定可能
 
+下記のように`--includetaxa`を`--excludetaxa`に置き換えることで、魚類以外のOTUの表を作成できます。
+
+```default
+clfiltersum \
+--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
+--excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
+--excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
+--excludetaxa=subclass,Dipnomorpha \
+12_community/sample_otu_matrix_all.tsv \
+12_community/sample_otu_matrix_nonfishes.tsv
+```
+
+同じことを別のやり方でやってみます。
+下記のコマンドでは、魚類のOTUの表からOTU名だけを取り出して`12_community/fishotus.txt`に保存しています。
 
 ```default
 head -n 1 12_community/sample_otu_matrix_fishes.tsv \
@@ -1237,18 +1243,38 @@ head -n 1 12_community/sample_otu_matrix_fishes.tsv \
 > 12_community/fishotus.txt
 ```
 
+`clfiltersum`には、与えたテキストファイルに名前が含まれていないOTUを取り出すオプションがあるので、先程作成したファイルを使用して下記のように魚類以外のOTUの表を作成することができます。
+
 ```default
 clfiltersum \
 --negativeotulist=12_community/fishotus.txt \
-12_community/sample_otu_matrix_raw.tsv \
-12_community/sample_otu_matrix_others.tsv
+12_community/sample_otu_matrix_all.tsv \
+12_community/sample_otu_matrix_nonfishes2.tsv
 ```
 
-includetaxaをexcludetaxaに置き換えても同じ結果になる。
+コマンドラインオプションの意味は以下の通りです。
+
+`--negativeotulist`
+: 除外するOTU名のリストを記したテキストファイル
 
 ### clrarefysumによるサンプル×OTU表のカバレッジベースレアファクション
 
-ほげほげ
+サンプル×OTU表があれば群集生態学的分析はできますが、このままではサンプル間のカバレッジ(サンプリング調査の網羅具合)にばらつきがあるため、本来種数の少ない高カバレッジのサンプルの方が本当は種数が多い低カバレッジのサンプルよりも種数が多いと誤判定してしまいかねません。
+そこで、サンプル間でカバレッジを揃えることで、このような問題を回避する処理がカバレッジベースレアファクションです [@Chao2012Coveragebasedrarefactionextrapolation] 。
+なお、レアファクションが「レアファクションしたサンプル×OTU表を得る」ことを指す場合と「レアファクションカーブを得る」ことを指す場合がありますが、本章では前者を指すものとお考え下さい。
+
+カバレッジベースレアファクションを行う手法としては、「そのサンプルで一度しか観測されていないOTU (シングルトン)の数」と「そのサンプルで二度しか観測されていないOTU (ダブルトン)の数」に基づいてカバレッジを推定して行う方法があります [@Chao2012Coveragebasedrarefactionextrapolation] 。
+しかし、メタバーコードデータではシーケンスエラーが大量に存在するためにこれらの数が十分信用できるものとは考えられていません [@Chiu2016Estimatingcomparingmicrobial] 。
+デノイジングしたデータなら問題ないのではとも思えるかもしれませんが、その証拠も十分でないのが現状です。
+@Chiu2016Estimatingcomparingmicrobial はそのようなシーケンスエラーのあるデータでもシングルトン数を修正する方法を提案しており、metagMiscというRパッケージの`phyloseq_coverage_raref()`関数で`correct_singletons`を有効にしてレアファクションすることで、この方法が適用できます。
+
+ここで、 $(1 - レアファクションカーブの傾き)$ はカバレッジそのものと捉えることができます [@Chao2012Coveragebasedrarefactionextrapolation] 。
+これに基づいて、Claidentではレアファクションカーブの端点の傾きをサンプル間で揃えるレアファクションをサポートしています。
+
+以下のコマンドは、リード数1000未満のサンプルを除去し、残ったサンプルでそれぞれカバレッジを計算し、全サンプルでカバレッジを最小値に揃うようにレアファクションを行います。
+ただし、カバレッジの最小値が0.99未満だった場合は0.99に揃え、カバレッジが0.99未満のサンプルは除去します。
+レアファクションの際には無作為にリードを捨てることになるため、反復すれば結果が変動する可能性があります。
+そこで、レアファクションを10反復行い、それぞれ結果を保存します。
 
 ```default
 clrarefysum \
@@ -1256,35 +1282,76 @@ clrarefysum \
 --minnread=1000 \
 --nreps=10 \
 --numthreads=NumberOfCPUcores \
-12_community/sample_otu_matrix_raw.tsv \
-12_community/sample_otu_matrix_raw_rarefied
+12_community/sample_otu_matrix_all.tsv \
+12_community/sample_otu_matrix_all_rarefied
 ```
 
+コマンドラインオプションの意味は以下の通りです。
+
+`--minpcov`
+: 揃えるカバレッジの下限
+
+`--minnread`
+: レアファクション前のリード数下限(下回るサンプルは捨てる)
+
+`--nreps`
+: レアファクションの反復数
+
+コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
+
+レアファクションが終わったら、以下のコマンドにより10反復全てで内部標準OTUのみを取り出します。
+
 ```default
-clfiltersum \
+for n in `seq -w 1 10`
+do clfiltersum \
 --otuseq=standard.fasta \
-12_community/sample_otu_matrix_raw_rarefied01.tsv \
-12_community/sample_otu_matrix_standard_rarefied01.tsv
+12_community/sample_otu_matrix_all_rarefied$n.tsv \
+12_community/sample_otu_matrix_standard_rarefied$n.tsv
+done
 ```
 
+以下のコマンドでは魚類OTUのみを取り出します。
+
 ```default
-clfiltersum \
+for n in `seq -w 1 10`
+do clfiltersum \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
 --includetaxa=subclass,Dipnomorpha \
-12_community/sample_otu_matrix_raw_rarefied01.tsv \
-12_community/sample_otu_matrix_fishes_rarefied01.tsv
+12_community/sample_otu_matrix_all_rarefied$n.tsv \
+12_community/sample_otu_matrix_fishes_rarefied$n.tsv
+done
 ```
+
+以下のコマンドでは魚類以外のOTUを取り出します。
+
+```default
+for n in `seq -w 1 10`
+do clfiltersum \
+--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
+--excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
+--excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
+--excludetaxa=subclass,Dipnomorpha \
+12_community/sample_otu_matrix_all_rarefied$n.tsv \
+12_community/sample_otu_matrix_nonfishes_rarefied$n.tsv
+done
+```
+
+metagMiscにしろClaidentにしろ、これらのカバレッジベースレアファクションで行えるのはあくまで「群集に対するシーケンシングカバレッジの均一化」に過ぎないことは注意が必要です。
+「採水した水の群集に対するカバレッジの均一化」や「濾過フィルター上に捕集したDNAの群集に対するカバレッジの均一化」や「PCRに投入するDNA溶液の群集に対するカバレッジの均一化」はなされていません。
+メタバーコーディングではこのようにサンプリング、つまり「一部を取り出す」ステップが多数存在するため、カバレッジの均一化が問題になるのはシーケンスリード数だけではありません。
+しかし、それらは全て飽和している(カバレッジ1.0)という仮定のもとでこの先の解析は行われます。
+もし何か異常な結果が得られた際には、この仮定が満たされていない可能性について検討すべきかもしれません。
 
 ### clestimateconcと内部標準DNAリード数を用いたDNA濃度の推定
 
-ほげほげ
+以下のコマンドでは、予め濃度がわかっている内部標準DNAリード数に基づいて他のOTUの環境水サンプル中のDNA濃度を推定します。
 
 ```default
 clestimateconc \
---stdconctable=stdconctable.tsv \
 --stdtable=12_community/sample_otu_matrix_standard.tsv \
+--stdconctable=stdconctable.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
 --numthreads=NumberOfCPUcores \
@@ -1292,25 +1359,70 @@ clestimateconc \
 12_community/sample_otu_matrix_fishes_estimated.tsv
 ```
 
+コマンドラインオプションの意味は以下の通りです。
+
+`--stdtable`
+: 内部標準OTUリード数表のタブ区切りテキスト(入力ファイルに内部標準OTUリード数が含まれている場合は不要)
+
+`--stdconctable`
+: 内部標準DNA濃度表のタブ区切りテキスト
+
+`--solutionvoltable`
+: 抽出DNA溶液量表のタブ区切りテキスト
+
+`--watervoltable`
+: 濾過水量表のタブ区切りテキスト
+
+コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
+
+10反復のレアファクションを行ったデータでもそれぞれDNA濃度を推定するには、以下のコマンドを実行します。
+
 ```default
-clestimateconc \
+for n in `seq -w 1 10`
+do clestimateconc \
+--stdtable=12_community/sample_otu_matrix_standard_rarefied$n.tsv \
 --stdconctable=stdconctable.tsv \
---stdtable=12_community/sample_otu_matrix_standard_rarefied01.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
 --numthreads=NumberOfCPUcores \
-12_community/sample_otu_matrix_fishes_rarefied01.tsv \
-12_community/sample_otu_matrix_fishes_rarefied01_estimated.tsv
+12_community/sample_otu_matrix_fishes_rarefied$n.tsv \
+12_community/sample_otu_matrix_fishes_rarefied$n_estimated.tsv
+done
 ```
 
-### サンプル×OTU表を用いた群集生態学的解析
+カバレッジの揃っていないデータでは、推定されるDNA濃度の信頼性がサンプル間でばらつきます。
+DNA濃度情報しかないデータからは値の信頼性のばらつきを考慮した解析を行うことはできないので、DNA濃度を利用した分析の際にはレアファクションしてから推定したDNA濃度データを使用する方が良いことが多いのではないでしょうか。
+ただ、分析方法によってはレアファクション前の元データから推定したDNA濃度データの方が適している場合もあるかもしれません。
 
-セルが自然数であることを仮定→非定量
-時系列データ分析など、定量データである必要がある場合→定量
-サンプル間・異なるシーケンスランのサンプル間での比較をしたい場合→定量
-シングルトンやダブルトンの数から近似的にカバレッジを推定する手法は使用できない。
-Chao指数はダメ
-iNEXTはダメ
+## サンプル×OTU表を用いた群集生態学的解析に向けて
+
+ここまでの内容で群集生態学的解析に必要なサンプル×OTU表が得られますが、未レアファクションのリード数データ、レアファクション済リード数データ、未レアファクションのDNA濃度データ、レアファクション済DNA濃度データの少なくとも4種類があるはずです。
+これらは目的に応じて適宜使い分ける必要があります。
+
+まず、レアファクションカーブやヒル数(有効種数) [@Chao2014RarefactionextrapolationHill] の推定・描画には未レアファクションのリード数データを用います。
+以下のRパッケージが役に立つでしょう。
+
+- vegan <https://github.com/vegandevs/vegan>
+- phyloseq <https://joey711.github.io/phyloseq/> [@McMurdie2013phyloseqPackageReproducible]
+- metagMisc <https://github.com/vmikk/metagMisc>
+- iNEXT <https://github.com/JohnsonHsieh/iNEXT> [@Hsieh2016iNEXTpackagerarefaction]
+
+レアファクション済リード数データはサンプル間での定量性を必要としないほとんどの分析(クラスター分析・NMDS・PerMANOVA・群集系統学解析)に利用できます。
+以下のRパッケージについて調べることをお勧めします。
+
+- vegan <https://github.com/vegandevs/vegan>
+- picante <https://cran.r-project.org/web/packages/picante/> [@Kembel2010Picantetoolsintegrating]
+- MicEco <https://github.com/Russel88/MicEco>
+- bipartite <https://github.com/biometry/bipartite>
+- pvclust <https://github.com/shimo-lab/pvclust>
+- mpmcorrelogram <https://cran.r-project.org/web/packages/mpmcorrelogram/>
+
+DNA濃度データはサンプル間での定量性が必要な時系列因果推論に使用することができます。
+その代わり、整数値を要求する手法を適用することができません。
+以下のRパッケージで時系列因果推論を行うことができます。
+
+- rEDM <https://ha0ye.github.io/rEDM/> [@Ye2016Informationleverageinterconnected]
+- rUIC <https://github.com/yutakaos/rUIC> [@Osada2023unifiedframeworknonparametric]
 
 # 引用文献
 
