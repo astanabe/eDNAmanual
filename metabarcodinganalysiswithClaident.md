@@ -30,6 +30,14 @@ MiFish pipeline [@Sato2018MitoFishMiFishPipeline;@Zhu2023MitoFishMitoAnnotatorMi
 - 使用のための前提知識・必要な物品は多い
 
 ここでは、Claidentのインストールから内部標準DNAを利用した定量メタバーコーディングの方法を解説します。
+本章のサポートページを下記URLに設置していますので、適宜ご参照下さい。
+
+```
+https://github.com/astanabe/eDNAmanual
+```
+
+サンプルデータ、サンプルファイル、本章の原稿ファイル等が置いてあります。
+
 Claidentの詳細については下記URLをご参照下さい。
 
 ```
@@ -57,7 +65,7 @@ Windowsをご使用の方は、Microsoft Storeから「Windows Subsystem for Lin
 大きなデータ解析にはディスク容量が不足する可能性が高いので、専用の解析マシンを用意することをお勧めします。
 分子同定の際に大きな参照配列データベースを使用すると膨大なメモリを必要とするため、できるだけメモリを多く搭載したマシンが望ましいでしょう。
 
-Debian・Ubuntu・Linux Mint・Windows上にインストールしたUbuntuの場合、ターミナル上で以下のコマンドを実行することでClaidentをインストールすることができます。
+Debian・Ubuntu・Linux MintおよびWindows上にインストールしたUbuntuの場合、ターミナル上で以下のコマンドを実行することでClaidentをインストールすることができます。
 
 ```default
 sudo apt install wget
@@ -114,9 +122,10 @@ export ftp_proxy=http://username:password@proxyaddress:portnumber
 ```default
 export PREFIX=/home/tanabe/claident20240101
 ```
+
 上記の例では、`/home/tanabe/claident20240101`以下にClaidentはインストールされます。
-インストール先を変更した場合、環境変数`PATH`に実行コマンドがある`インストール先/bin`が登録されていないため、Claidentの解析コマンドが実行できません。
-そこで、Claidentでの解析を行う前に以下のコマンドを実行して環境変数`PATH`に`インストール先/bin`を加えます。
+インストール先を変更した場合、環境変数`PATH`に実行コマンドが存在する`インストール先/bin`が登録されていないため、Claidentの解析コマンドが実行できません。
+そこで、Claidentでの解析を行う際には以下のコマンドを実行して環境変数`PATH`に`インストール先/bin`を加えます。
 
 ```default
 export PATH=/home/tanabe/claident20240101/bin:$PATH
@@ -996,7 +1005,7 @@ clmakecachedb \
 
 #### clidentseqによる近隣配列群の取得
 
-ほげほげ
+以下のコマンドで、QCauto法に基づいて近隣配列をキャッシュデータベースから取得します。
 
 ```default
 clidentseq \
@@ -1008,11 +1017,22 @@ clidentseq \
 11_taxonomy/neighborhoods_qc_species_wsp.txt
 ```
 
-ほげほげ
+コマンドラインオプションの意味は以下の通りです。
 
-#### classigntaxによる分類群の割当
+`--method`
+: 使用する分子同定アルゴリズム
 
-ほげほげ
+`--blastdb`
+: 使用する分子同定用参照配列データベースまたはキャッシュデータベース
+
+`--ignoreotuseq`
+: 指定したFASTA配列ファイルに含まれる配列名と一致するOTUは無視する
+
+コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
+
+#### classigntaxによる分類群の割り当て
+
+以下のコマンドで、取得した近隣配列の同定情報からLCAアルゴリズム [@Huson2007MEGANanalysismetagenomic] を用いて各OTUに分類群を割り当てます。
 
 ```default
 classigntax \
@@ -1021,13 +1041,20 @@ classigntax \
 11_taxonomy/taxonomy_qc_species_wsp.tsv
 ```
 
-ほげほげ
+コマンドラインオプションの意味は以下の通りです。
+
+`--taxdb`
+: 使用する参照配列の同定情報データベース(`clmakecachedb`の`--blastdb`と一致させる)
+
+コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
+
+出力ファイルは、OTUごとに1行の同定結果を記録したタブ区切りテキストになっています。
 
 ### 95%-3NN法による分子同定
 
 #### clidentseqによる近隣配列群の取得
 
-ほげほげ
+以下のコマンドで、95%-3NN法に基づいて近隣配列をキャッシュデータベースから取得します。
 
 ```default
 clidentseq \
@@ -1039,11 +1066,9 @@ clidentseq \
 11_taxonomy/neighborhoods_3nn_species_wsp.txt
 ```
 
-ほげほげ
-
 #### classigntaxによる分類群の割当
 
-ほげほげ
+以下のコマンドで、取得した近隣配列の同定情報からLCAアルゴリズム [@Huson2007MEGANanalysismetagenomic] を用いて各OTUに分類群を割り当てます。
 
 ```default
 classigntax \
@@ -1053,11 +1078,16 @@ classigntax \
 11_taxonomy/taxonomy_3nn_species_wsp.tsv
 ```
 
-ほげほげ
+コマンドラインオプションの意味は以下の通りです。
+
+`--minnsupporter`
+: 結果を支持する近隣配列数の下限
+
+この方法では、OTUの塩基配列が95%以上一致する参照配列を類似度上位3位タイまで取得して近隣配列とし、LCAアルゴリズム [@Huson2007MEGANanalysismetagenomic] を用いて各OTUに分類群を割り当てていますが、95%以上一致する参照配列が1～2本であっても結果を採用するように指定しています(当然、誤同定は生じやすくなります)。
 
 ### clmakeidentdbによる分子同定結果の再利用
 
-ほげほげ
+以下のコマンドを使用してQCauto法による分子同定結果データベースを作成することができます。
 
 ```default
 clmakeidentdb \
@@ -1072,12 +1102,21 @@ clmakeidentdb \
 11_taxonomy/neighborhoods_3nn_species_wsp.txt \
 11_taxonomy/3nn_species_wsp.identdb
 ```
+コマンドラインオプションの意味は以下の通りです。
 
-clmakecachedbとclidentseq
+`--append`
+: 出力ファイルが既に存在している場合は結果を追加する
+
+コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
+
+出力ファイル内には分子同定結果(実際には`clidentseq`の結果)が記録されており、`clmakecachedb`と`clidentseq`の実行時に`--identdb`オプションで指定することで、このデータベース内に結果が既にあるOTUにおいて参照配列データベースの検索を飛ばします。
 
 ### clmergeassignによる複数の分子同定結果のマージ
 
-ほげほげ
+ここまでの解析によって、少なくともQCauto法による分子同定結果と95%-3NN法による分子同定結果が得られているはずです。
+複数のデータベースでそれぞれ分子同定を行い、より多くの分子同定結果が得られている場合もあるでしょう。
+そのような場合、それらの結果からOTUごとに「最も低レベルの分類階層まで同定できているものを採用する」という形で同定結果をマージすることができます。
+下記コマンドを実行すると、より保守的で誤同定が少ないと考えられるQCauto法の結果を優先しつつ、95%-3NN法でQCauto法の結果と矛盾せず、より低レベルの分類階層まで同定できていたら採用する、という形で結果をマージできます(95%-3NN法の結果がより低レベルの分類階層まで同定できていても、QCauto法の結果と矛盾するなら却下する)。
 
 ```default
 clmergeassign \
@@ -1088,27 +1127,62 @@ clmergeassign \
 11_taxonomy/taxonomy_merged.tsv
 ```
 
-ほげほげ
+コマンドラインオプションの意味は以下の通りです。
+
+`--preferlower`
+: より低レベルの分類階層まで同定できている結果を優先的に採用する
+
+`--priority`
+: 入力ファイルの優先順位(ASCEND | DESCEND | EQUAL | 式による指定から選択)
+: 式は、入力ファイルに0から始まる数値を割り振り、「0<1=2<3<4」という風に指定します。
+: この優先順位は`--preferlower`よりも優先されます
+
+コマンドラインオプションに引き続いて、入力ファイル群、出力ファイルを指定します。
 
 ### clfillassignによる分子同定結果の穴埋め
 
-ほげほげ
+`classigntax`の出力は、そのままでは同定情報のない分類階層は空欄のままとなっています。
+そこで、以下のコマンドでそのような空欄を全て埋めることができます。
 
 ```default
 clfillassign \
+--fullfill=enable \
 11_taxonomy/taxonomy_merged.tsv \
 11_taxonomy/taxonomy_merged_filled.tsv
 ```
 
-ほげほげ
+コマンドラインオプションの意味は以下の通りです。
+
+`--fullfill`
+: ファイル中に存在しない分類階層も含めてClaidentがサポートしている全分類階層を穴埋めするか否か(ENABLE | DISABLEから選択)
+
+コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
+
+穴埋めは、より低レベルの分類階層の結果が存在する場合はその値で、より低レベルの分類階層の結果が存在しない場合は最も低レベルの分類階層の結果に「`unidentified `」を付加たもので行います。
+つまり、orderが「`Foo`」でinfraorderが「`Bar`」、その中間のsuborderが空欄の場合、suborderは「`Bar`」になり、parvorder以下の分類階層が全て空欄ならそれらは「`unidentified Bar`」となります。
 
 ## サンプル×OTU表の作成
 
-ほげほげ
+ここで言うサンプル×OTU表とは、各サンプルにおける各OTUのリード数の表のことを指します。
+以下のような形式で表せるものです。
 
 ```default
-mkdir -p 12_community
+samplename  OTU1  OTU2  OTU3  OTU4
+Sample1     3813   130  1949 34959
+Sample2    18389    19   194  1948
+Sample3       18     1   148   184
 ```
+
+この表を元データとして、統計的な解析を行うことになります。
+ここでは、実際に統計的な解析に入る前に必要な前処理について説明します。
+
+その前に、以下のコマンドで作業ディレクトリにサンプル×OTU表の出力ディレクトリを作成しておきます。
+
+```default
+mkdir 12_community
+```
+
+また、加工の出発点となるサンプル×OTU表は実は既に`10_decontaminated/decontaminated.tsv`として存在しているため、以下のコマンドでこれを先程作成したディレクトリにコピーしておきます。
 
 ```default
 cp \
@@ -1118,7 +1192,7 @@ cp \
 
 ### clfiltersumによるサンプル×OTU表の加工
 
-ほげほげ
+以下のコマンドで、内部標準OTUのみの表を作成することができます(他のOTUは除外される)。
 
 ```default
 clfiltersum \
@@ -1127,17 +1201,50 @@ clfiltersum \
 12_community/sample_otu_matrix_standard.tsv
 ```
 
+コマンドラインオプションの意味は以下の通りです。
+
+`--otuseq`
+: 指定したFASTA配列ファイルに含まれる配列名と一致するOTUのデータを取り出す
+
+コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
+
+以下のコマンドを実行すると、分子同定結果に基づいて、`--includetaxa`で指定した分類群(ここでは魚類)のOTUのみの表を作成することができます。
+
 ```default
 clfiltersum \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
 --includetaxa=subclass,Dipnomorpha \
-10_decontaminated/decontaminated.tsv \
+12_community/sample_otu_matrix_raw.tsv \
 12_community/sample_otu_matrix_fishes.tsv
 ```
 
-ほげほげ
+コマンドラインオプションの意味は以下の通りです。
+
+`--taxfile`
+: 分子同定結果のタブ区切りテキストファイル(`classigntax`の出力フォーマットのもの)
+
+`--includetaxa`
+: 該当する分類群名のOTUのデータを取り出す
+: 分類群名を検索する分類階層を限定することも可能
+: 複数指定可能
+
+
+```default
+head -n 1 12_community/sample_otu_matrix_fishes.tsv \
+| perl -ne '@row=split(/\t/);shift(@row);print(join("\n",@row)."\n");' \
+> 12_community/fishotus.txt
+```
+
+```default
+clfiltersum \
+--negativeotulist=12_community/fishotus.txt \
+12_community/sample_otu_matrix_raw.tsv \
+12_community/sample_otu_matrix_others.tsv
+```
+
+includetaxaをexcludetaxaに置き換えても同じ結果になる。
 
 ### clrarefysumによるサンプル×OTU表のカバレッジベースレアファクション
 
@@ -1149,11 +1256,26 @@ clrarefysum \
 --minnread=1000 \
 --nreps=10 \
 --numthreads=NumberOfCPUcores \
-12_community/sample_otu_matrix_fishes.tsv \
-12_community/sample_otu_matrix_fishes_rarefied
+12_community/sample_otu_matrix_raw.tsv \
+12_community/sample_otu_matrix_raw_rarefied
 ```
 
-ほげほげ
+```default
+clfiltersum \
+--otuseq=standard.fasta \
+12_community/sample_otu_matrix_raw_rarefied01.tsv \
+12_community/sample_otu_matrix_standard_rarefied01.tsv
+```
+
+```default
+clfiltersum \
+--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
+--includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
+--includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
+--includetaxa=subclass,Dipnomorpha \
+12_community/sample_otu_matrix_raw_rarefied01.tsv \
+12_community/sample_otu_matrix_fishes_rarefied01.tsv
+```
 
 ### clestimateconcと内部標準DNAリード数を用いたDNA濃度の推定
 
@@ -1166,11 +1288,20 @@ clestimateconc \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
 --numthreads=NumberOfCPUcores \
+12_community/sample_otu_matrix_fishes.tsv \
+12_community/sample_otu_matrix_fishes_estimated.tsv
+```
+
+```default
+clestimateconc \
+--stdconctable=stdconctable.tsv \
+--stdtable=12_community/sample_otu_matrix_standard_rarefied01.tsv \
+--solutionvoltable=solutionvoltable.tsv \
+--watervoltable=watervoltable.tsv \
+--numthreads=NumberOfCPUcores \
 12_community/sample_otu_matrix_fishes_rarefied01.tsv \
 12_community/sample_otu_matrix_fishes_rarefied01_estimated.tsv
 ```
-
-ほげほげ
 
 ### サンプル×OTU表を用いた群集生態学的解析
 
