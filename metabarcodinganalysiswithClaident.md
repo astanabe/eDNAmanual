@@ -1262,7 +1262,7 @@ Sample3       18     1   148   184
 mkdir 12_community
 ```
 
-また、加工の出発点となる群集組成表は実は既に`10_decontaminated/decontaminated.tsv`として存在しているため、以下のコマンドでこれを先程作成したディレクトリにコピーしておきます。
+また、加工の出発点となる群集組成表は実は既に「`10_decontaminated/decontaminated.tsv`」として存在しているため、以下のコマンドでこれを先程作成したディレクトリにコピーしておきます。
 
 ```default
 cp \
@@ -1323,7 +1323,7 @@ clfiltersum \
 ```
 
 同じことを別のやり方でやってみます。
-下記のコマンドでは、魚類のOTUの表からOTU名だけを取り出して`12_community/fishotus.txt`に保存しています。
+下記のコマンドでは、魚類のOTUの表からOTU名だけを取り出して「`12_community/fishotus.txt`」に保存しています。
 
 ```default
 head -n 1 12_community/sample_otu_matrix_fishes.tsv \
