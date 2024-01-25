@@ -521,7 +521,7 @@ bcl-convert \
 1番目のレーンのデータだけをundemultiplexed FASTQにする場合、`--bcl-only-lane 1`とします。
 このオプションを指定しない場合は全レーンのデータがレーンごとに異なるファイルに出力されます。
 
-bcl2fastqかBCL Convertを実行すると、以下の4ファイルが生成されます(1レーンのみ出力した場合)。
+上述の通りにbcl2fastqかBCL Convertを実行すると、以下の4ファイルが生成されます(1レーンのみ出力した場合)。
 
 ～_I1_001.fastq.gz
 : index1のundemultiplexed FASTQ (長さ8塩基)
