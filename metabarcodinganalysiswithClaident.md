@@ -1506,7 +1506,7 @@ clsumtaxa \
 
 `--sortkey`
 : ソート順を決めるキー(ABUNDANCE | RANKNAMEから選択)
-: RANKNAMEは「`familyname`」、「`classname`」、「"species group name"」などとする
+: RANKNAMEは「`familyname`」、「`classname`」、「`"species group name"`」(スペースが含まれる場合はクォートする)などとする
 
 コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
 
