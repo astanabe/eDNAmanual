@@ -1,7 +1,7 @@
 ---
 title: Claidentを用いた定量メタバーコーディング解析
 author: 田辺晶史 (東北大学大学院生命科学研究科)
-date: 2024-01-24
+date: 2024-01-26
 output: 
   pdf_document:
     latex_engine: lualatex
@@ -152,11 +152,11 @@ Claidentによるデータ解析は、以下の流れで行います。
 8. インデックスホッピング除去 [@Esling2015Accuratemultiplexingfiltering]
 9. ネガティブコントロールを利用したデコンタミネーション
 10. 分子同定 [@Tanabe2013TwoNewComputational]
-11. 群集組成表の作成・加工
+11. OTU組成表の作成・加工
 12. カバレッジベースレアファクション [@Chao2012Coveragebasedrarefactionextrapolation]
 13. 内部標準DNAリード数を利用したDNA濃度の推定 [@Ushio2018Quantitativemonitoringmultispecies]
 
-最終的に得られた群集組成表をRやその他の統計解析環境で処理することで、作図や要約、仮説検証を行います。
+最終的に得られたOTU組成表をRやその他の統計解析環境で処理することで、作図や要約、仮説検証を行います。
 Claident自体には統計解析機能はありません。
 
 Claidentは大抵のメタバーコードデータの解析に使用可能ですが、ここでは以下のようなデータを仮定して解説を進めます(下記を満たしていないデータを解析できないわけではありません)。
@@ -1216,9 +1216,9 @@ clfillassign \
 穴埋めは、より低レベルの分類階層の結果が存在する場合はその値で、より低レベルの分類階層の結果が存在しない場合は最も低レベルの分類階層の結果に「`unidentified `」を付加たもので行います。
 つまり、orderが「`Foo`」でinfraorderが「`Bar`」、その中間のsuborderが空欄の場合、suborderは「`Bar`」になり、parvorder以下の分類階層が全て空欄ならそれらは「`unidentified Bar`」となります。
 
-## 群集組成表の作成
+## OTU組成表の作成
 
-ここで言う群集組成表とは、各サンプルにおける各OTUのリード数の表のことを指します。
+ここで言うOTU組成表とは、各サンプルにおける各OTUのリード数の表のことを指します。
 以下のような形式で表せるものです。
 
 ```default
@@ -1231,13 +1231,13 @@ Sample3       18     1   148   184
 この表を元データとして、統計的な解析を行うことになります。
 ここでは、実際に統計的な解析に入る前に必要な前処理について説明します。
 
-その前に、以下のコマンドで作業ディレクトリに群集組成表の出力ディレクトリを作成しておきます。
+その前に、以下のコマンドで作業ディレクトリにOTU組成表の出力ディレクトリを作成しておきます。
 
 ```default
 mkdir 12_community
 ```
 
-また、加工の出発点となる群集組成表は実は既に「`10_decontaminated/decontaminated.tsv`」として存在しているため、以下のコマンドでこれを先程作成したディレクトリにコピーしておきます。
+また、加工の出発点となるOTU組成表は実は既に「`10_decontaminated/decontaminated.tsv`」として存在しているため、以下のコマンドでこれを先程作成したディレクトリにコピーしておきます。
 
 ```default
 cp \
@@ -1245,7 +1245,7 @@ cp \
 12_community/sample_otu_matrix_all.tsv
 ```
 
-### clfiltersumによる群集組成表の加工
+### clfiltersumによるOTU組成表の加工
 
 以下のコマンドで、内部標準OTUのみの表を作成することができます(他のOTUは除外される)。
 
@@ -1320,11 +1320,11 @@ clfiltersum \
 `--negativeotulist`
 : 除外するOTU名のリストを記したテキストファイル
 
-### clrarefysumによる群集組成表のカバレッジベースレアファクション
+### clrarefysumによるOTU組成表のカバレッジベースレアファクション
 
-群集組成表があれば群集生態学解析はできますが、このままではサンプル間のカバレッジ(サンプリング調査の網羅具合)にばらつきがあるため、本来種数の少ない高カバレッジのサンプルの方が本当は種数が多い低カバレッジのサンプルよりも種数が多いと誤判定してしまいかねません。
+OTU組成表があれば群集生態学解析はできますが、このままではサンプル間のカバレッジ(サンプリング調査の網羅具合)にばらつきがあるため、本来種数の少ない高カバレッジのサンプルの方が本当は種数が多い低カバレッジのサンプルよりも種数が多いと誤判定してしまいかねません。
 そこで、サンプル間でカバレッジを揃えることで、このような問題を回避する処理がカバレッジベースレアファクションです [@Chao2012Coveragebasedrarefactionextrapolation] 。
-なお、レアファクションが「レアファクションした群集組成表を得る」ことを指す場合と「レアファクションカーブを得る」ことを指す場合がありますが、本章では前者を指すものとお考え下さい。
+なお、レアファクションが「レアファクションしたOTU組成表を得る」ことを指す場合と「レアファクションカーブを得る」ことを指す場合がありますが、本章では前者を指すものとお考え下さい。
 
 カバレッジベースレアファクションを行う手法としては、「そのサンプルで一度しか観測されていないOTU (シングルトン)の数」と「そのサンプルで二度しか観測されていないOTU (ダブルトン)の数」に基づいてカバレッジを推定して行う方法があります [@Chao2012Coveragebasedrarefactionextrapolation] 。
 しかし、メタバーコードデータではシーケンスエラーが大量に存在するために、これらの数が十分信用できるものとは考えられていません [@Chiu2016Estimatingcomparingmicrobial] 。
@@ -1403,7 +1403,7 @@ do clfiltersum \
 done
 ```
 
-上記の例では全分類群の群集組成表を用いてカバレッジベースレアファクションを行い、レアファクション後に魚類OTUと魚類以外のOTUに分けていますが、最初から魚類以外に興味がない場合や、事前知識により魚類以外はコンタミネーションの可能性が高いと思われる場合、魚類のみの群集組成表を用いてカバレッジベースレアファクションを行う方が良いかもしれません。
+上記の例では全分類群のOTU組成表を用いてカバレッジベースレアファクションを行い、レアファクション後に魚類OTUと魚類以外のOTUに分けていますが、最初から魚類以外に興味がない場合や、事前知識により魚類以外はコンタミネーションの可能性が高いと思われる場合、魚類のみのOTU組成表を用いてカバレッジベースレアファクションを行う方が良いかもしれません。
 
 metagMiscにしろClaidentにしろ、これらのカバレッジベースレアファクションで行えるのはあくまで「群集に対するシーケンシングカバレッジの均一化」に過ぎないことは注意が必要です。
 「採水した水の、群集に対するカバレッジの均一化」や「濾過フィルター上に捕集したDNAの、群集に対するカバレッジの均一化」や「PCRに投入するDNA溶液の、群集に対するカバレッジの均一化」はなされていません。
@@ -1423,7 +1423,7 @@ clestimateconc \
 --watervoltable=watervoltable.tsv \
 --numthreads=NumberOfCPUcores \
 12_community/sample_otu_matrix_fishes.tsv \
-12_community/sample_otu_matrix_fishes_estimated.tsv
+12_community/sample_otu_matrix_fishes_concentration.tsv
 ```
 
 コマンドラインオプションの意味は以下の通りです。
@@ -1453,7 +1453,7 @@ do clestimateconc \
 --watervoltable=watervoltable.tsv \
 --numthreads=NumberOfCPUcores \
 12_community/sample_otu_matrix_fishes_rarefied$n.tsv \
-12_community/sample_otu_matrix_fishes_rarefied$n_estimated.tsv
+12_community/sample_otu_matrix_fishes_rarefied$n_concentration.tsv
 done
 ```
 
@@ -1461,9 +1461,78 @@ done
 DNA濃度情報しかないデータからは値の信頼性のばらつきを考慮した解析を行うことはできないので、DNA濃度を利用した分析の際にはレアファクションしてから推定したDNA濃度データを使用する方が良いことが多いのではないでしょうか。
 ただ、分析方法によってはレアファクション前の元データから推定したDNA濃度データの方が適している場合もあるかもしれません。
 
-## 群集組成表を用いた群集生態学解析に向けて
+### OTU組成表からの種組成表の作成
 
-ここまでの内容で群集生態学解析に必要な群集組成表が得られますが、未レアファクションのリード数データ、レアファクション済リード数データ、未レアファクションのDNA濃度データ、レアファクション済DNA濃度データの少なくとも4種類があるはずです。
+OTU組成表は群集生態学解析には適していますが、作図などの際には種組成表や属組成表の方がわかりやすいことがあるでしょう。
+そのような場合、OTU組成表と分子同定結果から、種組成表や属組成表を作成することができます。
+以下のコマンドでは、魚類のOTU組成表から種組成表を作成しています。
+
+```default
+clsumtaxa \
+--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
+--targetrank=species \
+--taxnamereplace=enable \
+--fuseotu=enable \
+--numbering=enable \
+--sortkey=abundance \
+12_community/sample_otu_matrix_fishes.tsv \
+12_community/sample_species_matrix_fishes.tsv
+```
+
+コマンドラインオプションの意味は以下の通りです。
+
+`--taxfile`
+: 分子同定結果のタブ区切りテキストファイル(`classigntax`の出力フォーマットのもの)
+
+`--targetrank`
+: 指定した分類階層の情報を使用する
+
+`--taxnamereplace`
+: 出力OTU名内で使用されているスペースやコロンをアンダーバーに置換(ENABLE | DISABLEから選択)
+
+`--fuseotu`
+: 分類群名が同じOTUをまとめるか否か(ENABLE | DISABLEから選択)
+: まとめない場合は出力OTU名を「`入力OTU名:分類群名`」とし、組成の内容は維持する
+: ただし`--taxnamereplace`が有効の場合は出力OTU名は「`入力OTU名_分類群名`」となる
+
+`--numbering`
+: 出力OTU名にソート順で番号を接頭辞として付加するか否か(ENABLE | DISABLEから選択)
+: 出力OTUが100ある場合は`001`～`100`という風に幅を揃えた番号をコロン「`:`」で区切って付加する
+: `--taxnamereplace`が有効の場合はコロンではなくアンダーバー「`_`」で区切って付加する
+: `--fuseotu`と`--taxnamereplace`が有効の場合は「`番号_分類群名`」となる
+: `--fuseotu`が有効、`--taxnamereplace`が無効の場合は「`番号:分類群名`」となる
+: `--fuseotu`が無効、`--taxnamereplace`が有効の場合は「`番号_入力OTU名_分類群名`」となる
+: `--fuseotu`と`--taxnamereplace`が無効の場合は「`番号:入力OTU名:分類群名`」となる
+
+`--sortkey`
+: ソート順を決めるキー(ABUNDANCE | RANKNAMEから選択)
+: RANKNAMEは「`familyname`」、「`classname`」、「"species group name"」などとする
+
+コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。
+
+以下のコマンドでは、DNA濃度を値とするOTU組成表から種組成表を作成しています。
+
+```default
+clsumtaxa \
+--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
+--targetrank=species \
+--taxnamereplace=enable \
+--taxranknamereplace=enable \
+--fuseotu=enable \
+--numbering=enable \
+--sortkey=abundance \
+12_community/sample_otu_matrix_fishes_concentration.tsv \
+12_community/sample_species_matrix_fishes_concentration.tsv
+```
+
+なお、`--fuseotu`を有効化した場合、分類群名だけでOTUがまとめられてしまうため、`--targetrank=species`であっても「`unidentified 高次分類群名`」という種が存在し、これには多数の種がまとめられてしまう可能性があります。
+これは低レベルの分類階層が同定できなかったOTUは`clfillassign`で「`unidentified 高次分類群名`」としたためです。
+したがって、複数の種が誤ってまとめられたOTUを含む種組成表となってしまいます。
+このような種組成表は作図に使用することはできますが、統計的分析にはASVや配列の類似度に基づいてクラスタリングを行ったOTUを単位とするOTU組成表を使用するようにしましょう。
+
+## OTU組成表を用いた群集生態学解析に向けて
+
+ここまでの内容で群集生態学解析に必要なOTU組成表が得られますが、未レアファクションのリード数データ、レアファクション済リード数データ、未レアファクションのDNA濃度データ、レアファクション済DNA濃度データの少なくとも4種類があるはずです。
 これらは目的や解析手法に応じて適宜使い分ける必要があります。
 
 まず、レアファクションカーブやヒル数(有効種数) [@Chao2014RarefactionextrapolationHill] の推定・描画には未レアファクションのリード数データを用います。
