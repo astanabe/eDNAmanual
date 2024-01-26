@@ -415,60 +415,9 @@ TCATGTCT
 通常、受託解析業者に依頼すると「`SampleSheet.csv`」の内容に合わせてデマルチプレックス済みのFASTQファイルを納品されることが多いでしょう。
 しかし、Illumina社製のデマルチプレックスプログラムはあまりに多くのサンプルを1シーケンスランや1レーンにマルチプレックスすると正常にデマルチプレックスできなかったり、インデックスの塩基の信頼性を考慮していなかったり、1塩基の読み間違い(不一致)を許容する設定であったり、「未使用のインデックスの組み合わせ」の塩基配列は全て破棄されてインデックスホッピングの検出に対応できなくなるため、Claidentでは内蔵するデマルチプレックスプログラム`clsplitseq`でのデマルチプレックスを推奨しています。
 
-`clsplitseq`でのデマルチプレックスを行うには、LinuxマシンにIllumina社が提供するbcl2fastqまたはBCL Convertというプログラムをインストールし、シーケンサのランデータからインデックス配列を含むデマルチプレックスしていないFASTQ (undemultiplexed FASTQ)を生成する必要があります。
+`clsplitseq`でのデマルチプレックスを行うには、LinuxマシンにIllumina社が提供するBCL Convertというプログラムをインストールし、シーケンサのランデータからインデックス配列を含むデマルチプレックスしていないFASTQ (undemultiplexed FASTQ)を生成する必要があります。
 以下の作業における作業ディレクトリは、高速なSSDに設置することを強くお勧めします。
 
-bcl2fastqは以下のURLから取得できます。
-
-- <https://jp.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html>
-
-執筆時点の最新版はv2.20です。
-Debian・Ubuntu・Linux MintおよびWindows上にインストールしたUbuntuの場合、(Linux rpm)と書かれている配布ファイルをダウンロードして作業ディレクトリ「`workingdirectory`」に置き、ターミナルで以下のコマンドを実行することでインストールできます。
-
-```default
-sudo apt install rpm2cpio cpio
-cd workingdirectory
-unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
-mkdir temporary
-cd temporary
-rpm2cpio ../bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm | cpio -id
-sudo mkdir -p /usr/local/bin
-sudo cp usr/local/bin/bcl2fastq /usr/local/bin/
-sudo cp -R usr/local/share/css /usr/local/share/
-sudo cp -R usr/local/share/xsl /usr/local/share/
-cd ..
-rm -rf temporary bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
-```
-
-なお、このプログラムはmacOSには対応していません。
-macOS上で実行するには、仮想マシンプログラムをインストールして仮想マシン上にLinuxをインストールし、そのLinux上にbcl2fastqをインストールする必要があります。
-
-bcl2fastqでundemultiplexed FASTQを生成するには、「`SampleSheet.csv`」をコピーして「`Dummy.csv`」を作成し、テキストエディタで開いて`[Data]`セクションを編集します。
-`[Data]`セクションには1行目に各列のラベルが記されており、2行目以降にサンプル名やインデックス配列が記されていますが、2行目以降は削除します。
-FASTQ生成の際にこのファイルをサンプルシートとして指定することで、bcl2fastqに内蔵されているデマルチプレックス機能を無効化し、undemultiplexed FASTQを作成することができます。
-8塩基長のデュアルインデックスでフォワード側151サイクル、リバース側151サイクル解読した場合、以下のコマンドでundemultiplexed FASTQを「`01_undemultiplexed`」ディレクトリに出力することができます。
-インデックス長やサイクル数が異なる場合は`--use-bases-mask`オプションを適宜変更して下さい。
-
-```default
-bcl2fastq \
---processing-threads NumberOfCPUcores \
---create-fastq-for-index-reads \
---use-bases-mask Y150n,I8,I8,Y150n \
---runfolder-dir RunDataDirectory \
---sample-sheet Dummy.csv \
---output-dir 01_undemultiplexed
-```
-
-ここで、RunDataDirectoryは、シーケンサ本体、またはシーケンサに付属の解析マシンに保存されている「`BaseCalls`」という名前のディレクトリを含むディレクトリです。
-予めbcl2fastqをインストールしたマシンにコピーしておく必要があります。
-`NumberOfCPUcores`は処理中に使用するCPUコア数の整数値で置き換えて下さい。
-
-上記の例ではレーンが一つしかない機種のデータを想定しています。
-レーンが複数ある機種のデータを扱う場合、`--tiles`オプションを使用することで、特定のレーンのみのデータからundemultiplexed FASTQを生成できます。
-1番目のレーンのデータだけをundemultiplexed FASTQにする場合、`--tiles s_1`とします。
-このオプションを指定しない場合は全レーンのデータがレーンごとに異なるファイルに出力されます。
-
-NextSeq 1000・2000やNovaSeq Xなどの新しい機種では、BCL Convertというまた別のプログラムを使用するように変更されています。
 BCL Convertは下記URLからダウンロードできます。
 
 - <https://jp.support.illumina.com/sequencing/sequencing_software/bcl-convert.html>
@@ -477,7 +426,7 @@ BCL Convertは下記URLからダウンロードできます。
 Debian・Ubuntu・Linux MintおよびWindows上にインストールしたUbuntuの場合、(Oracle 8)と書かれている配布ファイルをダウンロードして作業ディレクトリ「`workingdirectory`」に置き、ターミナルで以下のコマンドを実行することでインストールできます。
 
 ```default
-sudo apt install rpm2cpio cpio
+sudo apt install rpm2cpio cpio pstack
 cd workingdirectory
 mkdir temporary
 cd temporary
@@ -485,59 +434,85 @@ rpm2cpio ../bcl-convert-4.2.4-2.el8.x86_64.rpm | cpio  -id
 sudo mkdir -p /usr/local/bin
 sudo cp usr/bin/bcl-convert /usr/local/bin/
 sudo mkdir -p /var/log/bcl-convert
+sudo chmod 777 /var/log/bcl-convert
 cd ..
 rm -rf temporary bcl-convert-4.2.4-2.el8.x86_64.rpm
 ```
 
-なお、このプログラムもmacOSには対応していません。
+なお、このプログラムはmacOSには対応していません。
 macOS上で実行するには、仮想マシンプログラムをインストールして仮想マシン上にLinuxをインストールし、そのLinux上にbcl2fastqをインストールする必要があります。
 
-BCL Convertでundemultiplexed FASTQを生成するには、「`SampleSheet.csv`」をコピーして「`Dummy.csv`」を作成し、テキストエディタで開いて`[BCLConvert_Settings]`および`[BCLConvert_Data]`セクションを編集します。
-まず、`[BCLConvert_Settings]`セクションに下記の2行を追記します(衝突する設定がある場合には削除する必要があるかもしれません)。
+BCL Convertでundemultiplexed FASTQを生成するには、下記の内容の「`Dummy.csv`」をテキストエディタで作成します。
 
 ```default
-OverrideCycles,Y150N;I8;I8;Y150N
+[Header]
+FileFormatVersion,2
+[BCLConvert_Settings]
+OverrideCycles,Y150N1;I8;I8;Y150N1
 CreateFastqForIndexReads,1
+[BCLConvert_Data]
+Lane,Sample_ID,index,index2
+1,Dummy,CCCCCCCC,CCCCCCCC
 ```
 
-これは8塩基長のデュアルインデックスでフォワード側151サイクル、リバース側151サイクル解読した場合の設定ですので、インデックス長やサイクル数が異なる場合は適宜変更する必要があります。
-`[BCLConvert_Data]`セクションでは1行目に各列のラベルが記されており、2行目以降にサンプル名やインデックス配列が記されていますが、2行目以降は削除します。
-FASTQ生成の際にこのファイルをサンプルシートとして指定することで、BCL Convertに内蔵されているデマルチプレックス機能を無効化し、undemultiplexed FASTQを作成することができます。
-以下のコマンドでundemultiplexed FASTQを「`01_undemultiplexed`」ディレクトリに出力することができます。
+ターミナルで下記のコマンドを実行すれば、テキストエディタがなくても「`Dummy.csv`」を作成できます。
+
+```default
+echo '[Header]
+FileFormatVersion,2
+[BCLConvert_Settings]
+OverrideCycles,Y150N1;I8;I8;Y150N1
+CreateFastqForIndexReads,1
+[BCLConvert_Data]
+Lane,Sample_ID,index,index2
+1,Dummy,CCCCCCCC,CCCCCCCC' > Dummy.csv
+```
+
+これは、8塩基長のデュアルインデックスでフォワード側151サイクル(末尾1塩基破棄)、リバース側151サイクル(末尾1塩基破棄)の場合の設定ファイルですので、インデックス長やサイクル数が異なる場合は適宜変更する必要があります。
+ダミーのサンプルとして、index1およびindex2が共に`CCCCCCCC`の`Dummy`というサンプルの行があります。
+サンプル行が一つもないとエラーになるため、このような行を作成する必要があります。
+万が一、index1およびindex2が共に`CCCCCCCC`のサンプル、index1が`CCCCCCCC`のサンプル、index2が`CCCCCCCC`のサンプルの**いずれか**が実在する場合は適当な配列に書き換えて下さい。
+index1およびindex2が共に`CCCCCCCC`のサンプルが実在しないのにサンプル`Dummy`のFASTQにいくらかデータが出力されることがありますが、index1およびindex2が共に`CCCCCCCC`のサンプルが本当に実在しないのなら、シーケンスエラーによるものなので問題はありません。
+なお、インデックスの長さが8塩基ではない場合は、`OverrideCycles`の行と`CCCCCCCC`は書き換える必要があります。
+例えば10塩基長のデュアルインデックスでフォワード側301サイクル(末尾1塩基破棄)、リバース側301サイクル(末尾1塩基破棄)の場合、`OverrideCycles,Y300N1;I10;I10;Y300N1`および`CCCCCCCCCC`とします。
+
+FASTQ生成の際にこのファイルを`--sample-sheet`に指定することで、BCL Convertに内蔵されているデマルチプレックス機能を無効化し、undemultiplexed FASTQを作成することができます。
+以下のコマンドでは、undemultiplexed FASTQを「`01_undemultiplexed`」ディレクトリに出力することができます。
 
 ```default
 bcl-convert \
---bcl-input-directory RunDataDirectory \
 --sample-sheet Dummy.csv \
+--bcl-input-directory RunDataDirectory \
 --output-directory 01_undemultiplexed
 ```
 
-ここで、RunDataDirectoryは、シーケンサ本体、またはシーケンサに付属の解析マシンに保存されている「`BaseCalls`」という名前のディレクトリを含むディレクトリです。
-予めBCL Convertをインストールしたマシンにコピーしておく必要があります。
-使用するCPU数はデフォルトで自動的に決定されます。
+ここで、RunDataDirectoryは、シーケンサ本体、またはシーケンサに付属の解析マシンに保存されている、シーケンスランのデータが保存されているディレクトリです。
+通常は「`Data`」というディレクトリが含まれているはずです。
+このディレクトリを予めBCL Convertをインストールしたマシンにコピーしておく必要があります。
+なお、使用するCPU数はデフォルトで自動的に決定されます(搭載されている全CPUを使用します)。
 
 上記の例ではレーンが一つしかない機種を想定しています。
 レーンが複数ある機種のデータを扱う場合、`--bcl-only-lane`オプションを使用することで、特定のレーンのみのデータからundemultiplexed FASTQを生成できます。
 1番目のレーンのデータだけをundemultiplexed FASTQにする場合、`--bcl-only-lane 1`とします。
 このオプションを指定しない場合は全レーンのデータがレーンごとに異なるファイルに出力されます。
 
-上述の通りにbcl2fastqかBCL Convertを実行すると、以下の4ファイルが生成されます(1レーンのみ出力した場合)。
+上述の通りにBCL Convertを実行すると、サンプル`Dummy`のファイル以外に以下の4ファイルが生成されます(1レーンのみ出力した場合)。
 
-～_I1_001.fastq.gz
+Undetermined_S0_L001_I1_001.fastq.gz
 : index1のundemultiplexed FASTQ (長さ8塩基)
 
-～_I2_001.fastq.gz
+Undetermined_S0_L001_I2_001.fastq.gz
 : index2のundemultiplexed FASTQ (長さ8塩基)
 
-～_R1_001.fastq.gz
+Undetermined_S0_L001_R1_001.fastq.gz
 : インサートのフォワード側リードのundemultiplexed FASTQ (長さ150塩基)
 
-～_R2_001.fastq.gz
+Undetermined_S0_L001_R2_001.fastq.gz
 : インサートのリバース側リードのundemultiplexed FASTQ (長さ150塩基)
 
 #### ディレクトリ構造
 
-解析開始前の作業ディレクトリ内のファイルとディレクトリは以下の通りです。
+Claidentでの解析開始前の作業ディレクトリ内のファイルとディレクトリは以下の通りです。
 
 - 作業ディレクトリ
   - blanklist.txt
@@ -550,10 +525,10 @@ bcl-convert \
   - index1.fasta
   - index2.fasta
   - 01_undemultiplexed (ディレクトリ)
-    - ～_I1_001.fastq.gz
-    - ～_I2_001.fastq.gz
-    - ～_R1_001.fastq.gz
-    - ～_R2_001.fastq.gz
+    - Undetermined_S0_L001_I1_001.fastq.gz
+    - Undetermined_S0_L001_I2_001.fastq.gz
+    - Undetermined_S0_L001_R1_001.fastq.gz
+    - Undetermined_S0_L001_R2_001.fastq.gz
 
 ## 塩基配列データ処理
 
@@ -581,10 +556,10 @@ clsplitseq \
 --compress=xz \
 --seqnamestyle=illumina \
 --numthreads=NumberOfCPUcores \
-01_undemultiplexed/Undemultiplexed_R1_001.fastq.gz \
-01_undemultiplexed/Undemultiplexed_I1_001.fastq.gz \
-01_undemultiplexed/Undemultiplexed_I2_001.fastq.gz \
-01_undemultiplexed/Undemultiplexed_R2_001.fastq.gz \
+01_undemultiplexed/Undetermined_S0_L001_R1_001.fastq.gz \
+01_undemultiplexed/Undetermined_S0_L001_I1_001.fastq.gz \
+01_undemultiplexed/Undetermined_S0_L001_I2_001.fastq.gz \
+01_undemultiplexed/Undetermined_S0_L001_R2_001.fastq.gz \
 02_demultiplexed
 ```
 
@@ -1428,13 +1403,13 @@ do clfiltersum \
 done
 ```
 
+上記の例では全分類群の群集組成表を用いてカバレッジベースレアファクションを行い、レアファクション後に魚類OTUと魚類以外のOTUに分けていますが、最初から魚類以外に興味がない場合や、事前知識により魚類以外はコンタミネーションの可能性が高いと思われる場合、魚類のみの群集組成表を用いてカバレッジベースレアファクションを行う方が良いかもしれません。
+
 metagMiscにしろClaidentにしろ、これらのカバレッジベースレアファクションで行えるのはあくまで「群集に対するシーケンシングカバレッジの均一化」に過ぎないことは注意が必要です。
 「採水した水の、群集に対するカバレッジの均一化」や「濾過フィルター上に捕集したDNAの、群集に対するカバレッジの均一化」や「PCRに投入するDNA溶液の、群集に対するカバレッジの均一化」はなされていません。
 メタバーコーディングではサンプリング、つまり「一部を取り出す」ステップが多数存在するため、均一性が問題になるのはシーケンシングカバレッジだけではありません。
 しかし、それらは全て飽和している(カバレッジ1.0)という仮定のもとでこの先の解析は行われます。
 もし何か異常な結果が得られた際には、この仮定が満たされていない可能性について検討すべきかもしれません。
-
-上記の例では全分類群の群集組成表を用いてカバレッジベースレアファクションを行い、レアファクション後に魚類OTUと魚類以外のOTUに分けていますが、最初から魚類以外に興味がない場合や、事前知識により魚類以外はコンタミネーションの可能性が高いと思われる場合、魚類のみの群集組成表を用いてカバレッジベースレアファクションを行う方が良いかもしれません。
 
 ### clestimateconcと内部標準DNAリード数を用いたDNA濃度の推定
 
