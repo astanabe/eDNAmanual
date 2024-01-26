@@ -1,7 +1,7 @@
 ---
 title: Claidentを用いた定量メタバーコーディング解析
 author: 田辺晶史 (東北大学大学院生命科学研究科)
-date: 2024-01-26
+date: 2024-01-27
 output: 
   pdf_document:
     latex_engine: lualatex
@@ -49,16 +49,19 @@ Claidentの詳細については下記URLをご参照下さい。
 
 Claidentは、以下の環境で動作するように作成されています。
 
-- Debian 11以降
-- Ubuntu 20.04以降 (Windows上のWSL2環境を含む)
+- Debian 11以降 (Windows上のWSL環境を含む)
+- Ubuntu 20.04以降 (Windows上のWSL環境を含む)
 - Linux Mint 20以降
 - RedHat Enterprise Linux 8以降
-- AlmaLinux 8以降 (Windows上のWSL2環境を含む)
+- AlmaLinux 8以降 (Windows上のWSL環境を含む)
 - Rocky Linux 8以降
 - HomebrewをインストールしたmacOS
 - MacPortsをインストールしたmacOS
 
-Windowsをご使用の方は、Microsoft Storeから「Windows Subsystem for Linux」、「Ubuntu」および「Windows Terminal」をインストールすれば、Ubuntu環境内にClaidentをインストールすることができます。
+Windowsをご使用の方は、下記のMicrosoft公式ページを参照してWSLとUbuntuをインストールして下さい。
+
+- <https://learn.microsoft.com/ja-jp/windows/wsl/install>
+
 ただし、Windows上にインストールしたUbuntuは、標準では最大250GB程度しかディスク容量を使用できません(執筆時点)。
 メモリも搭載しているうちの半分しか使用できません。
 大きなデータ解析にはディスクやメモリの容量が不足する可能性が高いので、専用の解析マシンを用意することをお勧めします。
@@ -82,6 +85,10 @@ sh installDB_Debian.sh
 cd ..
 rm -rf temporary
 ```
+
+maOSをご利用の方は、下記のページを参照してHomebrewをインストールして下さい。
+
+- <https://brew.sh/>
 
 HomebrewをインストールしたmacOSでClaidentをインストールするには、ターミナル上で以下のコマンドを実行します。
 
@@ -1534,6 +1541,7 @@ clsumtaxa \
 
 ここまでの内容で群集生態学解析に必要なOTU組成表が得られますが、未レアファクションのリード数データ、レアファクション済リード数データ、未レアファクションのDNA濃度データ、レアファクション済DNA濃度データの少なくとも4種類があるはずです。
 これらは目的や解析手法に応じて適宜使い分ける必要があります。
+ここではOTU組成表を使用してR [@RCoreTeam2023LanguageEnvironmentStatistical] で群集生態学解析を行う際に役立つパッケージを簡単に紹介します。
 
 まず、レアファクションカーブやヒル数(有効種数) [@Chao2014RarefactionextrapolationHill] の推定・描画には未レアファクションのリード数データを用います。
 以下のRパッケージが役に立つでしょう。
@@ -1547,16 +1555,37 @@ clsumtaxa \
 - vegan <https://github.com/vegandevs/vegan>
 - picante <https://cran.r-project.org/web/packages/picante/> [@Kembel2010Picantetoolsintegrating]
 - MicEco <https://github.com/Russel88/MicEco>
+- iNEXT.beta3D <https://github.com/KaiHsiangHu/iNEXT.beta3D> [@Chao2023Rarefactionextrapolationbeta]
 - bipartite <https://github.com/biometry/bipartite>
 - pvclust <https://github.com/shimo-lab/pvclust>
 - mpmcorrelogram <https://cran.r-project.org/web/packages/mpmcorrelogram/>
+- boral <https://cran.r-project.org/web/packages/boral/> [@Hui2016boralBayesianOrdination]
+- gllvm <https://github.com/JenniNiku/gllvm> [@Niku2019gllvmFastanalysis]
 
-DNA濃度データはサンプル間での定量性が必要な時系列因果推論に使用することができます。
+DNA濃度データはサンプル間での定量性が必要な解析方法に使用することができます。
 その代わり、整数値を要求する手法を適用することができません。
-以下のRパッケージで時系列因果推論を行うことができます。
+以下のRパッケージでは時系列因果推論を行うことができます。
 
 - rEDM <https://ha0ye.github.io/rEDM/> [@Ye2016Informationleverageinterconnected]
 - rUIC <https://github.com/yutakaos/rUIC> [@Osada2023unifiedframeworknonparametric]
+
+空間を対象とした場合、結合種分布モデリング(Joint Species Distribution Modeling)によって多種の生息適地の同時推定や多様性の高い重要地域の推定が可能です。
+下記のRパッケージではそのような複雑なモデルの当てはめに対応しています。
+
+- jSDM <https://ecology.ghislainv.fr/jSDM/> [@Warton2015ManyVariablesJoint]
+- HMSC <https://github.com/hmsc-r/HMSC> [@Tikhonov2020Jointspeciesdistribution]
+
+OTU組成からOTU間関係のネットワークを推定する手法も近年活発に開発されています。
+下記はOTU間関係ネットワークの推定と描画をサポートしたRパッケージです。
+
+- SpiecEasi <https://github.com/zdk123/SpiecEasi> [@Kurtz2015SparseCompositionallyRobust]
+- NetCoMi <https://github.com/stefpeschel/NetCoMi> [@Peschel2021NetCoMinetworkconstruction]
+- ggClusterNet <https://github.com/taowenmicro/ggClusterNet> [@Wen2022ggClusterNetpackagemicrobiome]
+
+ここで紹介したRパッケージとそれらに実装されている手法は新しいものも多く、筆者も十分に把握できているとは言えません。
+特に、それぞれの手法の前提として要求するデータの性質(在不在か、整数値か小数値か、サンプル内定量性やサンプル間定量性があるかなど)を論文やマニュアルでよく検討して使用するようにして下さい。
+
+最後に、 @Doi2011CommunityAnalysis および @Kadowaki2023primercommunityecology ではR上での群集生態学分析の入門的な解説がなされていますので、一読をお勧めします。
 
 # 引用文献
 
