@@ -1,0 +1,2470 @@
+---
+references:
+- id: Callahan2016DADA2Highresolutionsample
+  abstract: >-
+    DADA2 is an open-source software package that denoises and removes
+    sequencing errors from Illumina amplicon sequence data to distinguish
+    microbial sample sequences differing by as little as a single nucleotide.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Callahan
+      given: Benjamin J.
+    - family: McMurdie
+      given: Paul J.
+    - family: Rosen
+      given: Michael J.
+    - family: Han
+      given: Andrew W.
+    - family: Johnson
+      given: Amy Jo A.
+    - family: Holmes
+      given: Susan P.
+  citation-key: Callahan2016DADA2Highresolutionsample
+  container-title: Nature Methods
+  container-title-short: Nat Methods
+  DOI: 10.1038/nmeth.3869
+  ISSN: 1548-7105
+  issue: '7'
+  issued:
+    - year: 2016
+      month: 7
+  language: en
+  license: 2016 Springer Nature America, Inc.
+  number: '7'
+  page: 581-583
+  publisher: Nature Publishing Group
+  source: www.nature.com
+  title: 'DADA2: High-resolution sample inference from Illumina amplicon data'
+  title-short: DADA2
+  type: article-journal
+  URL: https://www.nature.com/articles/nmeth.3869
+  volume: '13'
+
+- id: Chao2012Coveragebasedrarefactionextrapolation
+  abstract: >-
+    We propose an integrated sampling, rarefaction, and extrapolation
+    methodology to compare species richness of a set of communities based on
+    samples of equal completeness (as measured by sample coverage) instead of
+    equal size. Traditional rarefaction or extrapolation to equal-sized samples
+    can misrepresent the relationships between the richnesses of the communities
+    being compared because a sample of a given size may be sufficient to fully
+    characterize the lower diversity community, but insufficient to characterize
+    the richer community. Thus, the traditional method systematically biases the
+    degree of differences between community richnesses. We derived a new
+    analytic method for seamless coverage-based rarefaction and extrapolation.
+    We show that this method yields less biased comparisons of richness between
+    communities, and manages this with less total sampling effort. When this
+    approach is integrated with an adaptive coverage-based stopping rule during
+    sampling, samples may be compared directly without rarefaction, so no extra
+    data is taken and none is thrown away. Even if this stopping rule is not
+    used during data collection, coverage-based rarefaction throws away less
+    data than traditional size-based rarefaction, and more efficiently finds the
+    correct ranking of communities according to their true richnesses. Several
+    hypothetical and real examples demonstrate these advantages.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Chao
+      given: Anne
+    - family: Jost
+      given: Lou
+  citation-key: Chao2012Coveragebasedrarefactionextrapolation
+  container-title: Ecology
+  DOI: 10.1890/11-1952.1
+  ISSN: 1939-9170
+  issue: '12'
+  issued:
+    - year: 2012
+  language: en
+  license: © 2012 by the Ecological Society of America
+  page: 2533-2547
+  source: Wiley Online Library
+  title: >-
+    Coverage-based rarefaction and extrapolation: standardizing samples by
+    completeness rather than size
+  title-short: Coverage-based rarefaction and extrapolation
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1890/11-1952.1
+  volume: '93'
+
+- id: Chao2014RarefactionextrapolationHill
+  abstract: >-
+    Quantifying and assessing changes in biological diversity are central
+    aspects of many ecological studies, yet accurate methods of estimating
+    biological diversity from sampling data have been elusive. Hill numbers, or
+    the effective number of species, are increasingly used to characterize the
+    taxonomic, phylogenetic, or functional diversity of an assemblage. However,
+    empirical estimates of Hill numbers, including species richness, tend to be
+    an increasing function of sampling effort and, thus, tend to increase with
+    sample completeness. Integrated curves based on sampling theory that
+    smoothly link rarefaction (interpolation) and prediction (extrapolation)
+    standardize samples on the basis of sample size or sample completeness and
+    facilitate the comparison of biodiversity data. Here we extended previous
+    rarefaction and extrapolation models for species richness (Hill number qD,
+    where q = 0) to measures of taxon diversity incorporating relative abundance
+    (i.e., for any Hill number qD, q > 0) and present a unified approach for
+    both individual-based (abundance) data and sample-based (incidence) data.
+    Using this unified sampling framework, we derive both theoretical formulas
+    and analytic estimators for seamless rarefaction and extrapolation based on
+    Hill numbers. Detailed examples are provided for the first three Hill
+    numbers: q = 0 (species richness), q = 1 (the exponential of Shannon's
+    entropy index), and q = 2 (the inverse of Simpson's concentration index). We
+    developed a bootstrap method for constructing confidence intervals around
+    Hill numbers, facilitating the comparison of multiple assemblages of both
+    rarefied and extrapolated samples. The proposed estimators are accurate for
+    both rarefaction and short-range extrapolation. For long-range
+    extrapolation, the performance of the estimators depends on both the value
+    of q and on the extrapolation range. We tested our methods on simulated data
+    generated from species abundance models and on data from large species
+    inventories. We also illustrate the formulas and estimators using empirical
+    data sets from biodiversity surveys of temperate forest spiders and tropical
+    ants.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Chao
+      given: Anne
+    - family: Gotelli
+      given: Nicholas J.
+    - family: Hsieh
+      given: T. C.
+    - family: Sander
+      given: Elizabeth L.
+    - family: Ma
+      given: K. H.
+    - family: Colwell
+      given: Robert K.
+    - family: Ellison
+      given: Aaron M.
+  citation-key: Chao2014RarefactionextrapolationHill
+  container-title: Ecological Monographs
+  DOI: 10.1890/13-0133.1
+  ISSN: 1557-7015
+  issue: '1'
+  issued:
+    - year: 2014
+  language: en
+  license: © 2014 by the Ecological Society of America
+  page: 45-67
+  source: Wiley Online Library
+  title: >-
+    Rarefaction and extrapolation with Hill numbers: a framework for sampling
+    and estimation in species diversity studies
+  title-short: Rarefaction and extrapolation with Hill numbers
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1890/13-0133.1
+  volume: '84'
+
+- id: Chao2023Rarefactionextrapolationbeta
+  abstract: >-
+    Based on sampling data, we propose a rigorous standardization method to
+    measure and compare beta diversity across datasets. Here beta diversity,
+    which quantifies the extent of among-assemblage differentiation, relies on
+    Whittaker's original multiplicative decomposition scheme, but we use Hill
+    numbers for any diversity order q ≥ 0. Richness-based beta diversity (q = 0)
+    quantifies the extent of species identity shift, whereas abundance-based (q
+    > 0) beta diversity also quantifies the extent of difference among
+    assemblages in species abundance. We adopt and define the assumptions of a
+    statistical sampling model as the foundation for our approach, treating
+    sampling data as a representative sample taken from an assemblage. The
+    approach makes a clear distinction between the theoretical assemblage level
+    (unknown properties/parameters of the assemblage) and the sampling data
+    level (empirical/observed statistics computed from data). At the assemblage
+    level, beta diversity for N assemblages reflects the interacting effect of
+    the species abundance distribution and spatial/temporal aggregation of
+    individuals in the assemblage. Under independent sampling, observed beta (=
+    gamma/alpha) diversity depends not only on among-assemblage differentiation
+    but also on sampling effort/completeness, which in turn induces dependence
+    of beta on alpha and gamma diversity. How to remove the dependence of
+    richness-based beta diversity on its gamma component (species pool) has been
+    intensely debated. Our approach is to standardize gamma and alpha based on
+    sample coverage (an objective measure of sample completeness). For a single
+    assemblage, the iNEXT method was developed, through interpolation
+    (rarefaction) and extrapolation with Hill numbers, to standardize samples by
+    sampling effort/completeness. Here we adapt the iNEXT standardization to
+    alpha and gamma diversity, that is, alpha and gamma diversity are both
+    assessed at the same level of sample coverage, to formulate standardized,
+    coverage-based beta diversity. This extension of iNEXT to beta diversity
+    required the development of novel concepts and theories, including a formal
+    proof and simulation-based demonstration that the resulting standardized
+    beta diversity removes the dependence of beta diversity on both gamma and
+    alpha values, and thus reflects the pure among-assemblage differentiation.
+    The proposed standardization is illustrated with spatial, temporal, and
+    spatiotemporal datasets, while the freeware iNEXT.beta3D facilitates all
+    computations and graphics.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 26
+  author:
+    - family: Chao
+      given: Anne
+    - family: Thorn
+      given: Simon
+    - family: Chiu
+      given: Chun-Huo
+    - family: Moyes
+      given: Faye
+    - family: Hu
+      given: Kai-Hsiang
+    - family: Chazdon
+      given: Robin L.
+    - family: Wu
+      given: Jessie
+    - family: Magnago
+      given: Luiz Fernando S.
+    - family: Dornelas
+      given: Maria
+    - family: Zelený
+      given: David
+    - family: Colwell
+      given: Robert K.
+    - family: Magurran
+      given: Anne E.
+  citation-key: Chao2023Rarefactionextrapolationbeta
+  container-title: Ecological Monographs
+  DOI: 10.1002/ecm.1588
+  ISSN: 1557-7015
+  issue: '4'
+  issued:
+    - year: 2023
+  language: en
+  license: >-
+    © 2023 The Authors. Ecological Monographs published by Wiley Periodicals LLC
+    on behalf of The Ecological Society of America.
+  page: e1588
+  source: Wiley Online Library
+  title: >-
+    Rarefaction and extrapolation with beta diversity under a framework of Hill
+    numbers: The iNEXT.beta3D standardization
+  title-short: >-
+    Rarefaction and extrapolation with beta diversity under a framework of Hill
+    numbers
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/ecm.1588
+  volume: '93'
+
+- id: Chiu2016Estimatingcomparingmicrobial
+  abstract: >-
+    Estimating and comparing microbial diversity are statistically challenging
+    due to limited sampling and possible sequencing errors for low-frequency
+    counts, producing spurious singletons. The inflated singleton count
+    seriously affects statistical analysis and inferences about microbial
+    diversity. Previous statistical approaches to tackle the sequencing errors
+    generally require different parametric assumptions about the sampling model
+    or about the functional form of frequency counts. Different parametric
+    assumptions may lead to drastically different diversity estimates. We focus
+    on nonparametric methods which are universally valid for all parametric
+    assumptions and can be used to compare diversity across communities. We
+    develop here a nonparametric estimator of the true singleton count to
+    replace the spurious singleton count in all methods/approaches. Our
+    estimator of the true singleton count is in terms of the frequency counts of
+    doubletons, tripletons and quadrupletons, provided these three frequency
+    counts are reliable. To quantify microbial alpha diversity for an individual
+    community, we adopt the measure of Hill numbers (effective number of taxa)
+    under a nonparametric framework. Hill numbers, parameterized by an order q
+    that determines the measures’ emphasis on rare or common species, include
+    taxa richness (q = 0), Shannon diversity (q = 1, the exponential of Shannon
+    entropy), and Simpson diversity (q = 2, the inverse of Simpson index). A
+    diversity profile which depicts the Hill number as a function of order q
+    conveys all information contained in a taxa abundance distribution. Based on
+    the estimated singleton count and the original non-singleton frequency
+    counts, two statistical approaches (non-asymptotic and asymptotic) are
+    developed to compare microbial diversity for multiple communities. (1) A
+    non-asymptotic approach refers to the comparison of estimated diversities of
+    standardized samples with a common finite sample size or sample
+    completeness. This approach aims to compare diversity estimates for
+    equally-large or equally-complete samples; it is based on the seamless
+    rarefaction and extrapolation sampling curves of Hill numbers, specifically
+    for q = 0, 1 and 2. (2) An asymptotic approach refers to the comparison of
+    the estimated asymptotic diversity profiles. That is, this approach compares
+    the estimated profiles for complete samples or samples whose size tends to
+    be sufficiently large. It is based on statistical estimation of the true
+    Hill number of any order q ≥ 0. In the two approaches, replacing the
+    spurious singleton count by our estimated count, we can greatly remove the
+    positive biases associated with diversity estimates due to spurious
+    singletons and also make fair comparisons across microbial communities, as
+    illustrated in our simulation results and in applying our method to analyze
+    sequencing data from viral metagenomes.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Chiu
+      given: Chun-Huo
+    - family: Chao
+      given: Anne
+  citation-key: Chiu2016Estimatingcomparingmicrobial
+  container-title: PeerJ
+  container-title-short: PeerJ
+  DOI: 10.7717/peerj.1634
+  ISSN: 2167-8359
+  issued:
+    - year: 2016
+      month: 2
+      day: 1
+  language: en
+  page: e1634
+  publisher: PeerJ Inc.
+  source: peerj.com
+  title: >-
+    Estimating and comparing microbial diversity in the presence of sequencing
+    errors
+  type: article-journal
+  URL: https://peerj.com/articles/1634
+  volume: '4'
+
+- id: Edgar2010Searchclusteringorders
+  abstract: "Motivation: Biological sequence data is accumulating rapidly, motivating the development of improved high-throughput methods for sequence classification.Results: UBLAST and USEARCH are new algorithms enabling sensitive local and global search of large sequence databases at exceptionally high speeds. They are often orders of magnitude faster than BLAST in practical applications, though sensitivity to distant protein relationships is lower. UCLUST is a new clustering method that exploits USEARCH to assign sequences to clusters. UCLUST offers several advantages over the widely used program CD-HIT, including higher speed, lower memory use, improved sensitivity, clustering at lower identities and classification of much larger datasets.Availability: Binaries are available at no charge for non-commercial use at http://www.drive5.com/usearchContact: \_robert@drive5.comSupplementary information: \_Supplementary data are available at Bioinformatics online."
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Edgar
+      given: Robert C.
+  citation-key: Edgar2010Searchclusteringorders
+  container-title: Bioinformatics
+  container-title-short: Bioinformatics
+  DOI: 10.1093/bioinformatics/btq461
+  ISSN: 1367-4803
+  issue: '19'
+  issued:
+    - year: 2010
+      month: 10
+      day: 1
+  page: 2460-2461
+  source: Silverchair
+  title: Search and clustering orders of magnitude faster than BLAST
+  type: article-journal
+  URL: https://doi.org/10.1093/bioinformatics/btq461
+  volume: '26'
+
+- id: Edgar2011UCHIMEimprovessensitivity
+  abstract: "Motivation: Chimeric DNA sequences often form during polymerase chain reaction amplification, especially when sequencing single regions (e.g. 16S rRNA or fungal Internal Transcribed Spacer) to assess diversity or compare populations. Undetected chimeras may be misinterpreted as novel species, causing inflated estimates of diversity and spurious inferences of differences between populations. Detection and removal of chimeras is therefore of critical importance in such experiments.Results: We describe UCHIME, a new program that detects chimeric sequences with two or more segments. UCHIME either uses a database of chimera-free sequences or detects chimeras de novo by exploiting abundance data. UCHIME has better sensitivity than ChimeraSlayer (previously the most sensitive database method), especially with short, noisy sequences. In testing on artificial bacterial communities with known composition, UCHIME de novo sensitivity is shown to be comparable to Perseus. UCHIME is &gt;100× faster than Perseus and &gt;1000× faster than ChimeraSlayer.Contact: \_robert@drive5.comAvailability: Source, binaries and data: http://drive5.com/uchime.Supplementary information: \_Supplementary data are available at Bioinformatics online."
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Edgar
+      given: Robert C.
+    - family: Haas
+      given: Brian J.
+    - family: Clemente
+      given: Jose C.
+    - family: Quince
+      given: Christopher
+    - family: Knight
+      given: Rob
+  citation-key: Edgar2011UCHIMEimprovessensitivity
+  container-title: Bioinformatics
+  container-title-short: Bioinformatics
+  DOI: 10.1093/bioinformatics/btr381
+  ISSN: 1367-4803
+  issue: '16'
+  issued:
+    - year: 2011
+      month: 8
+      day: 15
+  page: 2194-2200
+  source: Silverchair
+  title: UCHIME improves sensitivity and speed of chimera detection
+  type: article-journal
+  URL: https://doi.org/10.1093/bioinformatics/btr381
+  volume: '27'
+
+- id: Edgar2015Errorfilteringpair
+  abstract: "Motivation: Next-generation sequencing produces vast amounts of data with errors that are difficult to distinguish from true biological variation when coverage is low.Results: We demonstrate large reductions in error frequencies, especially for high-error-rate reads, by three independent means: (i) filtering reads according to their expected number of errors, (ii) assembling overlapping read pairs and (iii) for amplicon reads, by exploiting unique sequence abundances to perform error correction. We also show that most published paired read assemblers calculate incorrect posterior quality scores.Availability and implementation: These methods are implemented in the USEARCH package. Binaries are freely available at http://drive5.com/usearch.Contact: \_robert@drive5.comSupplementary information: Supplementary data are available at Bioinformatics online."
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Edgar
+      given: Robert C.
+    - family: Flyvbjerg
+      given: Henrik
+  citation-key: Edgar2015Errorfilteringpair
+  container-title: Bioinformatics
+  container-title-short: Bioinformatics
+  DOI: 10.1093/bioinformatics/btv401
+  ISSN: 1367-4803
+  issue: '21'
+  issued:
+    - year: 2015
+      month: 11
+      day: 1
+  page: 3476-3482
+  source: Silverchair
+  title: >-
+    Error filtering, pair assembly and error correction for next-generation
+    sequencing reads
+  type: article-journal
+  URL: https://doi.org/10.1093/bioinformatics/btv401
+  volume: '31'
+
+- id: Edgar2016UCHIME2improvedchimera
+  abstract: >-
+    Amplicon sequencing generates chimeric reads which can cause spurious
+    inferences of biological variation. I describe UCHIME2, an update of the
+    popular UCHIME chimera detection algorithm with new modes optimized for
+    high-resolution biological sequence reconstruction (“denoising”) and other
+    applications. I show that chimera frequency correlates inversely with
+    divergence, that error-free chimera prediction from sequence is impossible
+    in principle, and that UCHIME2 achieves higher detection accuracy than
+    previous methods.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Edgar
+      given: Robert C.
+  citation-key: Edgar2016UCHIME2improvedchimera
+  DOI: 10.1101/074252
+  issued:
+    - year: 2016
+      month: 9
+      day: 12
+  language: en
+  license: >-
+    © 2016, Posted by Cold Spring Harbor Laboratory. The copyright holder for
+    this pre-print is the author. All rights reserved. The material may not be
+    redistributed, re-used or adapted without the author's permission.
+  page: '074252'
+  publisher: bioRxiv
+  section: New Results
+  source: bioRxiv
+  title: 'UCHIME2: improved chimera prediction for amplicon sequencing'
+  title-short: UCHIME2
+  type: article
+  URL: https://www.biorxiv.org/content/10.1101/074252v1
+
+- id: Esling2015Accuratemultiplexingfiltering
+  abstract: >-
+    Tagging amplicons with tag sequences appended to PCR primers allow the
+    multiplexing of numerous samples for high-throughput sequencing (HTS). This
+    approach is routinely used in HTS-based diversity analyses, especially in
+    microbial ecology and biomedical diagnostics. However, amplicon library
+    preparation is subject to pervasive sample sequence cross-contaminations as
+    a result of tag switching events referred to as mistagging. Here, we
+    sequenced seven amplicon libraries prepared using various multiplexing
+    designs in order to measure the magnitude of this phenomenon and its impact
+    on diversity analyses. Up to 28.2% of the unique sequences correspond to
+    undetectable (critical) mistags in single- or saturated double-tagging
+    libraries. We show the advantage of multiplexing samples following Latin
+    Square Designs in order to optimize the detection of mistags and maximize
+    the information on their distribution across samples. We use this
+    information in designs incorporating PCR replicates to filter the critical
+    mistags and to recover the exact composition of mock community samples.
+    Being parameter-free and data-driven, our approach can provide more accurate
+    and reproducible HTS data sets, improving the reliability of their
+    interpretations.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Esling
+      given: Philippe
+    - family: Lejzerowicz
+      given: Franck
+    - family: Pawlowski
+      given: Jan
+  citation-key: Esling2015Accuratemultiplexingfiltering
+  container-title: Nucleic Acids Research
+  container-title-short: Nucleic Acids Research
+  DOI: 10.1093/nar/gkv107
+  ISSN: 0305-1048
+  issue: '5'
+  issued:
+    - year: 2015
+      month: 3
+      day: 11
+  page: 2513-2524
+  source: Silverchair
+  title: Accurate multiplexing and filtering for high-throughput amplicon-sequencing
+  type: article-journal
+  URL: https://doi.org/10.1093/nar/gkv107
+  volume: '43'
+
+- id: Hsieh2016iNEXTpackagerarefaction
+  abstract: >-
+    Hill numbers (or the effective number of species) have been increasingly
+    used to quantify the species/taxonomic diversity of an assemblage. The
+    sample-size- and coverage-based integrations of rarefaction (interpolation)
+    and extrapolation (prediction) of Hill numbers represent a unified
+    standardization method for quantifying and comparing species diversity
+    across multiple assemblages. We briefly review the conceptual background of
+    Hill numbers along with two approaches to standardization. We present an R
+    package iNEXT (iNterpolation/EXTrapolation) which provides simple functions
+    to compute and plot the seamless rarefaction and extrapolation sampling
+    curves for the three most widely used members of the Hill number family
+    (species richness, Shannon diversity and Simpson diversity). Two types of
+    biodiversity data are allowed: individual-based abundance data and
+    sampling-unit-based incidence data. Several applications of the iNEXT
+    packages are reviewed: (i) Non-asymptotic analysis: comparison of diversity
+    estimates for equally large or equally complete samples. (ii) Asymptotic
+    analysis: comparison of estimated asymptotic or true diversities. (iii)
+    Assessment of sample completeness (sample coverage) across multiple samples.
+    (iv) Comparison of estimated point diversities for a specified sample size
+    or a specified level of sample coverage. Two examples are demonstrated,
+    using the data (one for abundance data and the other for incidence data)
+    included in the package, to illustrate all R functions and graphical
+    displays.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Hsieh
+      given: T. C.
+    - family: Ma
+      given: K. H.
+    - family: Chao
+      given: Anne
+  citation-key: Hsieh2016iNEXTpackagerarefaction
+  container-title: Methods in Ecology and Evolution
+  DOI: 10.1111/2041-210X.12613
+  ISSN: 2041-210X
+  issue: '12'
+  issued:
+    - year: 2016
+  language: en
+  license: >-
+    © 2016 The Authors. Methods in Ecology and Evolution © 2016 British
+    Ecological Society
+  page: 1451-1456
+  source: Wiley Online Library
+  title: >-
+    iNEXT: an R package for rarefaction and extrapolation of species diversity
+    (Hill numbers)
+  title-short: iNEXT
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1111/2041-210X.12613
+  volume: '7'
+
+- id: Hsieh2022iNEXTInterpolationExtrapolation
+  abstract: >-
+    Provides simple functions to compute and plot two types (sample-size- and
+    coverage-based) rarefaction and extrapolation curves for species diversity
+    (Hill numbers) based on individual-based abundance data or sampling-unit-
+    based incidence data; see Chao and others (2014, Ecological Monographs) for
+    pertinent theory and methodologies, and Hsieh, Ma and Chao (2016, Methods in
+    Ecology and Evolution) for an introduction of the R package.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Hsieh
+      given: T. C.
+    - family: Chao
+      given: K. H. Ma and Anne
+  citation-key: Hsieh2022iNEXTInterpolationExtrapolation
+  issued:
+    - year: 2022
+      month: 8
+      day: 29
+  license: GPL (≥ 3)
+  source: R-Packages
+  title: 'iNEXT: Interpolation and Extrapolation for Species Diversity'
+  title-short: iNEXT
+  type: software
+  URL: https://cran.r-project.org/web/packages/iNEXT/index.html
+  version: 3.0.0
+
+- id: Hui2016boralBayesianOrdination
+  abstract: >-
+    Model-based methods have emerged as a powerful approach for analysing
+    multivariate abundance data in community ecology. Key applications include
+    model-based ordination, modelling the various sources of correlations across
+    species, and making inferences while accounting for these between species
+    correlations. boral (version 0.9.1, licence GPL-2) is an r package available
+    on cran for model-based analysis of multivariate abundance data, with
+    estimation performed using Bayesian Markov chain Monte Carlo methods. A key
+    feature of the boral package is the ability to incorporate latent variables
+    as a parsimonious method of modelling between species correlation. Pure
+    latent variable models offer a model-based approach to unconstrained
+    ordination, for visualizing sites and the indicator species characterizing
+    them on a low-dimensional plot. Correlated response models consist of
+    fitting generalized linear models to each species, while including latent
+    variables to account for residual correlation between species, for example,
+    due to unmeasured covariates.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 26
+  author:
+    - family: Hui
+      given: Francis K.C.
+  citation-key: Hui2016boralBayesianOrdination
+  container-title: Methods in Ecology and Evolution
+  DOI: 10.1111/2041-210X.12514
+  ISSN: 2041-210X
+  issue: '6'
+  issued:
+    - year: 2016
+  language: en
+  license: >-
+    © 2015 The Author. Methods in Ecology and Evolution © 2015 British
+    Ecological Society
+  page: 744-750
+  source: Wiley Online Library
+  title: >-
+    boral – Bayesian Ordination and Regression Analysis of Multivariate
+    Abundance Data in r
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1111/2041-210X.12514
+  volume: '7'
+
+- id: Huson2007MEGANanalysismetagenomic
+  abstract: >-
+    Metagenomics is the study of the genomic content of a sample of organisms
+    obtained from a common habitat using targeted or random sequencing. Goals
+    include understanding the extent and role of microbial diversity. The
+    taxonomical content of such a sample is usually estimated by comparison
+    against sequence databases of known sequences. Most published studies use
+    the analysis of paired-end reads, complete sequences of environmental fosmid
+    and BAC clones, or environmental assemblies. Emerging
+    sequencing-by-synthesis technologies with very high throughput are paving
+    the way to low-cost random “shotgun” approaches. This paper introduces
+    MEGAN, a new computer program that allows laptop analysis of large
+    metagenomic data sets. In a preprocessing step, the set of DNA sequences is
+    compared against databases of known sequences using BLAST or another
+    comparison tool. MEGAN is then used to compute and explore the taxonomical
+    content of the data set, employing the NCBI taxonomy to summarize and order
+    the results. A simple lowest common ancestor algorithm assigns reads to taxa
+    such that the taxonomical level of the assigned taxon reflects the level of
+    conservation of the sequence. The software allows large data sets to be
+    dissected without the need for assembly or the targeting of specific
+    phylogenetic markers. It provides graphical and statistical output for
+    comparing different data sets. The approach is applied to several data sets,
+    including the Sargasso Sea data set, a recently published metagenomic data
+    set sampled from a mammoth bone, and several complete microbial genomes.
+    Also, simulations that evaluate the performance of the approach for
+    different read lengths are presented.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Huson
+      given: Daniel H.
+    - family: Auch
+      given: Alexander F.
+    - family: Qi
+      given: Ji
+    - family: Schuster
+      given: Stephan C.
+  citation-key: Huson2007MEGANanalysismetagenomic
+  container-title: Genome Research
+  container-title-short: Genome Res.
+  DOI: 10.1101/gr.5969107
+  ISSN: 1088-9051, 1549-5469
+  issue: '3'
+  issued:
+    - year: 2007
+      month: 1
+      day: 3
+  language: en
+  page: 377-386
+  PMID: '17255551'
+  publisher: Cold Spring Harbor Lab
+  source: genome.cshlp.org
+  title: MEGAN analysis of metagenomic data
+  type: article-journal
+  URL: https://genome.cshlp.org/content/17/3/377
+  volume: '17'
+
+- id: Kadowaki2023primercommunityecology
+  abstract: >-
+    Community ecology beginners often struggle to understand theories expressed
+    in complex mathematical formulas and to master computer programming. To
+    remedy this situation, this article provides a practical, R-based
+    introduction to community ecology by illustrating core concepts (vital
+    rates, carrying capacity, and density dependence) and models that can be
+    used to explore the patterns of species abundance and diversity. The
+    structure of this article consists of three modeling exercises, each asking
+    a general question that can be answered by a combination of theory and R
+    programming: (1) what determines the abundance of species, and what makes a
+    population persist and go extinct?; (2) what determines the distribution of
+    species and species diversity?; (3) what determines the relative abundance
+    of species and what allows species to coexist? Through the exercises, I
+    discuss the following five concepts and ideas that provide valuable insights
+    into the questions: (i) the tragedy of the commons, (ii) the theory of
+    island biogeography, (iii) competitive exclusion, (iv) the neutral theory of
+    biodiversity, and (v) frequency dependence. These materials are thus
+    designed to guide the reader in developing an intuition for ecological
+    thinking that will help capture the essence of the global environmental and
+    biodiversity crisis. Although this article does not delineate the scope and
+    depth of the vast field of community ecology, I hope that it will motivate
+    the reader to step up to a more formal introduction to community ecology.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 26
+  author:
+    - family: Kadowaki
+      given: Kohmei
+  citation-key: Kadowaki2023primercommunityecology
+  container-title: Population Ecology
+  DOI: 10.1002/1438-390X.12158
+  ISSN: 1438-390X
+  issue: '4'
+  issued:
+    - year: 2023
+  language: en
+  license: >-
+    © 2023 The Authors. Population Ecology published by John Wiley & Sons
+    Australia, Ltd on behalf of The Society of Population Ecology.
+  page: 240-256
+  source: Wiley Online Library
+  title: A primer of community ecology using the R language
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/1438-390X.12158
+  volume: '65'
+
+- id: Kembel2010Picantetoolsintegrating
+  abstract: "Summary: Picante is a software package that provides a comprehensive set of tools for analyzing the phylogenetic and trait diversity of ecological communities. The package calculates phylogenetic diversity metrics, performs trait comparative analyses, manipulates phenotypic and phylogenetic data, and performs tests for phylogenetic signal in trait distributions, community structure and species interactions.Availability: Picante is a package for the R statistical language and environment written in R and C, released under a GPL v2 open-source license, and freely available on the web (http://picante.r-forge.r-project.org) and from CRAN (http://cran.r-project.org).Contact: \_skembel@uoregon.edu"
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Kembel
+      given: Steven W.
+    - family: Cowan
+      given: Peter D.
+    - family: Helmus
+      given: Matthew R.
+    - family: Cornwell
+      given: William K.
+    - family: Morlon
+      given: Helene
+    - family: Ackerly
+      given: David D.
+    - family: Blomberg
+      given: Simon P.
+    - family: Webb
+      given: Campbell O.
+  citation-key: Kembel2010Picantetoolsintegrating
+  container-title: Bioinformatics
+  container-title-short: Bioinformatics
+  DOI: 10.1093/bioinformatics/btq166
+  ISSN: 1367-4803
+  issue: '11'
+  issued:
+    - year: 2010
+      month: 6
+      day: 1
+  page: 1463-1464
+  source: Silverchair
+  title: 'Picante: R tools for integrating phylogenies and ecology'
+  title-short: Picante
+  type: article-journal
+  URL: https://doi.org/10.1093/bioinformatics/btq166
+  volume: '26'
+
+- id: Kembel2020picanteIntegratingPhylogenies
+  abstract: >-
+    Functions for phylocom integration, community analyses, null-models, traits
+    and evolution. Implements numerous ecophylogenetic approaches including
+    measures of community phylogenetic and trait diversity, phylogenetic signal,
+    estimation of trait values for unobserved taxa, null models for community
+    and phylogeny randomizations, and utility functions for data input/output
+    and phylogeny plotting. A full description of package functionality and
+    methods are provided by Kembel et al. (2010)
+    <doi:10.1093/bioinformatics/btq166>.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Kembel
+      given: Steven W.
+    - family: Ackerly
+      given: David D.
+    - family: Blomberg
+      given: Simon P.
+    - family: Cornwell
+      given: Will K.
+    - family: Cowan
+      given: Peter D.
+    - family: Helmus
+      given: Matthew R.
+    - family: Morlon
+      given: Helene
+    - family: Webb
+      given: Campbell O.
+  citation-key: Kembel2020picanteIntegratingPhylogenies
+  issued:
+    - year: 2020
+      month: 6
+      day: 10
+  license: GPL-2
+  source: R-Packages
+  title: 'picante: Integrating Phylogenies and Ecology'
+  title-short: picante
+  type: software
+  URL: https://cran.r-project.org/web/packages/picante/
+  version: 1.8.2
+
+- id: Komai2019Developmentnewset
+  abstract: >-
+    The Decapoda is one of the largest orders within the class Malacostraca,
+    comprising approximately 14,000 extant species and including many
+    commercially important species. For biodiversity monitoring in a
+    non-invasive manner, a new set of PCR primers was developed for
+    metabarcoding environmental DNA (eDNA) from decapod crustaceans. The new
+    primers (herein named “MiDeca”) were designed for two conservative regions
+    of the mitochondrial 16S rRNA gene, which amplify a short, hyper-variable
+    region (153–184 bp, 164 bp on average) with sufficient interspecific
+    variations. With the use of MiDeca primers and tissue-derived DNA extracts,
+    we successfully determined those sequences (154–189 bp) from 250 species,
+    placed in 186 genera and 65 families across the suborder Dendrobranchiata
+    and 10 of the 11 infraorders of the suborder Pleocyemata. We also
+    preliminarily attempted eDNA metabarcoding from natural seawater collected
+    at Banda, Tateyama, the Pacific coast of central Japan and detected 42
+    decapod species including 34 and 8 species with sequence identities of &gt;
+    98% and 80–98%, respectively. The results suggest the usefulness of eDNA
+    metabarcoding with MiDeca primers for biodiversity monitoring of the decapod
+    species. It appears, however, that further optimisation of primer sequences
+    would still be necessary to avoid possible PCR dropouts from eDNA extracts.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Komai
+      given: Tomoyuki
+    - family: Gotoh
+      given: Ryo O.
+    - family: Sado
+      given: Tetsuya
+    - family: Miya
+      given: Masaki
+  citation-key: Komai2019Developmentnewset
+  container-title: Metabarcoding and Metagenomics
+  DOI: 10.3897/mbmg.3.33835
+  ISSN: 2534-9708
+  issued:
+    - year: 2019
+      month: 4
+      day: 24
+  language: en
+  license: 2024 Tomoyuki Komai, Ryo O. Gotoh, Tetsuya Sado, Masaki Miya
+  page: e33835
+  publisher: Pensoft Publishers
+  source: mbmg.pensoft.net
+  title: >-
+    Development of a new set of PCR primers for eDNA metabarcoding decapod
+    crustaceans
+  type: article-journal
+  URL: https://mbmg.pensoft.net/article/33835/
+  volume: '3'
+
+- id: Kurtz2015SparseCompositionallyRobust
+  abstract: >-
+    16S ribosomal RNA (rRNA) gene and other environmental sequencing techniques
+    provide snapshots of microbial communities, revealing phylogeny and the
+    abundances of microbial populations across diverse ecosystems. While changes
+    in microbial community structure are demonstrably associated with certain
+    environmental conditions (from metabolic and immunological health in mammals
+    to ecological stability in soils and oceans), identification of underlying
+    mechanisms requires new statistical tools, as these datasets present several
+    technical challenges. First, the abundances of microbial operational
+    taxonomic units (OTUs) from amplicon-based datasets are compositional.
+    Counts are normalized to the total number of counts in the sample. Thus,
+    microbial abundances are not independent, and traditional statistical
+    metrics (e.g., correlation) for the detection of OTU-OTU relationships can
+    lead to spurious results. Secondly, microbial sequencing-based studies
+    typically measure hundreds of OTUs on only tens to hundreds of samples;
+    thus, inference of OTU-OTU association networks is severely under-powered,
+    and additional information (or assumptions) are required for accurate
+    inference. Here, we present SPIEC-EASI (SParse InversE Covariance Estimation
+    for Ecological Association Inference), a statistical method for the
+    inference of microbial ecological networks from amplicon sequencing datasets
+    that addresses both of these issues. SPIEC-EASI combines data
+    transformations developed for compositional data analysis with a graphical
+    model inference framework that assumes the underlying ecological association
+    network is sparse. To reconstruct the network, SPIEC-EASI relies on
+    algorithms for sparse neighborhood and inverse covariance selection. To
+    provide a synthetic benchmark in the absence of an experimentally validated
+    gold-standard network, SPIEC-EASI is accompanied by a set of computational
+    tools to generate OTU count data from a set of diverse underlying network
+    topologies. SPIEC-EASI outperforms state-of-the-art methods to recover edges
+    and network properties on synthetic data under a variety of scenarios.
+    SPIEC-EASI also reproducibly predicts previously unknown microbial
+    associations using data from the American Gut project.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 26
+  author:
+    - family: Kurtz
+      given: Zachary D.
+    - family: Müller
+      given: Christian L.
+    - family: Miraldi
+      given: Emily R.
+    - family: Littman
+      given: Dan R.
+    - family: Blaser
+      given: Martin J.
+    - family: Bonneau
+      given: Richard A.
+  citation-key: Kurtz2015SparseCompositionallyRobust
+  container-title: PLOS Computational Biology
+  container-title-short: PLOS Computational Biology
+  DOI: 10.1371/journal.pcbi.1004226
+  ISSN: 1553-7358
+  issue: '5'
+  issued:
+    - year: 2015
+      month: 5
+      day: 7
+  language: en
+  page: e1004226
+  publisher: Public Library of Science
+  source: PLoS Journals
+  title: Sparse and Compositionally Robust Inference of Microbial Ecological Networks
+  type: article-journal
+  URL: >-
+    https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004226
+  volume: '11'
+
+- id: McMurdie2013phyloseqPackageReproducible
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: McMurdie
+      given: Paul J.
+    - family: Holmes
+      given: Susan
+  citation-key: McMurdie2013phyloseqPackageReproducible
+  container-title: PLoS ONE
+  container-title-short: PLoS ONE
+  DOI: 10.1371/journal.pone.0061217
+  editor:
+    - family: Watson
+      given: Michael
+  ISSN: 1932-6203
+  issue: '4'
+  issued:
+    - year: 2013
+      month: 4
+      day: 22
+  language: en
+  page: e61217
+  source: DOI.org (Crossref)
+  title: >-
+    phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of
+    Microbiome Census Data
+  title-short: phyloseq
+  type: article-journal
+  URL: https://dx.plos.org/10.1371/journal.pone.0061217
+  volume: '8'
+
+- id: McMurdie2024joey711phyloseqa
+  abstract: >-
+    phyloseq is a set of classes, wrappers, and tools (in R) to make it easier
+    to import, store, and analyze phylogenetic sequencing data; and to
+    reproducibly share that data and analysis with others. See the phyloseq
+    front page:
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: McMurdie
+      given: Paul J.
+  citation-key: McMurdie2024joey711phyloseqa
+  genre: R
+  issued:
+    - year: 2024
+      month: 1
+      day: 22
+  original-date:
+    - year: 2011
+      month: 8
+      day: 11
+  source: GitHub
+  title: joey711/phyloseq
+  type: software
+  URL: https://github.com/joey711/phyloseq
+
+- id: Mikryukov2024vmikkmetagMisc
+  abstract: Miscellaneous functions for metagenomic analysis.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Mikryukov
+      given: Vladimir
+  citation-key: Mikryukov2024vmikkmetagMisc
+  genre: R
+  issued:
+    - year: 2024
+      month: 1
+      day: 23
+  license: MIT
+  original-date:
+    - year: 2016
+      month: 12
+      day: 15
+  source: GitHub
+  title: vmikk/metagMisc
+  type: software
+  URL: https://github.com/vmikk/metagMisc
+
+- id: Minamoto2021illustratedmanualenvironmental
+  abstract: >-
+    Environmental DNA (eDNA)-based assessments of macro-organisms have now
+    become an essential approach for biomonitoring. eDNA survey methods have a
+    number of advantages over conventional survey methods. However, the value of
+    the data that will accumulate would be greatly enhanced by standardizing the
+    analysis methods, which would allow us to compare data from multiple
+    monitoring sites at different points in time. The eDNA Society
+    (http://ednasociety.org/en/about), whose founding members consist of
+    Japanese researchers conducting eDNA studies on macro-organisms, was
+    established in 2018, with the aim of expanding eDNA technology and science.
+    Here, we introduce our key publication, “Environmental DNA Sampling and
+    Experiment Manual” (http://ednasociety.org/en/manual), which was published
+    under the initiative of the eDNA Society. Detailed methods for the surveys
+    and experiments are described in the manual, including the selection of
+    sampling sites, sampling methods, filtration methods, DNA extraction,
+    species-specific detection by real-time polymerase chain reaction, and fish
+    eDNA metabarcoding. The manual assists users in conducting standardized
+    surveys and quality experiments, and provides a basis for collecting
+    comparable data. Given that the efficacy of methods can be context dependent
+    and variable, and that procedures may sometimes conflict with
+    standardization, it is difficult to ensure that all processes are equally
+    effective. However, even in such cases, it is important to maintain
+    sufficiently high data quality by setting the minimum standards to be
+    followed. Implementation of such standardized methodologies will enable the
+    systematic and frequent collection of flawless, comparable eDNA data from
+    around the world; this will provide important fundamental information for
+    biodiversity conservation, as well as the sustainable use of fisheries
+    resources.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Minamoto
+      given: Toshifumi
+    - family: Miya
+      given: Masaki
+    - family: Sado
+      given: Tetsuya
+    - family: Seino
+      given: Satoquo
+    - family: Doi
+      given: Hideyuki
+    - family: Kondoh
+      given: Michio
+    - family: Nakamura
+      given: Keigo
+    - family: Takahara
+      given: Teruhiko
+    - family: Yamamoto
+      given: Satoshi
+    - family: Yamanaka
+      given: Hiroki
+    - family: Araki
+      given: Hitoshi
+    - family: Iwasaki
+      given: Wataru
+    - family: Kasai
+      given: Akihide
+    - family: Masuda
+      given: Reiji
+    - family: Uchii
+      given: Kimiko
+  citation-key: Minamoto2021illustratedmanualenvironmental
+  container-title: Environmental DNA
+  DOI: 10.1002/edn3.121
+  ISSN: 2637-4943
+  issue: '1'
+  issued:
+    - year: 2021
+  language: en
+  page: 8-13
+  source: Wiley Online Library
+  title: >-
+    An illustrated manual for environmental DNA research: Water sampling
+    guidelines and experimental protocols
+  title-short: An illustrated manual for environmental DNA research
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/edn3.121
+  volume: '3'
+
+- id: Miya2015MiFishsetuniversal
+  abstract: >-
+    We developed a set of universal PCR primers (MiFish-U/E) for metabarcoding
+    environmental DNA (eDNA) from fishes. Primers were designed using aligned
+    whole mitochondrial genome (mitogenome) sequences from 880 species,
+    supplemented by partial mitogenome sequences from 160 elasmobranchs (sharks
+    and rays). The primers target a hypervariable region of the 12S rRNA gene
+    (163–185 bp), which contains sufficient information to identify fishes to
+    taxonomic family, genus and species except for some closely related
+    congeners. To test versatility of the primers across a diverse range of
+    fishes, we sampled eDNA from four tanks in the Okinawa Churaumi Aquarium
+    with known species compositions, prepared dual-indexed libraries and
+    performed paired-end sequencing of the region using high-throughput
+    next-generation sequencing technologies. Out of the 180 marine fish species
+    contained in the four tanks with reference sequences in a custom database,
+    we detected 168 species (93.3%) distributed across 59 families and 123
+    genera. These fishes are not only taxonomically diverse, ranging from sharks
+    and rays to higher teleosts, but are also greatly varied in their ecology,
+    including both pelagic and benthic species living in shallow coastal to deep
+    waters. We also sampled natural seawaters around coral reefs near the
+    aquarium and detected 93 fish species using this approach. Of the 93
+    species, 64 were not detected in the four aquarium tanks, rendering the
+    total number of species detected to 232 (from 70 families and 152 genera).
+    The metabarcoding approach presented here is non-invasive, more efficient,
+    more cost-effective and more sensitive than the traditional survey methods.
+    It has the potential to serve as an alternative (or complementary) tool for
+    biodiversity monitoring that revolutionizes natural resource management and
+    ecological studies of fish communities on larger spatial and temporal
+    scales.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 19
+  author:
+    - family: Miya
+      given: M.
+    - family: Sato
+      given: Y.
+    - family: Fukunaga
+      given: T.
+    - family: Sado
+      given: T.
+    - family: Poulsen
+      given: J. Y.
+    - family: Sato
+      given: K.
+    - family: Minamoto
+      given: T.
+    - family: Yamamoto
+      given: S.
+    - family: Yamanaka
+      given: H.
+    - family: Araki
+      given: H.
+    - family: Kondoh
+      given: M.
+    - family: Iwasaki
+      given: W.
+  citation-key: Miya2015MiFishsetuniversal
+  container-title: Royal Society Open Science
+  DOI: 10.1098/rsos.150088
+  issue: '7'
+  issued:
+    - year: 2015
+      month: 7
+  page: '150088'
+  publisher: Royal Society
+  source: royalsocietypublishing.org (Atypon)
+  title: >-
+    MiFish, a set of universal PCR primers for metabarcoding environmental DNA
+    from fishes: detection of more than 230 subtropical marine species
+  title-short: >-
+    MiFish, a set of universal PCR primers for metabarcoding environmental DNA
+    from fishes
+  type: article-journal
+  URL: https://royalsocietypublishing.org/doi/10.1098/rsos.150088
+  volume: '2'
+
+- id: Miya2020MiFishmetabarcodinghighthroughput
+  abstract: "We reviewed the current methodology and practices of the DNA metabarcoding approach using a universal PCR primer pair MiFish, which co-amplifies a short fragment of fish DNA (approx. 170\_bp from the mitochondrial 12S rRNA gene) across a wide variety of taxa. This method has mostly been applied to biodiversity monitoring using environmental DNA (eDNA) shed from fish and, coupled with next-generation sequencing technologies, has enabled massively parallel sequencing of several hundred eDNA samples simultaneously. Since the publication of its technical outline in 2015, this method has been widely used in various aquatic environments in and around the six continents, and MiFish primers have demonstrably outperformed other competing primers. Here, we outline the technical progress in this method over the last 5\_years and highlight some case studies on marine, freshwater, and estuarine fish communities. Additionally, we discuss various applications of MiFish metabarcoding to non-fish organisms, single-species detection systems, quantitative biodiversity monitoring, and bulk DNA samples other than eDNA. By recognizing the MiFish eDNA metabarcoding strengths and limitations, we argue that this method is useful for ecosystem conservation strategies and the sustainable use of fishery resources in “ecosystem-based fishery management” through continuous biodiversity monitoring at multiple sites."
+  accessed:
+    - year: 2024
+      month: 1
+      day: 19
+  author:
+    - family: Miya
+      given: Masaki
+    - family: Gotoh
+      given: Ryo O.
+    - family: Sado
+      given: Tetsuya
+  citation-key: Miya2020MiFishmetabarcodinghighthroughput
+  container-title: Fisheries Science
+  container-title-short: Fish Sci
+  DOI: 10.1007/s12562-020-01461-x
+  ISSN: 1444-2906
+  issue: '6'
+  issued:
+    - year: 2020
+      month: 11
+      day: 1
+  language: en
+  page: 939-970
+  source: Springer Link
+  title: >-
+    MiFish metabarcoding: a high-throughput approach for simultaneous detection
+    of multiple fish species from environmental DNA and other samples
+  title-short: MiFish metabarcoding
+  type: article-journal
+  URL: https://doi.org/10.1007/s12562-020-01461-x
+  volume: '86'
+
+- id: Niku2019gllvmFastanalysis
+  abstract: >-
+    There has been rapid development in tools for multivariate analysis based on
+    fully specified statistical models or ‘joint models’. One approach
+    attracting a lot of attention is generalized linear latent variable models
+    (GLLVMs). However, software for fitting these models is typically slow and
+    not practical for large datasets. The r package gllvm offers relatively fast
+    methods to fit GLLVMs via maximum likelihood, along with tools for model
+    checking, visualization and inference. The main advantage of the package
+    over other implementations is speed, for example, being two orders of
+    magnitude faster, and capable of handling thousands of response variables.
+    These advances come from using variational approximations to simplify the
+    likelihood expression to be maximized, automatic differentiation software
+    for model-fitting (via the TMB package) and careful choice of initial values
+    for parameters. Examples are used to illustrate the main features and
+    functionality of the package, such as constrained or unconstrained
+    ordination, including functional traits in ‘fourth corner’ models, and (if
+    the number of environmental coefficients is not large) make inferences about
+    environmental associations.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 26
+  author:
+    - family: Niku
+      given: Jenni
+    - family: Hui
+      given: Francis K. C.
+    - family: Taskinen
+      given: Sara
+    - family: Warton
+      given: David I.
+  citation-key: Niku2019gllvmFastanalysis
+  container-title: Methods in Ecology and Evolution
+  DOI: 10.1111/2041-210X.13303
+  ISSN: 2041-210X
+  issue: '12'
+  issued:
+    - year: 2019
+  language: en
+  license: >-
+    © 2019 The Authors. Methods in Ecology and Evolution © 2019 British
+    Ecological Society
+  page: 2173-2182
+  source: Wiley Online Library
+  title: >-
+    gllvm: Fast analysis of multivariate abundance data with generalized linear
+    latent variable models in r
+  title-short: gllvm
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1111/2041-210X.13303
+  volume: '10'
+
+- id: Oksanen2022veganCommunityEcology
+  abstract: >-
+    Ordination methods, diversity analysis and other functions for community and
+    vegetation ecologists.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Oksanen
+      given: Jari
+    - family: Simpson
+      given: Gavin L.
+    - family: Blanchet
+      given: F. Guillaume
+    - family: Kindt
+      given: Roeland
+    - family: Legendre
+      given: Pierre
+    - family: Minchin
+      given: Peter R.
+    - family: O'Hara
+      given: R. B.
+    - family: Solymos
+      given: Peter
+    - family: Stevens
+      given: M. Henry H.
+    - family: Szoecs
+      given: Eduard
+    - family: Wagner
+      given: Helene
+    - family: Barbour
+      given: Matt
+    - family: Bedward
+      given: Michael
+    - family: Bolker
+      given: Ben
+    - family: Borcard
+      given: Daniel
+    - family: Carvalho
+      given: Gustavo
+    - family: Chirico
+      given: Michael
+    - family: Caceres
+      given: Miquel De
+    - family: Durand
+      given: Sebastien
+    - family: Evangelista
+      given: Heloisa Beatriz Antoniazi
+    - family: FitzJohn
+      given: Rich
+    - family: Friendly
+      given: Michael
+    - family: Furneaux
+      given: Brendan
+    - family: Hannigan
+      given: Geoffrey
+    - family: Hill
+      given: Mark O.
+    - family: Lahti
+      given: Leo
+    - family: McGlinn
+      given: Dan
+    - family: Ouellette
+      given: Marie-Helene
+    - family: Cunha
+      given: Eduardo Ribeiro
+    - family: Smith
+      given: Tyler
+    - family: Stier
+      given: Adrian
+    - family: Braak
+      given: Cajo J. F. Ter
+    - family: Weedon
+      given: James
+  citation-key: Oksanen2022veganCommunityEcology
+  issued:
+    - year: 2022
+      month: 10
+      day: 11
+  license: GPL-2
+  source: R-Packages
+  title: 'vegan: Community Ecology Package'
+  title-short: vegan
+  type: software
+  URL: https://cran.r-project.org/web/packages/vegan/
+  version: 2.6-4
+
+- id: Osada2023unifiedframeworknonparametric
+  abstract: >-
+    Most complex systems in the real world are driven by multiple interactions
+    among components. Identifying these interactions is critical for
+    understanding, forecasting, and controlling system-level phenomena. Transfer
+    entropy (TE) and convergent cross mapping (CCM) are two approaches for
+    nonparametric causality detection based on time-series data that enable the
+    identification of interactions with the minimal need for system
+    intervention. However, the theoretical relationship between TE and CCM has
+    not been formally explained. Here, we provide a theoretical formulation that
+    links TE and CCM, based on different definitions of causal influence, in an
+    information-theoretic framework. Furthermore, from the formulation, we
+    propose a novel nonparametric causality test, named unified
+    information-theoretic causality (UIC), which has lower data requirements
+    than those of TE (due to robustness to noise) and lower false-positive rates
+    than those of CCM. Numerical experiments confirmed that UIC outperforms TE
+    and CCM in terms of the performance of causality detection for both linear
+    and nonlinear dynamical systems. Finally, we demonstrate the practical
+    importance of the conditional test based on UIC using numerical simulations
+    with indirect causality and empirical data for microbial communities in
+    irrigated water samples from rice fields. Our results contribute to a
+    unified understanding of nonparametric causality tests in time series and
+    the accurate reconstruction of complex real-world systems.
+
+    Significance Statement Complex systems with multiple interacting components
+    are common in a wide range of scientific fields, including economics,
+    sociology, engineering, epidemiology, and ecology. Identifying interactions
+    among components is necessary for understanding and predicting system-level
+    phenomena. To this end, nonparametric causality tests based on time-series
+    data have attracted attention. In this study, we provide a theoretical
+    framework that integrates two major nonparametric causality tests, transfer
+    entropy and convergent cross mapping. Furthermore, from the integrated
+    framework, we propose a novel nonparametric causality test, named unified
+    information-theoretic causality, which shows greater accuracy and efficiency
+    compared with conventional methods. Our method enables the reconstruction of
+    large interacting systems from multivariate time-series data and can provide
+    insight into system-level phenomena, such as critical transitions.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Osada
+      given: Yutaka
+    - family: Ushio
+      given: Masayuki
+    - family: Michio
+      given: Kondoh
+  citation-key: Osada2023unifiedframeworknonparametric
+  DOI: 10.1101/2023.04.20.537743
+  issued:
+    - year: 2023
+      month: 4
+      day: 21
+  language: en
+  license: >-
+    © 2023, Posted by Cold Spring Harbor Laboratory. This pre-print is available
+    under a Creative Commons License (Attribution 4.0 International), CC BY 4.0,
+    as described at http://creativecommons.org/licenses/by/4.0/
+  page: 2023.04.20.537743
+  publisher: bioRxiv
+  section: New Results
+  source: bioRxiv
+  title: A unified framework for nonparametric causality detection
+  type: article
+  URL: https://www.biorxiv.org/content/10.1101/2023.04.20.537743v1
+
+- id: Osada2023yutakaosrUIC
+  abstract: R package for Unified Information-theoretic Causality
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Osada
+      given: Yutaka
+  citation-key: Osada2023yutakaosrUIC
+  genre: C++
+  issued:
+    - year: 2023
+      month: 2
+      day: 22
+  original-date:
+    - year: 2020
+      month: 4
+      day: 1
+  source: GitHub
+  title: yutakaos/rUIC
+  type: software
+  URL: https://github.com/yutakaos/rUIC
+
+- id: Peschel2021NetCoMinetworkconstruction
+  abstract: >-
+    Estimating microbial association networks from high-throughput sequencing
+    data is a common exploratory data analysis approach aiming at understanding
+    the complex interplay of microbial communities in their natural habitat.
+    Statistical network estimation workflows comprise several analysis steps,
+    including methods for zero handling, data normalization and computing
+    microbial associations. Since microbial interactions are likely to change
+    between conditions, e.g. between healthy individuals and patients,
+    identifying network differences between groups is often an integral
+    secondary analysis step. Thus far, however, no unifying computational tool
+    is available that facilitates the whole analysis workflow of constructing,
+    analysing and comparing microbial association networks from high-throughput
+    sequencing data.Here, we introduce NetCoMi (Network Construction and
+    comparison for Microbiome data), an R package that integrates existing
+    methods for each analysis step in a single reproducible computational
+    workflow. The package offers functionality for constructing and analysing
+    single microbial association networks as well as quantifying network
+    differences. This enables insights into whether single taxa, groups of taxa
+    or the overall network structure change between groups. NetCoMi also
+    contains functionality for constructing differential networks, thus allowing
+    to assess whether single pairs of taxa are differentially associated between
+    two groups. Furthermore, NetCoMi facilitates the construction and analysis
+    of dissimilarity networks of microbiome samples, enabling a high-level
+    graphical summary of the heterogeneity of an entire microbiome sample
+    collection. We illustrate NetCoMi’s wide applicability using data sets from
+    the GABRIELA study to compare microbial associations in settled dust from
+    children’s rooms between samples from two study centers (Ulm and Munich).R
+    scripts used for producing the examples shown in this manuscript are
+    provided as supplementary data. The NetCoMi package, together with a
+    tutorial, is available at https://github.com/stefpeschel/NetCoMi.Tel:+49 89
+    3187 43258; stefanie.peschel@mail.deSupplementary data are available at
+    Briefings in Bioinformatics online.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 26
+  author:
+    - family: Peschel
+      given: Stefanie
+    - family: Müller
+      given: Christian L
+    - family: Mutius
+      given: Erika
+      non-dropping-particle: von
+    - family: Boulesteix
+      given: Anne-Laure
+    - family: Depner
+      given: Martin
+  citation-key: Peschel2021NetCoMinetworkconstruction
+  container-title: Briefings in Bioinformatics
+  container-title-short: Briefings in Bioinformatics
+  DOI: 10.1093/bib/bbaa290
+  ISSN: 1477-4054
+  issue: '4'
+  issued:
+    - year: 2021
+      month: 7
+      day: 1
+  page: bbaa290
+  source: Silverchair
+  title: 'NetCoMi: network construction and comparison for microbiome data in R'
+  title-short: NetCoMi
+  type: article-journal
+  URL: https://doi.org/10.1093/bib/bbaa290
+  volume: '22'
+
+- id: RCoreTeam2023LanguageEnvironmentStatistical
+  author:
+    - literal: R Core Team
+  citation-key: RCoreTeam2023LanguageEnvironmentStatistical
+  issued:
+    - year: 2023
+      month: 10
+      day: 31
+  title: 'R: A Language and Environment for Statistical Computing'
+  type: webpage
+  URL: https://www.R-project.org
+
+- id: Rognes2016VSEARCHversatileopen
+  abstract: >-
+    Background VSEARCH is an open source and free of charge multithreaded 64-bit
+    tool for processing and preparing metagenomics, genomics and population
+    genomics nucleotide sequence data. It is designed as an alternative to the
+    widely used USEARCH tool (Edgar, 2010) for which the source code is not
+    publicly available, algorithm details are only rudimentarily described, and
+    only a memory-confined 32-bit version is freely available for academic use.
+    Methods When searching nucleotide sequences, VSEARCH uses a fast heuristic
+    based on words shared by the query and target sequences in order to quickly
+    identify similar sequences, a similar strategy is probably used in USEARCH.
+    VSEARCH then performs optimal global sequence alignment of the query against
+    potential target sequences, using full dynamic programming instead of the
+    seed-and-extend heuristic used by USEARCH. Pairwise alignments are computed
+    in parallel using vectorisation and multiple threads. Results VSEARCH
+    includes most commands for analysing nucleotide sequences available in
+    USEARCH version 7 and several of those available in USEARCH version 8,
+    including searching (exact or based on global alignment), clustering by
+    similarity (using length pre-sorting, abundance pre-sorting or a
+    user-defined order), chimera detection (reference-based or de novo),
+    dereplication (full length or prefix), pairwise alignment, reverse
+    complementation, sorting, and subsampling. VSEARCH also includes commands
+    for FASTQ file processing, i.e., format detection, filtering, read quality
+    statistics, and merging of paired reads. Furthermore, VSEARCH extends
+    functionality with several new commands and improvements, including
+    shuffling, rereplication, masking of low-complexity sequences with the
+    well-known DUST algorithm, a choice among different similarity definitions,
+    and FASTQ file format conversion. VSEARCH is here shown to be more accurate
+    than USEARCH when performing searching, clustering, chimera detection and
+    subsampling, while on a par with USEARCH for paired-ends read merging.
+    VSEARCH is slower than USEARCH when performing clustering and chimera
+    detection, but significantly faster when performing paired-end reads merging
+    and dereplication. VSEARCH is available at
+    https://github.com/torognes/vsearch under either the BSD 2-clause license or
+    the GNU General Public License version 3.0. Discussion VSEARCH has been
+    shown to be a fast, accurate and full-fledged alternative to USEARCH. A free
+    and open-source versatile tool for sequence analysis is now available to the
+    metagenomics community.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Rognes
+      given: Torbjørn
+    - family: Flouri
+      given: Tomáš
+    - family: Nichols
+      given: Ben
+    - family: Quince
+      given: Christopher
+    - family: Mahé
+      given: Frédéric
+  citation-key: Rognes2016VSEARCHversatileopen
+  container-title: PeerJ
+  container-title-short: PeerJ
+  DOI: 10.7717/peerj.2584
+  ISSN: 2167-8359
+  issued:
+    - year: 2016
+      month: 10
+      day: 18
+  language: en
+  page: e2584
+  publisher: PeerJ Inc.
+  source: peerj.com
+  title: 'VSEARCH: a versatile open source tool for metagenomics'
+  title-short: VSEARCH
+  type: article-journal
+  URL: https://peerj.com/articles/2584
+  volume: '4'
+
+- id: Russel2023Russel88MicEco
+  abstract: Various functions for analysis of microbial community data
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Russel
+      given: Jakob
+  citation-key: Russel2023Russel88MicEco
+  genre: R
+  issued:
+    - year: 2023
+      month: 12
+      day: 28
+  license: GPL-3.0
+  original-date:
+    - year: 2017
+      month: 3
+      day: 1
+  source: GitHub
+  title: Russel88/MicEco
+  type: software
+  URL: https://github.com/Russel88/MicEco
+
+- id: Sakata2022DevelopmentevaluationPCR
+  abstract: >-
+    Biodiversity monitoring is important for the conservation of natural
+    ecosystems in general, but particularly for amphibians, whose populations
+    are pronouncedly declining. However, amphibians’ ecological traits (e.g.
+    nocturnal or aquatic) often prevent their precise monitoring. Environmental
+    DNA (eDNA) metabarcoding – analysis of extra-organismal DNA released into
+    the environment – allows the easy and effective monitoring of the
+    biodiversity of aquatic organisms. Here, we developed and tested the utility
+    of original PCR primer sets. First, we conducted in vitro PCR amplification
+    tests with universal primer candidates using total DNA extracted from
+    amphibian tissues. Five primer sets successfully amplified the target DNA
+    fragments (partial 16S rRNA gene fragments of 160–311 bp) from all 16 taxa
+    tested (from the three living amphibian orders Anura, Caudata and
+    Gymnophiona). Next, we investigated the taxonomic resolution retrieved using
+    each primer set. The results revealed that the universal primer set
+    “Amph16S” had the highest resolution amongst the tested sets. Finally, we
+    applied Amph16S to the water samples collected in the field and evaluated
+    its detection capability by comparing the species detected using eDNA and
+    physical survey (capture-based sampling and visual survey) in multiple
+    agricultural ecosystems across Japan (160 sites in 10 areas). The eDNA
+    metabarcoding with Amph16S detected twice as many species as the physical
+    surveys (16 vs. 8 species, respectively), indicating the effectiveness of
+    Amph16S in biodiversity monitoring and ecological research for amphibian
+    communities.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Sakata
+      given: Masayuki K.
+    - family: Kawata
+      given: Mone U.
+    - family: Kurabayashi
+      given: Atsushi
+    - family: Kurita
+      given: Takaki
+    - family: Nakamura
+      given: Masatoshi
+    - family: Shirako
+      given: Tomoyasu
+    - family: Kakehashi
+      given: Ryosuke
+    - family: Nishikawa
+      given: Kanto
+    - family: Hossman
+      given: Mohamad Yazid
+    - family: Nishijima
+      given: Takashi
+    - family: Kabamoto
+      given: Junichi
+    - family: Miya
+      given: Masaki
+    - family: Minamoto
+      given: Toshifumi
+  citation-key: Sakata2022DevelopmentevaluationPCR
+  container-title: Metabarcoding and Metagenomics
+  DOI: 10.3897/mbmg.6.76534
+  ISSN: 2534-9708
+  issued:
+    - year: 2022
+      month: 2
+      day: 21
+  language: en
+  license: >-
+    2024 Masayuki K. Sakata, Mone U. Kawata, Atsushi Kurabayashi, Takaki Kurita,
+    Masatoshi Nakamura, Tomoyasu Shirako, Ryosuke Kakehashi, Kanto Nishikawa,
+    Mohamad Yazid Hossman, Takashi Nishijima, Junichi Kabamoto, Masaki Miya,
+    Toshifumi Minamoto
+  page: e76534
+  publisher: Pensoft Publishers
+  source: mbmg.pensoft.net
+  title: >-
+    Development and evaluation of PCR primers for environmental DNA (eDNA)
+    metabarcoding of Amphibia
+  type: article-journal
+  URL: https://mbmg.pensoft.net/article/76534/
+  volume: '6'
+
+- id: Sato2018MitoFishMiFishPipeline
+  abstract: >-
+    Fish mitochondrial genome (mitogenome) data form a fundamental basis for
+    revealing vertebrate evolution and hydrosphere ecology. Here, we report
+    recent functional updates of MitoFish, which is a database of fish
+    mitogenomes with a precise annotation pipeline MitoAnnotator. Most
+    importantly, we describe implementation of MiFish pipeline for metabarcoding
+    analysis of fish mitochondrial environmental DNA, which is a fast-emerging
+    and powerful technology in fish studies. MitoFish, MitoAnnotator, and MiFish
+    pipeline constitute a key platform for studies of fish evolution, ecology,
+    and conservation, and are freely available at
+    http://mitofish.aori.u-tokyo.ac.jp/ (last accessed April 7th, 2018).
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Sato
+      given: Yukuto
+    - family: Miya
+      given: Masaki
+    - family: Fukunaga
+      given: Tsukasa
+    - family: Sado
+      given: Tetsuya
+    - family: Iwasaki
+      given: Wataru
+  citation-key: Sato2018MitoFishMiFishPipeline
+  container-title: Molecular Biology and Evolution
+  container-title-short: Molecular Biology and Evolution
+  DOI: 10.1093/molbev/msy074
+  ISSN: 0737-4038
+  issue: '6'
+  issued:
+    - year: 2018
+      month: 6
+      day: 1
+  page: 1553-1555
+  source: Silverchair
+  title: >-
+    MitoFish and MiFish Pipeline: A Mitochondrial Genome Database of Fish with
+    an Analysis Pipeline for Environmental DNA Metabarcoding
+  title-short: MitoFish and MiFish Pipeline
+  type: article-journal
+  URL: https://doi.org/10.1093/molbev/msy074
+  volume: '35'
+
+- id: Takenaka2023DevelopmentnovelPCR
+  abstract: >-
+    DNA barcoding is a powerful tool that provides rapid, accurate, and
+    automatable species identification using standardized genetic region(s),
+    such as for revealing the existence of cryptic species and/or rare species
+    in biodiversity monitoring. DNA barcoding techniques require the development
+    of sets of universal PCR primers for DNA barcoding. We tried to develop
+    universal primer sets, and succeeded in designing not only universal primer
+    sets for DNA barcoding regions of almost all insects, which were designed to
+    include a hypervariable site between highly conserved sites, but also primer
+    sets for longer fragment sequences for registration in a database. We
+    confirmed successful amplification for 14 orders, 43 families, and 68
+    species with DNA barcoding in the mtDNA 16S rRNA region, and for 13 orders,
+    42 families, and 66 species with DNA barcoding in the mtDNA 12S rRNA region,
+    including Apterygota and Pterygota (Paleoptera, Polyneoptera, Paraneoptera,
+    and Oligoneoptera). A key feature is that the DNA fragments of the DNA
+    barcoding regions amplified by these primer sets are both short at about
+    200-bp, and longer fragment sequences will increase the level of data
+    registration in the DNA database. In addition, we evaluated the sensitivity
+    of these newly developed primers using Epeorus aesculus (Heptageniidae),
+    which inhabits a relatively wide range of river systems. The results of this
+    study revealed the existence of a cryptic species or an undescribed species.
+    Such resulting database enhancements will provide opportunities for
+    increasingly accurate assessment of biodiversity and genetic diversity.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Takenaka
+      given: Masaki
+    - family: Yano
+      given: Koki
+    - family: Suzuki
+      given: Tomoya
+    - family: Tojo
+      given: Koji
+  citation-key: Takenaka2023DevelopmentnovelPCR
+  container-title: Limnology
+  container-title-short: Limnology
+  DOI: 10.1007/s10201-022-00710-5
+  ISSN: 1439-863X
+  issue: '2'
+  issued:
+    - year: 2023
+      month: 4
+      day: 1
+  language: en
+  page: 121-136
+  source: Springer Link
+  title: >-
+    Development of novel PCR primer sets for DNA barcoding of aquatic insects,
+    and the discovery of some cryptic species
+  type: article-journal
+  URL: https://doi.org/10.1007/s10201-022-00710-5
+  volume: '24'
+
+- id: Tanabe2013TwoNewComputational
+  abstract: >-
+    Taxonomic identification of biological specimens based on DNA sequence
+    information (a.k.a. DNA barcoding) is becoming increasingly common in
+    biodiversity science. Although several methods have been proposed, many of
+    them are not universally applicable due to the need for prerequisite
+    phylogenetic/machine-learning analyses, the need for huge computational
+    resources, or the lack of a firm theoretical background. Here, we propose
+    two new computational methods of DNA barcoding and show a benchmark for
+    bacterial/archeal 16S, animal COX1, fungal internal transcribed spacer, and
+    three plant chloroplast (rbcL, matK, and trnH-psbA) barcode loci that can be
+    used to compare the performance of existing and new methods. The benchmark
+    was performed under two alternative situations: query sequences were
+    available in the corresponding reference sequence databases in one, but were
+    not available in the other. In the former situation, the commonly used
+    “1-nearest-neighbor” (1-NN) method, which assigns the taxonomic information
+    of the most similar sequences in a reference database (i.e., BLAST-top-hit
+    reference sequence) to a query, displays the highest rate and highest
+    precision of successful taxonomic identification. However, in the latter
+    situation, the 1-NN method produced extremely high rates of
+    misidentification for all the barcode loci examined. In contrast, one of our
+    new methods, the query-centric auto-k-nearest-neighbor (QCauto) method,
+    consistently produced low rates of misidentification for all the loci
+    examined in both situations. These results indicate that the 1-NN method is
+    most suitable if the reference sequences of all potentially observable
+    species are available in databases; otherwise, the QCauto method returns the
+    most reliable identification results. The benchmark results also indicated
+    that the taxon coverage of reference sequences is far from complete for
+    genus or species level identification in all the barcode loci examined.
+    Therefore, we need to accelerate the registration of reference barcode
+    sequences to apply high-throughput DNA barcoding to genus or species level
+    identification in biodiversity research.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Tanabe
+      given: Akifumi S.
+    - family: Toju
+      given: Hirokazu
+  citation-key: Tanabe2013TwoNewComputational
+  container-title: PLOS ONE
+  container-title-short: PLOS ONE
+  DOI: 10.1371/journal.pone.0076910
+  ISSN: 1932-6203
+  issue: '10'
+  issued:
+    - year: 2013
+      month: 10
+      day: 18
+  language: en
+  page: e76910
+  publisher: Public Library of Science
+  source: PLoS Journals
+  title: >-
+    Two New Computational Methods for Universal DNA Barcoding: A Benchmark Using
+    Barcode Sequences of Bacteria, Archaea, Animals, Fungi, and Land Plants
+  title-short: Two New Computational Methods for Universal DNA Barcoding
+  type: article-journal
+  URL: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0076910
+  volume: '8'
+
+- id: Tikhonov2020Jointspeciesdistribution
+  abstract: >-
+    Joint Species Distribution Modelling (JSDM) is becoming an increasingly
+    popular statistical method for analysing data in community ecology.
+    Hierarchical Modelling of Species Communities (HMSC) is a general and
+    flexible framework for fitting JSDMs. HMSC allows the integration of
+    community ecology data with data on environmental covariates, species
+    traits, phylogenetic relationships and the spatio-temporal context of the
+    study, providing predictive insights into community assembly processes from
+    non-manipulative observational data of species communities. The full range
+    of functionality of HMSC has remained restricted to Matlab users only. To
+    make HMSC accessible to the wider community of ecologists, we introduce Hmsc
+    3.0, a user-friendly r implementation. We illustrate the use of the package
+    by applying Hmsc 3.0 to a range of case studies on real and simulated data.
+    The real data consist of bird counts in a spatio-temporally structured
+    dataset, environmental covariates, species traits and phylogenetic
+    relationships. Vignettes on simulated data involve single-species models,
+    models of small communities, models of large species communities and models
+    for large spatial data. We demonstrate the estimation of species responses
+    to environmental covariates and how these depend on species traits, as well
+    as the estimation of residual species associations. We demonstrate how to
+    construct and fit models with different types of random effects, how to
+    examine MCMC convergence, how to examine the explanatory and predictive
+    powers of the models, how to assess parameter estimates and how to make
+    predictions. We further demonstrate how Hmsc 3.0 can be applied to normally
+    distributed data, count data and presence–absence data. The package, along
+    with the extended vignettes, makes JSDM fitting and post-processing easily
+    accessible to ecologists familiar with r.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 26
+  author:
+    - family: Tikhonov
+      given: Gleb
+    - family: Opedal
+      given: Øystein H.
+    - family: Abrego
+      given: Nerea
+    - family: Lehikoinen
+      given: Aleksi
+    - family: Jonge
+      given: Melinda M. J.
+      non-dropping-particle: de
+    - family: Oksanen
+      given: Jari
+    - family: Ovaskainen
+      given: Otso
+  citation-key: Tikhonov2020Jointspeciesdistribution
+  container-title: Methods in Ecology and Evolution
+  DOI: 10.1111/2041-210X.13345
+  ISSN: 2041-210X
+  issue: '3'
+  issued:
+    - year: 2020
+  language: en
+  license: >-
+    © 2019 The Authors. Methods in Ecology and Evolution published by John Wiley
+    & Sons Ltd on behalf of British Ecological Society.
+  page: 442-447
+  source: Wiley Online Library
+  title: Joint species distribution modelling with the r-package Hmsc
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1111/2041-210X.13345
+  volume: '11'
+
+- id: Ushio2017EnvironmentalDNAenables
+  abstract: >-
+    Terrestrial animals must have frequent contact with water to survive,
+    implying that environmental DNA (eDNA) originating from those animals should
+    be detectable from places containing water in terrestrial ecosystems. Aiming
+    to detect the presence of terrestrial mammals using forest water samples, we
+    applied a set of universal PCR primers (MiMammal, a modified version of fish
+    universal primers) for metabarcoding mammalian eDNA. The versatility of
+    MiMammal primers was tested in silico and by amplifying DNAs extracted from
+    tissues. The results suggested that MiMammal primers are capable of
+    amplifying and distinguishing a diverse group of mammalian species. In
+    addition, analyses of water samples from zoo cages of mammals with known
+    species composition suggested that MiMammal primers could successfully
+    detect mammalian species from water samples in the field. Then, we performed
+    an experiment to detect mammals from natural ecosystems by collecting five
+    500-ml water samples from ponds in two cool-temperate forests in Hokkaido,
+    northern Japan. MiMammal amplicon libraries were constructed using eDNA
+    extracted from water samples, and sequences generated by Illumina MiSeq were
+    subjected to data processing and taxonomic assignment. We thereby detected
+    multiple species of mammals common to the sampling areas, including deer
+    (Cervus nippon), mouse (Mus musculus), vole (Myodes rufocanus), raccoon
+    (Procyon lotor), rat (Rattus norvegicus) and shrew (Sorex unguiculatus).
+    Many previous applications of the eDNA metabarcoding approach have been
+    limited to aquatic/semiaquatic systems, but the results presented here show
+    that the approach is also promising even for forest mammal biodiversity
+    surveys.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Ushio
+      given: Masayuki
+    - family: Fukuda
+      given: Hisato
+    - family: Inoue
+      given: Toshiki
+    - family: Makoto
+      given: Kobayashi
+    - family: Kishida
+      given: Osamu
+    - family: Sato
+      given: Keiichi
+    - family: Murata
+      given: Koichi
+    - family: Nikaido
+      given: Masato
+    - family: Sado
+      given: Tetsuya
+    - family: Sato
+      given: Yukuto
+    - family: Takeshita
+      given: Masamichi
+    - family: Iwasaki
+      given: Wataru
+    - family: Yamanaka
+      given: Hiroki
+    - family: Kondoh
+      given: Michio
+    - family: Miya
+      given: Masaki
+  citation-key: Ushio2017EnvironmentalDNAenables
+  container-title: Molecular Ecology Resources
+  DOI: 10.1111/1755-0998.12690
+  ISSN: 1755-0998
+  issue: '6'
+  issued:
+    - year: 2017
+  language: en
+  license: © 2017 John Wiley & Sons Ltd
+  page: e63-e75
+  source: Wiley Online Library
+  title: >-
+    Environmental DNA enables detection of terrestrial mammals from forest pond
+    water
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1111/1755-0998.12690
+  volume: '17'
+
+- id: Ushio2018Demonstrationpotentialenvironmental
+  abstract: >-
+    Birds play unique functional roles in the maintenance of ecosystems, such as
+    pollination and seed dispersal, and thus monitoring bird species diversity
+    is a first step towards avoiding undesirable consequences of anthropogenic
+    impacts on bird communities. In the present study, we hypothesized that
+    birds, regardless of their main habitats, must have frequent contact with
+    water and that tissues that contain their DNA that persists in the
+    environment (environmental DNA; eDNA) could be used to detect the presence
+    of avian species. To this end, we applied a set of universal PCR primers
+    (MiBird, a modified version of fish/mammal universal primers) for
+    metabarcoding avian eDNA. We confirmed the versatility of MiBird primers by
+    performing in silico analyses and by amplifying DNAs extracted from bird
+    tissues. Analyses of water samples from zoo cages of birds with known
+    species composition suggested that the use of MiBird primers combined with
+    Illumina MiSeq could successfully detect avian species from water samples.
+    Additionally, analysis of water samples collected from a natural pond
+    detected five avian species common to the sampling areas. The present
+    findings suggest that avian eDNA metabarcoding would be a complementary
+    detection/identification tool in cases where visual census of bird species
+    is difficult.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Ushio
+      given: Masayuki
+    - family: Murata
+      given: Koichi
+    - family: Sado
+      given: Tetsuya
+    - family: Nishiumi
+      given: Isao
+    - family: Takeshita
+      given: Masamichi
+    - family: Iwasaki
+      given: Wataru
+    - family: Miya
+      given: Masaki
+  citation-key: Ushio2018Demonstrationpotentialenvironmental
+  container-title: Scientific Reports
+  container-title-short: Sci Rep
+  DOI: 10.1038/s41598-018-22817-5
+  ISSN: 2045-2322
+  issue: '1'
+  issued:
+    - year: 2018
+      month: 3
+      day: 14
+  language: en
+  license: 2018 The Author(s)
+  number: '1'
+  page: '4493'
+  publisher: Nature Publishing Group
+  source: www.nature.com
+  title: >-
+    Demonstration of the potential of environmental DNA as a tool for the
+    detection of avian species
+  type: article-journal
+  URL: https://www.nature.com/articles/s41598-018-22817-5
+  volume: '8'
+
+- id: Ushio2018Quantitativemonitoringmultispecies
+  abstract: >-
+    Effective ecosystem conservation and resource management require
+    quantitative monitoring of biodiversity, including accurate descriptions of
+    species composition and temporal variations of species abundance.
+    Accordingly, quantitative monitoring of biodiversity has been performed for
+    many ecosystems, but it is often time- and effort-consuming and costly.
+    Recent studies have shown that environmental DNA (eDNA), which is released
+    to the environment from macro-organisms living in a habitat, contains
+    information about species identity and abundance. Thus, analysing eDNA would
+    be a promising approach for more efficient biodiversity monitoring. In the
+    present study, internal standard DNAs (i.e. known amounts of short DNA
+    fragments from fish species that have never been observed in a sampling
+    area) were added to eDNA samples, which were collected weekly from a coastal
+    marine ecosystem in Maizuru Bay, Japan (from April 2015 to March 2016) and
+    metabarcoding analysis was performed using Illumina MiSeq to simultaneously
+    identify fish species and quantify fish eDNA copy numbers. A correction
+    equation was obtained for each sample using the relationship between the
+    number of sequence reads and the added amount of the standard DNAs and this
+    equation was used to estimate the copy numbers from the sequence reads of
+    non-standard fish eDNA. The calculated copy numbers showed significant
+    positive correlations with those determined by quantitative PCR, suggesting
+    that eDNA metabarcoding with standard DNA enabled useful quantification of
+    eDNA. Furthermore, for samples that show a high level of PCR inhibition,
+    this method might allow more accurate quantification than qPCR because the
+    correction equations generated using internal standard DNAs would include
+    the effect of PCR inhibition. A single run of Illumina MiSeq produced &gt;70
+    quantitative fish eDNA time series in this study, showing that this method
+    could contribute to more efficient and quantitative monitoring of
+    biodiversity.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Ushio
+      given: Masayuki
+    - family: Murakami
+      given: Hiroaki
+    - family: Masuda
+      given: Reiji
+    - family: Sado
+      given: Tetsuya
+    - family: Miya
+      given: Masaki
+    - family: Sakurai
+      given: Sho
+    - family: Yamanaka
+      given: Hiroki
+    - family: Minamoto
+      given: Toshifumi
+    - family: Kondoh
+      given: Michio
+  citation-key: Ushio2018Quantitativemonitoringmultispecies
+  container-title: Metabarcoding and Metagenomics
+  DOI: 10.3897/mbmg.2.23297
+  ISSN: 2534-9708
+  issued:
+    - year: 2018
+      month: 3
+      day: 14
+  language: en
+  license: >-
+    2024 Masayuki Ushio, Hiroaki Murakami, Reiji Masuda, Tetsuya Sado, Masaki
+    Miya, Sho Sakurai, Hiroki Yamanaka, Toshifumi Minamoto, Michio Kondoh
+  page: e23297
+  publisher: Pensoft Publishers
+  source: mbmg.pensoft.net
+  title: >-
+    Quantitative monitoring of multispecies fish environmental DNA using
+    high-throughput sequencing
+  type: article-journal
+  URL: https://mbmg.pensoft.net/article/23297/
+  volume: '2'
+
+- id: Ushio2022efficientearlypoolingprotocol
+  abstract: >-
+    Environmental DNA (eDNA) metabarcoding, a method that applies
+    high-throughput sequencing and universal primer sets to eDNA analysis, has
+    been a promising approach for efficient, comprehensive biodiversity
+    monitoring. However, significant money-, labor-, and time-costs are still
+    required for performing eDNA metabarcoding. In this study, we assessed the
+    performance of an “early-pooling” protocol (a protocol based on 1st PCR
+    tagging) to reduce the experimental costs of library preparation for eDNA
+    metabarcoding. Specifically, we performed three experiments to investigate
+    the effects of 1st PCR-tagging and 2nd PCR-indexing protocols on the
+    community composition revealed by eDNA metabarcoding, the effects of
+    post-1st PCR exonuclease purification on tag jumping (corresponds to index
+    hopping in 2nd PCR indexing), and the effects of the number of PCR
+    replicates and the eDNA template volume on the number of detected OTUs.
+    Analyses of 204 eDNA libraries from three natural aquatic ecosystems and one
+    mock eDNA sample showed that (i) 1st PCR tagging does not cause clear biases
+    in the outcomes of eDNA metabarcoding, (ii) post-1st PCR exonuclease
+    purification reduces the risk of tag jumping, and (iii) increasing the eDNA
+    template volume may increase the number of detected OTUs and reduce
+    variations in the detected community compositions, similar to increasing the
+    number of 1st PCR replicates. Our results show that an early-pooling
+    protocol with post-1st PCR exonuclease purification and an increased amount
+    of the DNA template reduces the risk of tag jumping, the costs for
+    consumables and reagents (except for many tagged 1st PCR primers), and the
+    handling time in library preparation, and produces similar results to a 2nd
+    PCR-indexing protocol. Therefore, once a target metabarcoding region is
+    selected and a set of tagged-1st PCR primers is prepared, the early-pooling
+    protocol provides a cost, labor, and time-efficient approach for processing
+    a large number of samples.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Ushio
+      given: Masayuki
+    - family: Furukawa
+      given: Saori
+    - family: Murakami
+      given: Hiroaki
+    - family: Masuda
+      given: Reiji
+    - family: Nagano
+      given: Atsushi J.
+  citation-key: Ushio2022efficientearlypoolingprotocol
+  container-title: Environmental DNA
+  DOI: 10.1002/edn3.337
+  ISSN: 2637-4943
+  issue: '6'
+  issued:
+    - year: 2022
+  language: en
+  license: © 2022 The Authors. Environmental DNA published by John Wiley & Sons Ltd.
+  page: 1212-1228
+  source: Wiley Online Library
+  title: An efficient early-pooling protocol for environmental DNA metabarcoding
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/edn3.337
+  volume: '4'
+
+- id: Warton2015ManyVariablesJoint
+  abstract: >-
+    Technological advances have enabled a new class of multivariate models for
+    ecology, with the potential now to specify a statistical model for
+    abundances jointly across many taxa, to simultaneously explore interactions
+    across taxa and the response of abundance to environmental variables. Joint
+    models can be used for several purposes of interest to ecologists, including
+    estimating patterns of residual correlation across taxa, ordination,
+    multivariate inference about environmental effects and environment-by-trait
+    interactions, accounting for missing predictors, and improving predictions
+    in situations where one can leverage knowledge of some species to predict
+    others. We demonstrate this by example and discuss recent computation tools
+    and future directions.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 26
+  author:
+    - family: Warton
+      given: David I.
+    - family: Blanchet
+      given: F. Guillaume
+    - family: O’Hara
+      given: Robert B.
+    - family: Ovaskainen
+      given: Otso
+    - family: Taskinen
+      given: Sara
+    - family: Walker
+      given: Steven C.
+    - family: Hui
+      given: Francis K. C.
+  citation-key: Warton2015ManyVariablesJoint
+  container-title: Trends in Ecology & Evolution
+  container-title-short: Trends in Ecology & Evolution
+  DOI: 10.1016/j.tree.2015.09.007
+  ISSN: 0169-5347
+  issue: '12'
+  issued:
+    - year: 2015
+      month: 12
+      day: 1
+  page: 766-779
+  source: ScienceDirect
+  title: 'So Many Variables: Joint Modeling in Community Ecology'
+  title-short: So Many Variables
+  type: article-journal
+  URL: https://www.sciencedirect.com/science/article/pii/S0169534715002402
+  volume: '30'
+
+- id: Wen2022ggClusterNetpackagemicrobiome
+  abstract: >-
+    The network analysis has attracted increasing attention and interest from
+    ecological academics, thus it is of great necessity to develop more
+    convenient and powerful tools. For that reason, we have developed an R
+    package, named “ggClusterNet,” to complete and display the network analysis
+    in an easier manner. In that package, ten network layout algorithms are
+    designed to better display the modules of microbiome network
+    (randomClusterG, PolygonClusterG, PolygonRrClusterG, ArtifCluster,
+    randSNEClusterG, PolygonModsquareG, PolyRdmNotdCirG, model_Gephi.2,
+    model_igraph, and model_maptree). For the convenience of the users, many
+    functions related to microbial network analysis, such as corMicor(),
+    net_properties(), node_properties(), ZiPiPlot(), random_Net_compate(), are
+    integrated to complete the network mining. Furthermore, the pipeline
+    function named network.2() and corBionetwork() are also added for the quick
+    achievement of the network or bipartite network analysis as well as their
+    in-depth mining. The ggClusterNet is publicly available via GitHub
+    (https://github.com/taowenmicro/ggClusterNet/) or Gitee
+    (https://gitee.com/wentaomicro/ggClusterNet) for users' access. A complete
+    description of the usages can be found on the manuscript's GitHub page
+    (https://github.com/taowenmicro/ggClusterNet/wiki).
+  accessed:
+    - year: 2024
+      month: 1
+      day: 26
+  author:
+    - family: Wen
+      given: Tao
+    - family: Xie
+      given: Penghao
+    - family: Yang
+      given: Shengdie
+    - family: Niu
+      given: Guoqing
+    - family: Liu
+      given: Xiaoyu
+    - family: Ding
+      given: Zhexu
+    - family: Xue
+      given: Chao
+    - family: Liu
+      given: Yong-Xin
+    - family: Shen
+      given: Qirong
+    - family: Yuan
+      given: Jun
+  citation-key: Wen2022ggClusterNetpackagemicrobiome
+  container-title: iMeta
+  DOI: 10.1002/imt2.32
+  ISSN: 2770-596X
+  issue: '3'
+  issued:
+    - year: 2022
+  language: en
+  license: >-
+    © 2022 The Authors. iMeta published by John Wiley & Sons Australia, Ltd on
+    behalf of iMeta Science.
+  page: e32
+  source: Wiley Online Library
+  title: >-
+    ggClusterNet: An R package for microbiome network analysis and
+    modularity-based multiple network layouts
+  title-short: ggClusterNet
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/imt2.32
+  volume: '1'
+
+- id: Ye2016Informationleverageinterconnected
+  abstract: >-
+    In ecological analysis, complexity has been regarded as an obstacle to
+    overcome. Here we present a straightforward approach for addressing
+    complexity in dynamic interconnected systems. We show that complexity, in
+    the form of multiple interacting components, can actually be an asset for
+    studying natural systems from temporal data. The central idea is that
+    multidimensional time series enable system dynamics to be reconstructed from
+    multiple viewpoints, and these viewpoints can be combined into a single
+    model. We show how our approach, multiview embedding (MVE), can improve
+    forecasts for simulated ecosystems and a mesocosm experiment. By leveraging
+    complexity, MVE is particularly effective for overcoming the limitations of
+    short and noisy time series and should be highly relevant for many areas of
+    science.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 23
+  author:
+    - family: Ye
+      given: Hao
+    - family: Sugihara
+      given: George
+  citation-key: Ye2016Informationleverageinterconnected
+  container-title: Science
+  DOI: 10.1126/science.aag0863
+  issue: '6302'
+  issued:
+    - year: 2016
+      month: 8
+      day: 26
+  page: 922-925
+  publisher: American Association for the Advancement of Science
+  source: science.org (Atypon)
+  title: >-
+    Information leverage in interconnected ecosystems: Overcoming the curse of
+    dimensionality
+  title-short: Information leverage in interconnected ecosystems
+  type: article-journal
+  URL: https://www.science.org/doi/10.1126/science.aag0863
+  volume: '353'
+
+- id: Zhu2023MitoFishMitoAnnotatorMiFish
+  abstract: >-
+    MitoFish, MitoAnnotator, and MiFish Pipeline are comprehensive databases of
+    fish mitochondrial genomes (mitogenomes), accurate annotation software of
+    fish mitogenomes, and a web platform for metabarcoding analysis of fish
+    mitochondrial environmental DNA (eDNA), respectively. The MitoFish Suite
+    currently receives over 48,000 visits worldwide every year; however, the
+    performance and usefulness of the online platforms can still be improved.
+    Here, we present essential updates on these platforms, including an
+    enrichment of the reference data sets, an enhanced searching function,
+    substantially faster genome annotation and eDNA analysis with the denoising
+    of sequencing errors, and a multisample comparative analysis function. These
+    updates have made our platform more intuitive, effective, and reliable.
+    These updated platforms are freely available at
+    http://mitofish.aori.u-tokyo.ac.jp/.
+  accessed:
+    - year: 2024
+      month: 1
+      day: 22
+  author:
+    - family: Zhu
+      given: Tao
+    - family: Sato
+      given: Yukuto
+    - family: Sado
+      given: Tetsuya
+    - family: Miya
+      given: Masaki
+    - family: Iwasaki
+      given: Wataru
+  citation-key: Zhu2023MitoFishMitoAnnotatorMiFish
+  container-title: Molecular Biology and Evolution
+  container-title-short: Molecular Biology and Evolution
+  DOI: 10.1093/molbev/msad035
+  ISSN: 1537-1719
+  issue: '3'
+  issued:
+    - year: 2023
+      month: 3
+      day: 1
+  page: msad035
+  source: Silverchair
+  title: 'MitoFish, MitoAnnotator, and MiFish Pipeline: Updates in 10 Years'
+  title-short: MitoFish, MitoAnnotator, and MiFish Pipeline
+  type: article-journal
+  URL: https://doi.org/10.1093/molbev/msad035
+  volume: '40'
+
+- id: 土居2011生物群集解析のための類似度とその応用Rを使った類似度の算出グラフ化
+  abstract: >-
+    群集生態学では、古くから類似度指数を用いた解析が頻繁に用いられてきた。しかし近年、汎用性の高い新たな類似度や検定手法が提案されているにもかかわらず、それらが十分に普及し利用されているとは言い難い。そこで、本総説では、現在までに発表されている代表的で有用な類似度、それを使ったグラフ表示、統計的検定について解説を行う。各類似度の成り立ち、指数ごとの特性、利用方法について初学者向けの説明を試みる。各種手法の理解の助けのため、統計ソフトRのveganパッケージを用いた分析を取り上げ、例題や付録のRコードを用いてveganによる解析手順を紹介する。利用実態としては、Jaccard指数など古くから提案されている指数が近年でも多く用いられているが、Chaoによって近年開発された指数は希少種を考慮した汎用性の高い類似度指数として優れており、Chao指数の利用が促進されることが望ましい。また、類似度を用いた検定についてもPERMANOVAなどの新しい統計手法の利用が図られるべきである。今後の群集解析において、これらの手法が取り入れられることにより、より適切な生態系の評価が行われ、新たな発見につながることが期待される。
+  author:
+    - family: 土居
+      given: 秀幸
+    - family: 岡村
+      given: 寛
+  citation-key: 土居2011生物群集解析のための類似度とその応用Rを使った類似度の算出グラフ化
+  container-title: 日本生態学会誌
+  DOI: 10.18960/seitai.61.1_3
+  issue: '1'
+  issued:
+    - year: 2011
+  language: ja
+  page: 3-20
+  source: J-Stage
+  title: '生物群集解析のための類似度とその応用: Rを使った類似度の算出、グラフ化、検定'
+  title-short: 生物群集解析のための類似度とその応用
+  type: article-journal
+  volume: '61'
+
+- id: 門脇2016メタゲノムデータを用いた群集統計解析法レアファクションから仮説検定まで
+  author:
+    - family: 門脇
+      given: 浩明
+  citation-key: 門脇2016メタゲノムデータを用いた群集統計解析法レアファクションから仮説検定まで
+  container-title: 日本生態学会第６３回大会講演資料
+  issued:
+    - year: 2016
+      month: 3
+      day: 24
+  language: ja
+  title: メタゲノムデータを用いた群集統計解析法：レアファクションから仮説検定まで
+  type: post-weblog
+  URL: >-
+    https://www.fifthdimension.jp/wiki.cgi?page=%BC%AB%CD%B3%BD%B8%B2%F12016%A1%A7%A5%E1%A5%BF%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%A1%A6%B4%C4%B6%ADDNA%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%B2%F2%C0%CF%A4%CE%B5%BB%CB%A1
+...
