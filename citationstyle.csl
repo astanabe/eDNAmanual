@@ -34,7 +34,7 @@
   </locale>
   <macro name="editor">
     <names variable="editor" delimiter=", ">
-      <name and="text" initialize-with=". " delimiter=", "/>
+      <name and="text" delimiter=", "/>
       <label form="short" prefix=" (" text-case="capitalize-first" suffix=")" strip-periods="true"/>
     </names>
   </macro>
@@ -43,7 +43,7 @@
   </macro>
   <macro name="author">
     <names variable="author">
-      <name name-as-sort-order="all" and="symbol" sort-separator=", " initialize-with="." delimiter-precedes-last="never" delimiter=", "/>
+      <name name-as-sort-order="all" and="symbol" sort-separator=", " delimiter-precedes-last="never" delimiter=", "/>
       <et-al font-style="italic"/>
       <label form="short" prefix=" "/>
       <substitute>
@@ -54,7 +54,7 @@
   </macro>
   <macro name="author-short">
     <names variable="author">
-      <name form="short" and="symbol" delimiter=", " delimiter-precedes-last="never" initialize-with=". "/>
+      <name form="short" and="symbol" delimiter=", " delimiter-precedes-last="never"/>
       <et-al font-style="italic"/>
       <substitute>
         <names variable="editor"/>

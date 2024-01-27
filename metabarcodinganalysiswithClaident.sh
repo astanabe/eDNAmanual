@@ -1,2 +1,2 @@
-pandoc metabarcodinganalysiswithClaident.md -o metabarcodinganalysiswithClaident.pdf --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.bib --csl=zootaxa.csl --pdf-engine=lualatex -H template.tex
-pandoc metabarcodinganalysiswithClaident.md -o metabarcodinganalysiswithClaident.docx --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.bib --csl=zootaxa.csl
+pandoc metabarcodinganalysiswithClaident.md -o metabarcodinganalysiswithClaident.pdf --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.bib --csl=citationstyle.csl --pdf-engine=lualatex -H template.tex
+pandoc metabarcodinganalysiswithClaident.md -o metabarcodinganalysiswithClaident.docx --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.bib --csl=citationstyle.csl
