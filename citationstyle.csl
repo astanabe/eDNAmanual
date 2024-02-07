@@ -69,7 +69,7 @@
         <choose>
           <if variable="URL">
             <group delimiter=" ">
-              <text variable="URL" prefix="Available from: "/>
+              <text variable="URL" prefix=" "/>
               <group prefix="(" suffix=")">
                 <date variable="accessed" form="text"/>
               </group>
