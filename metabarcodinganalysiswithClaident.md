@@ -447,7 +447,7 @@ rm -rf temporary bcl-convert-4.2.4-2.el8.x86_64.rpm
 ```
 
 なお、このプログラムはmacOSには対応していません。
-macOS上で実行するには、仮想マシンプログラムをインストールして仮想マシン上にLinuxをインストールし、そのLinux上にbcl2fastqをインストールする必要があります。
+macOS上で実行するには、仮想マシンプログラムをインストールして仮想マシン上にLinuxをインストールし、そのLinux上にBCL Convertをインストールする必要があります。
 
 BCL Convertでundemultiplexed FASTQを生成するには、下記の内容の「`Dummy.csv`」をテキストエディタで作成します。
 
@@ -1337,6 +1337,8 @@ OTU組成表があれば群集生態学解析はできますが、このまま�
 しかし、メタバーコードデータではシーケンスエラーが大量に存在するために、これらの数が十分信用できるものとは考えられていません [@Chiu2016Estimatingcomparingmicrobial] 。
 デノイジングしたデータなら問題ないのではとも思えるかもしれませんが、その証拠も十分でないのが現状です。
 @Chiu2016Estimatingcomparingmicrobial はそのようなシーケンスエラーのあるデータでもシングルトン数を修正する方法を提案しており、metagMiscというRパッケージの`phyloseq_coverage_raref()`関数で`correct_singletons`を有効にしてレアファクションすることで、この方法が適用できます。
+
+デノイジングの影響について説明
 
 ここで、 $(1 - レアファクションカーブの傾き)$ はカバレッジそのものと捉えることができます [@Chao2012Coveragebasedrarefactionextrapolation] 。
 これに基づいて、Claidentではレアファクションカーブの端点の傾きをサンプル間で揃えるレアファクションをサポートしています。
