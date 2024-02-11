@@ -847,6 +847,7 @@ MiFishで増幅されるのはミトコンドリア12S領域の一部なので�
 ```default
 clremovecontam \
 --test=thompson \
+--ignoresamplelist=blanklist.txt \
 --index1file=index1.fasta \
 --index2file=index2.fasta \
 --numthreads=NumberOfCPUcores \
@@ -859,6 +860,9 @@ clremovecontam \
 `--test`
 : 検定方法を指定(THOMPSON | BINOMIALから選択)
 
+`--ignoresamplelist`
+: インデックスホッピング除去の対象外にするサンプルIDリストを記したテキストファイル
+
 `--index1file`
 : リバース側インデックス配列ファイル(`clsplitseq`に与えたものと同じ)
 
@@ -868,6 +872,8 @@ clremovecontam \
 コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。
 
 このコマンドは、各サンプルに対して、「片方のインデックスを共有する、未使用のインデックスの組み合わせ」(共有していない方のインデックスのインデックスホッピングによって生じたものである可能性がある)におけるそのASVのリード数に対して、サンプルにおけるASVのリード数が外れ値でないのであれば、それはインデックスホッピング由来であると判定して0に置換します。
+
+なお、ブランクからインデックスホッピングを除去してしまうと、次節で行うネガティブコントロールを利用したデコンタミネーションの際に使用する情報が失われてしまい支障を来すため、処理の対象外とします。
 
 ### clremovecontamとネガティブコントロールを利用したデコンタミネーション
 
@@ -1273,6 +1279,7 @@ clfiltersum \
 
 ```default
 clfiltersum \
+--negativeotuseq=standard.fasta \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
@@ -1282,6 +1289,9 @@ clfiltersum \
 ```
 
 コマンドラインオプションの意味は以下の通りです。
+
+`--negativeotuseq`
+: 指定したFASTA配列ファイルに含まれる配列名と一致するOTUのデータを除外する
 
 `--taxfile`
 : 分子同定結果のタブ区切りテキストファイル(`classigntax`の出力フォーマットのもの)
@@ -1295,6 +1305,7 @@ clfiltersum \
 
 ```default
 clfiltersum \
+--negativeotuseq=standard.fasta \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
@@ -1316,6 +1327,7 @@ head -n 1 12_community/sample_otu_matrix_fishes.tsv \
 
 ```default
 clfiltersum \
+--negativeotuseq=standard.fasta \
 --negativeotulist=12_community/fishotus.txt \
 12_community/sample_otu_matrix_all.tsv \
 12_community/sample_otu_matrix_nonfishes2.tsv
@@ -1404,6 +1416,7 @@ done
 ```default
 for n in `seq -w 1 10`
 do clfiltersum \
+--negativeotuseq=standard.fasta \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
@@ -1418,6 +1431,7 @@ done
 ```default
 for n in `seq -w 1 10`
 do clfiltersum \
+--negativeotuseq=standard.fasta \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \

@@ -70,6 +70,7 @@ clremovechimev \
 #eliminating index-hopping
 clremovecontam \
 --test=thompson \
+--ignoresamplelist=blanklist.txt \
 --index1file=index1.fasta \
 --index2file=index2.fasta \
 --numthreads=4 \
@@ -171,6 +172,7 @@ clfiltersum \
 
 #extracting fish otus
 clfiltersum \
+--negativeotuseq=standard.fasta \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
@@ -180,6 +182,7 @@ clfiltersum \
 
 #extracting non-fish otus
 clfiltersum \
+--negativeotuseq=standard.fasta \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
@@ -194,6 +197,7 @@ head -n 1 12_community/sample_otu_matrix_fishes.tsv \
 
 #extracting non-fish otus
 clfiltersum \
+--negativeotuseq=standard.fasta \
 --negativeotulist=12_community/fishotus.txt \
 12_community/sample_otu_matrix_all.tsv \
 12_community/sample_otu_matrix_nonfishes2.tsv
@@ -218,6 +222,7 @@ done
 #extracting fish otus of rarefied tables
 for n in `seq -w 1 10`
 do clfiltersum \
+--negativeotuseq=standard.fasta \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
@@ -229,6 +234,7 @@ done
 #extracting non-fish otus of rarefied tables
 for n in `seq -w 1 10`
 do clfiltersum \
+--negativeotuseq=standard.fasta \
 --taxfile=11_taxonomy/taxonomy_merged_filled.tsv \
 --excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
@@ -256,7 +262,7 @@ do clestimateconc \
 --watervoltable=watervoltable.tsv \
 --numthreads=4 \
 12_community/sample_otu_matrix_fishes_rarefied-r$n.tsv \
-12_community/sample_otu_matrix_fishes_rarefied-r$n_concentration.tsv
+12_community/sample_otu_matrix_fishes_rarefied-r$n\_concentration.tsv
 done
 
 #making species composition table based on number of reads
