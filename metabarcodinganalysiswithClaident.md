@@ -719,7 +719,6 @@ Pseudo-pooling法に関してはDADA2の公式Webサイトをご参照下さい�
 clremovechimev \
 --mode=denovo \
 --uchimedenovo=3 \
---numthreads=NumberOfCPUcores \
 05_denoised \
 06_chimeraremoved
 ```
@@ -764,8 +763,8 @@ clclusterstdv \
 @Ushio2022efficientearlypoolingprotocol のAppendix S1に掲載されているMiFish用内部標準配列はこの条件を満たしています。
 内部標準配列と実在する生物の塩基配列の類似度が高く(0.85以上)、内部標準DNAの合成エラー率が低いと期待できる場合は0.97程度まで値を大きくしても構いません。
 内部標準DNAの合成エラー率が低いと期待できるかどうかは、合成業者の公称エラー率や合成方法などから判断します。
-判断が難しい場合は、値を0.90～0.97の範囲で0.01間隔で変化させ、内部標準DNAと判定される配列数が急激に変化するところを探し、変化点の小さい方に設定します。
-内部標準DNAと判定される配列数が急激に変化するところが見つからない場合、内部標準DNAの合成エラー率が非常に高い、または内部標準配列に似た配列を持った生物の配列が含まれている、またはその両方であり定量は不可能と考えられるため、内部標準DNAの合成を業者に依頼するところから全てやり直す必要があります。
+判断が難しい場合は、値を0.90～0.97の範囲で0.01間隔で変化させ、内部標準DNAと判定されるリード数が急激に変化するところを探し、変化点の小さい方に設定します。
+内部標準DNAと判定されるリード数が急激に変化するところが見つからない場合、内部標準DNAの合成エラー率が非常に高い、または内部標準配列に似た配列を持った生物の配列が含まれている、またはその両方であり定量は不可能と考えられるため、内部標準DNAの合成を業者に依頼するところから全てやり直す必要があります。
 合成された内部標準DNAと生物のDNAの区別ができないので、非定量メタバーコーディングとしてもデータを使用することはできません。
 
 ### clremovechimevによる参照配列データベースを用いたキメラ除去
@@ -1071,7 +1070,7 @@ clidentseq \
 --ignoreotuseq=standard.fasta \
 --numthreads=NumberOfCPUcores \
 10_decontaminated/decontaminated.fasta \
-11_taxonomy/neighborhoods_qc_species_wsp.txt
+11_taxonomy/neighborhoods_qcauto_species_wsp.txt
 ```
 
 コマンドラインオプションの意味は以下の通りです。
@@ -1094,8 +1093,8 @@ clidentseq \
 ```default
 classigntax \
 --taxdb=animals_mt_species_wsp \
-11_taxonomy/neighborhoods_qc_species_wsp.txt \
-11_taxonomy/taxonomy_qc_species_wsp.tsv
+11_taxonomy/neighborhoods_qcauto_species_wsp.txt \
+11_taxonomy/taxonomy_qcauto_species_wsp.tsv
 ```
 
 コマンドラインオプションの意味は以下の通りです。
@@ -1120,7 +1119,7 @@ clidentseq \
 --ignoreotuseq=standard.fasta \
 --numthreads=NumberOfCPUcores \
 10_decontaminated/decontaminated.fasta \
-11_taxonomy/neighborhoods_3nn_species_wsp.txt
+11_taxonomy/neighborhoods_95p3nn_species_wsp.txt
 ```
 
 #### classigntaxによる分類群の割当
@@ -1131,8 +1130,8 @@ clidentseq \
 classigntax \
 --taxdb=animals_mt_species_wsp \
 --minnsupporter=1 \
-11_taxonomy/neighborhoods_3nn_species_wsp.txt \
-11_taxonomy/taxonomy_3nn_species_wsp.tsv
+11_taxonomy/neighborhoods_95p3nn_species_wsp.txt \
+11_taxonomy/taxonomy_95p3nn_species_wsp.tsv
 ```
 
 コマンドラインオプションの意味は以下の通りです。
@@ -1149,15 +1148,15 @@ classigntax \
 ```default
 clmakeidentdb \
 --append \
-11_taxonomy/neighborhoods_qc_species_wsp.txt \
-11_taxonomy/qc_species_wsp.identdb
+11_taxonomy/neighborhoods_qcauto_species_wsp.txt \
+11_taxonomy/qcauto_species_wsp.identdb
 ```
 
 ```default
 clmakeidentdb \
 --append \
-11_taxonomy/neighborhoods_3nn_species_wsp.txt \
-11_taxonomy/3nn_species_wsp.identdb
+11_taxonomy/neighborhoods_95p3nn_species_wsp.txt \
+11_taxonomy/95p3nn_species_wsp.identdb
 ```
 コマンドラインオプションの意味は以下の通りです。
 
@@ -1182,8 +1181,8 @@ clmakeidentdb \
 clmergeassign \
 --preferlower \
 --priority=descend \
-11_taxonomy/taxonomy_qc_species_wsp.tsv \
-11_taxonomy/taxonomy_3nn_species_wsp.tsv \
+11_taxonomy/taxonomy_qcauto_species_wsp.tsv \
+11_taxonomy/taxonomy_95p3nn_species_wsp.tsv \
 11_taxonomy/taxonomy_merged.tsv
 ```
 
@@ -1338,7 +1337,9 @@ OTU組成表があれば群集生態学解析はできますが、このまま�
 デノイジングしたデータなら問題ないのではとも思えるかもしれませんが、その証拠も十分でないのが現状です。
 @Chiu2016Estimatingcomparingmicrobial はそのようなシーケンスエラーのあるデータでもシングルトン数を修正する方法を提案しており、metagMiscというRパッケージの`phyloseq_coverage_raref()`関数で`correct_singletons`を有効にしてレアファクションすることで、この方法が適用できます。
 
-デノイジングの影響について説明
+ただし、 @Chiu2016Estimatingcomparingmicrobial の方法は未デノイジングデータを前提とした方法です。
+デノイジングを適用すると、シングルトンを含むリード数の少ないASVは、捨てられたり近隣のリード数がより大きいASVのシーケンスエラー由来とみなされ、未デノイジングデータから激減します。
+このため、 @Chiu2016Estimatingcomparingmicrobial の方法はそのまま適用することは問題があると考えられます。
 
 ここで、 $(1 - レアファクションカーブの傾き)$ はカバレッジそのものと捉えることができます [@Chao2012Coveragebasedrarefactionextrapolation] 。
 これに基づいて、Claidentではレアファクションカーブの端点の傾きをサンプル間で揃えるレアファクションをサポートしています。
@@ -1353,8 +1354,8 @@ OTU組成表があれば群集生態学解析はできますが、このまま�
 ```default
 clrarefysum \
 --minpcov=0.99 \
---minnread=1000 \
---nreps=10 \
+--minntotalseqsample=1000 \
+--nreplicate=10 \
 --numthreads=NumberOfCPUcores \
 12_community/sample_otu_matrix_all.tsv \
 12_community/sample_otu_matrix_all_rarefied
@@ -1365,13 +1366,27 @@ clrarefysum \
 `--minpcov`
 : 揃えるカバレッジの下限(下回るサンプルは捨てる)
 
-`--minnread`
+`--minntotalseqsample`
 : レアファクション前のリード数下限(下回るサンプルは捨てる)
 
-`--nreps`
+`--nreplicate`
 : レアファクションの反復数
 
 コマンドラインオプションに引き続いて、入力ファイル、出力ファイルの接頭辞を指定します。
+
+実行後に生成される出力ファイルは以下の通りです。
+
+`出力ファイルの接頭辞-r数字.tsv`
+: レアファクションされたOTU組成表のタブ区切りテキスト
+
+`出力ファイルの接頭辞_inputpcov.tsv`
+: 入力された各サンプルのカバレッジ推定値のタブ区切りテキスト
+
+`出力ファイルの接頭辞_outputpcov.tsv`
+: 出力された各サンプルのカバレッジ値のタブ区切りテキスト
+
+`出力ファイルの接頭辞_outputnseq.tsv`
+: 出力された各サンプルの合計リード数のタブ区切りテキスト
 
 レアファクションが終わったら、以下のコマンドにより10反復全てで内部標準OTUのみを取り出します。
 
@@ -1379,8 +1394,8 @@ clrarefysum \
 for n in `seq -w 1 10`
 do clfiltersum \
 --otuseq=standard.fasta \
-12_community/sample_otu_matrix_all_rarefied$n.tsv \
-12_community/sample_otu_matrix_standard_rarefied$n.tsv
+12_community/sample_otu_matrix_all_rarefied-r$n.tsv \
+12_community/sample_otu_matrix_standard_rarefied-r$n.tsv
 done
 ```
 
@@ -1393,8 +1408,8 @@ do clfiltersum \
 --includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
 --includetaxa=subclass,Dipnomorpha \
-12_community/sample_otu_matrix_all_rarefied$n.tsv \
-12_community/sample_otu_matrix_fishes_rarefied$n.tsv
+12_community/sample_otu_matrix_all_rarefied-r$n.tsv \
+12_community/sample_otu_matrix_fishes_rarefied-r$n.tsv
 done
 ```
 
@@ -1407,8 +1422,8 @@ do clfiltersum \
 --excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \
 --excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \
 --excludetaxa=subclass,Dipnomorpha \
-12_community/sample_otu_matrix_all_rarefied$n.tsv \
-12_community/sample_otu_matrix_nonfishes_rarefied$n.tsv
+12_community/sample_otu_matrix_all_rarefied-r$n.tsv \
+12_community/sample_otu_matrix_nonfishes_rarefied-r$n.tsv
 done
 ```
 
@@ -1417,7 +1432,7 @@ done
 metagMiscにしろClaidentにしろ、これらのカバレッジベースレアファクションで行えるのはあくまで「群集に対するシーケンシングカバレッジの均一化」に過ぎないことは注意が必要です。
 「採水した水の、群集に対するカバレッジの均一化」や「濾過フィルター上に捕集したDNAの、群集に対するカバレッジの均一化」や「PCRに投入するDNA溶液の、群集に対するカバレッジの均一化」はなされていません。
 メタバーコーディングではサンプリング、つまり「一部を取り出す」ステップが多数存在するため、均一性が問題になるのはシーケンシングカバレッジだけではありません。
-しかし、それらは全て飽和している(カバレッジ1.0)という仮定のもとでこの先の解析は行われます。
+しかし、それらは全て飽和している(カバレッジがほぼ1.0)という仮定のもとでこの先の解析は行われます。
 もし何か異常な結果が得られた際には、この仮定が満たされていない可能性について検討すべきかもしれません。
 
 ### clestimateconcと内部標準DNAリード数を用いたDNA濃度の推定
@@ -1456,13 +1471,13 @@ clestimateconc \
 ```default
 for n in `seq -w 1 10`
 do clestimateconc \
---stdtable=12_community/sample_otu_matrix_standard_rarefied$n.tsv \
+--stdtable=12_community/sample_otu_matrix_standard_rarefied-r$n.tsv \
 --stdconctable=stdconctable.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
 --numthreads=NumberOfCPUcores \
-12_community/sample_otu_matrix_fishes_rarefied$n.tsv \
-12_community/sample_otu_matrix_fishes_rarefied$n_concentration.tsv
+12_community/sample_otu_matrix_fishes_rarefied-r$n.tsv \
+12_community/sample_otu_matrix_fishes_rarefied-r$n_concentration.tsv
 done
 ```
 
