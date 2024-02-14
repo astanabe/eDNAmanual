@@ -126,7 +126,7 @@ clidentseq \
 #taxonomic assignment based on 95%-3NN method
 classigntax \
 --taxdb=animals_mt_species_wsp \
---minnsupporter=1 \
+--minnsupporter=3 \
 11_taxonomy/neighborhoods_95p3nn_species_wsp.txt \
 11_taxonomy/taxonomy_95p3nn_species_wsp.tsv
 
