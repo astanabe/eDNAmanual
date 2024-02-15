@@ -1644,7 +1644,7 @@ clsumtaxa \
 - MicEco <https://github.com/Russel88/MicEco>
 - iNEXT.beta3D <https://github.com/KaiHsiangHu/iNEXT.beta3D> [@Chao2023Rarefactionextrapolationbeta]
 - bipartite <https://github.com/biometry/bipartite>
-- pvclust <https://github.com/shimo-lab/pvclust>
+- pvclust <https://github.com/shimo-lab/pvclust> [@Suzuki2006Pvclustpackageassessing]
 - mpmcorrelogram <https://cran.r-project.org/web/packages/mpmcorrelogram/>
 - boral <https://cran.r-project.org/web/packages/boral/> [@Hui2016boralBayesianOrdination]
 - gllvm <https://github.com/JenniNiku/gllvm> [@Niku2019gllvmFastanalysis]

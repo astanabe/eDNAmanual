@@ -1759,6 +1759,141 @@ references:
   URL: https://doi.org/10.1093/molbev/msy074
   volume: '35'
 
+- id: Shimodaira2002ApproximatelyUnbiasedTest
+  abstract: >-
+    An approximately unbiased (AU) test that uses a newly devised multiscale
+    bootstrap technique was developed for general hypothesis testing of regions
+    in an attempt to reduce test bias. It was applied to maximum-likelihood tree
+    selection for obtaining the confidence set of trees. The AU test is based on
+    the theory of Efron et al. (Proc. Natl. Acad. Sci. USA 93:13429–13434;
+    1996), but the new method provides higher-order accuracy yet simpler
+    implementation. The AU test, like the Shimodaira–Hasegawa (SH) test, adjusts
+    the selection bias overlooked in the standard use of the bootstrap
+    probability and Kishino–Hasegawa tests. The selection bias comes from
+    comparing many trees at the same time and often leads to overconfidence in
+    the wrong trees. The SH test, though safe to use, may exhibit another type
+    of bias such that it appears conservative. Here I show that the AU test is
+    less biased than other methods in typical cases of tree selection. These
+    points are illustrated in a simulation study as well as in the analysis of
+    mammalian mitochondrial protein sequences. The theoretical argument provides
+    a simple formula that covers the bootstrap probability test, the
+    Kishino–Hasegawa test, the AU test, and the Zharkikh–Li test. A practical
+    suggestion is provided as to which test should be used under particular
+    circumstances.
+  accessed:
+    - year: 2024
+      month: 2
+      day: 15
+  author:
+    - family: Shimodaira
+      given: Hidetoshi
+  citation-key: Shimodaira2002ApproximatelyUnbiasedTest
+  container-title: Systematic Biology
+  container-title-short: Systematic Biology
+  DOI: 10.1080/10635150290069913
+  ISSN: 1063-5157
+  issue: '3'
+  issued:
+    - year: 2002
+      month: 5
+      day: 1
+  page: 492-508
+  source: Silverchair
+  title: An Approximately Unbiased Test of Phylogenetic Tree Selection
+  type: article-journal
+  URL: https://doi.org/10.1080/10635150290069913
+  volume: '51'
+
+- id: Shimodaira2004Approximatelyunbiasedtests
+  abstract: >-
+    Approximately unbiased tests based on bootstrap probabilities are considered
+    for the exponential family of distributions with unknown expectation
+    parameter vector, where the null hypothesis is represented as an
+    arbitrary-shaped region with smooth boundaries. This problem has been
+    discussed previously in Efron and Tibshirani [Ann. Statist. 26 (1998)
+    1687–1718], and a corrected p-value with second-order asymptotic accuracy is
+    calculated by the two-level bootstrap of Efron, Halloran and Holmes [Proc.
+    Natl. Acad. Sci. U.S.A. 93 (1996) 13429–13434] based on the ABC bias
+    correction of Efron [J. Amer. Statist. Assoc. 82 (1987) 171–185]. Our
+    argument is an extension of their asymptotic theory, where the geometry,
+    such as the signed distance and the curvature of the boundary, plays an
+    important role. We give another calculation of the corrected p-value without
+    finding the “nearest point” on the boundary to the observation, which is
+    required in the two-level bootstrap and is an implementational burden in
+    complicated problems. The key idea is to alter the sample size of the
+    replicated dataset from that of the observed dataset. The frequency of the
+    replicates falling in the region is counted for several sample sizes, and
+    then the p-value is calculated by looking at the change in the frequencies
+    along the changing sample sizes. This is the multiscale bootstrap of
+    Shimodaira [Systematic Biology 51 (2002) 492–508], which is third-order
+    accurate for the multivariate normal model. Here we introduce a newly
+    devised multistep-multiscale bootstrap, calculating a third-order accurate
+    p-value for the exponential family of distributions. In fact, our p-value is
+    asymptotically equivalent to those obtained by the double bootstrap of Hall
+    [The Bootstrap and Edgeworth Expansion (1992) Springer, New York] and the
+    modified signed likelihood ratio of Barndorff-Nielsen [Biometrika 73 (1986)
+    307–322] ignoring O(n−3/2) terms, yet the computation is less demanding and
+    free from model specification. The algorithm is remarkably simple despite
+    complexity of the theory behind it. The differences of the p-values are
+    illustrated in simple examples, and the accuracies of the bootstrap methods
+    are shown in a systematic way.
+  accessed:
+    - year: 2024
+      month: 2
+      day: 15
+  author:
+    - family: Shimodaira
+      given: Hidetoshi
+  citation-key: Shimodaira2004Approximatelyunbiasedtests
+  container-title: The Annals of Statistics
+  DOI: 10.1214/009053604000000823
+  ISSN: 0090-5364, 2168-8966
+  issue: '6'
+  issued:
+    - year: 2004
+      month: 12
+  page: 2616-2641
+  publisher: Institute of Mathematical Statistics
+  source: Project Euclid
+  title: >-
+    Approximately unbiased tests of regions using multistep-multiscale bootstrap
+    resampling
+  type: article-journal
+  URL: >-
+    https://projecteuclid.org/journals/annals-of-statistics/volume-32/issue-6/Approximately-unbiased-tests-of-regions-using-multistep-multiscale-bootstrap-resampling/10.1214/009053604000000823.full
+  volume: '32'
+
+- id: Suzuki2006Pvclustpackageassessing
+  abstract: "Summary: Pvclust is an add-on package for a statistical software R to assess the uncertainty in hierarchical cluster analysis. Pvclust can be used easily for general statistical problems, such as DNA microarray analysis, to perform the bootstrap analysis of clustering, which has been popular in phylogenetic analysis. Pvclust calculates probability values (p-values) for each cluster using bootstrap resampling techniques. Two types of p-values are available: approximately unbiased (AU) p-value and bootstrap probability (BP) value. Multiscale bootstrap resampling is used for the calculation of AU p-value, which has superiority in bias over BP value calculated by the ordinary bootstrap resampling. In addition the computation time can be enormously decreased with parallel computing option.Availability: The program is freely distributed under GNU General Public License (GPL) and can directly be installed from CRAN (), the official R package archive. The instruction and program source code are available at Contact: \_ryota.suzuki@is.titech.ac.jp"
+  accessed:
+    - year: 2024
+      month: 2
+      day: 15
+  author:
+    - family: Suzuki
+      given: Ryota
+    - family: Shimodaira
+      given: Hidetoshi
+  citation-key: Suzuki2006Pvclustpackageassessing
+  container-title: Bioinformatics
+  container-title-short: Bioinformatics
+  DOI: 10.1093/bioinformatics/btl117
+  ISSN: 1367-4803
+  issue: '12'
+  issued:
+    - year: 2006
+      month: 6
+      day: 15
+  page: 1540-1542
+  source: Silverchair
+  title: >-
+    Pvclust: an R package for assessing the uncertainty in hierarchical
+    clustering
+  title-short: Pvclust
+  type: article-journal
+  URL: https://doi.org/10.1093/bioinformatics/btl117
+  volume: '22'
+
 - id: Takenaka2023DevelopmentnovelPCR
   abstract: >-
     DNA barcoding is a powerful tool that provides rapid, accurate, and
