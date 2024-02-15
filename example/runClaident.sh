@@ -81,6 +81,7 @@ clremovecontam \
 clremovecontam \
 --test=thompson \
 --blanklist=blanklist.txt \
+--ignoreotuseq=standard.fasta \
 --stdconctable=stdconctable.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
