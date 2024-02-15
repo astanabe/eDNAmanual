@@ -1,7 +1,7 @@
 ---
 title: Claidentを用いた定量メタバーコーディング解析
 author: 田辺晶史 (東北大学大学院生命科学研究科)
-date: 2024-02-14
+date: 2024-02-15
 output: 
   pdf_document:
     latex_engine: lualatex
