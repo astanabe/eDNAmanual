@@ -89,7 +89,7 @@ cd ..
 rm -rf temporary
 ```
 
-maOSをご利用の方は、下記のページを参照してHomebrewをインストールして下さい。
+macOSをご利用の方は、下記のページを参照してHomebrewをインストールして下さい。
 
 - <https://brew.sh/>
 
