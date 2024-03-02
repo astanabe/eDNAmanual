@@ -1,7 +1,7 @@
 ---
 title: Claidentを用いた定量メタバーコーディング解析
 author: 田辺晶史 (東北大学大学院生命科学研究科)
-date: 2024-02-20
+date: 2024-03-02
 output: 
   pdf_document:
     latex_engine: lualatex
@@ -843,15 +843,6 @@ clremovechimev \
 
 `--mode=ref`は参照配列データベースを用いたキメラ除去モードを指します。
 Claidentのインストーラで自動インストールされる参照配列データベースは以下の通りです。
-
-rdpgoldv9
-: 細菌16S用
-
-dairydb3.0.0
-: 細菌16S用
-
-unite20170628, unite20170628untrim, unite20170628its1, unite20170628its2
-: 真菌ITS用
 
 cdu12s
 : ミトコンドリア12S用
