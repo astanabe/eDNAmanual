@@ -1008,11 +1008,23 @@ Claidentに添付されているデータベースは、以下の形式で命名
 overall
 : 全生物全遺伝子座
 
+animals_12S
+: 動物12S
+
+animals_16S
+: 動物16S
+
 animals_COX1
 : 動物COX1(COI)
 
+animals_CytB
+: 動物CytB
+
+animals_D-loop
+: 動物D-loop
+
 animals_mt
-: 動物ミトコンドリアゲノム
+: 動物ミトコンドリアDNA
 
 eukaryota_LSU
 : 真核生物LSU(28S)
@@ -1027,7 +1039,7 @@ fungi_ITS
 : 真菌ITS
 
 plants_cp
-: 植物葉緑体ゲノム
+: 植物葉緑体DNA
 
 plants_matK
 : 植物matK
