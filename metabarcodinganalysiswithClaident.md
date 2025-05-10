@@ -1,7 +1,7 @@
 ---
 title: Claidentを用いた定量メタバーコーディング解析
 author: 田辺晶史 (東北大学大学院生命科学研究科)
-date: 2024-03-04
+date: 2024-05-10
 output: 
   pdf_document:
     latex_engine: lualatex
@@ -275,6 +275,13 @@ RunID__BlankMaterialID3__PrimerID
 ```
 
 Claidentは、このファイルに記載されているものをブランクとして認識します。
+なお、RunIDとPrimerIDを省略し、以下の形式で記述することもできます。
+
+```default
+BlankMaterialID1
+BlankMaterialID2
+BlankMaterialID3
+```
 
 #### 濾過水量表(watervoltable.tsv)
 
@@ -288,6 +295,17 @@ RunID__SampleMaterialID3__PrimerID  1500
 RunID__BlankMaterialID1__PrimerID   500
 RunID__BlankMaterialID2__PrimerID   500
 RunID__BlankMaterialID3__PrimerID   500
+```
+
+なお、RunIDとPrimerIDを省略し、以下の形式で記述することもできます。
+
+```default
+SampleMaterialID1  1000  1000
+SampleMaterialID2  1000  500
+SampleMaterialID3  1500
+BlankMaterialID1   500
+BlankMaterialID2   500
+BlankMaterialID3   500
 ```
 
 この数値を使用して、元の環境水サンプル中におけるDNA濃度が推定されます。
@@ -307,6 +325,17 @@ RunID__SampleMaterialID3__PrimerID  200
 RunID__BlankMaterialID1__PrimerID   200
 RunID__BlankMaterialID2__PrimerID   200
 RunID__BlankMaterialID3__PrimerID   200
+```
+
+なお、RunIDとPrimerIDを省略し、以下の形式で記述することもできます。
+
+```default
+SampleMaterialID1  200  200
+SampleMaterialID2  200  200
+SampleMaterialID3  200
+BlankMaterialID1   200
+BlankMaterialID2   200
+BlankMaterialID3   200
 ```
 
 この数値を使用して、抽出したDNA溶液中の総DNAコピー数が推定されます。
@@ -352,6 +381,18 @@ RunID__SampleMaterialID3__PrimerID 5             10            20            40
 RunID__BlankMaterialID1__PrimerID  5             10            20            40
 RunID__BlankMaterialID2__PrimerID  5             10            20            40
 RunID__BlankMaterialID3__PrimerID  5             10            20            40
+```
+
+なお、RunIDとPrimerIDを省略し、以下の形式で記述することもできます。
+
+```default
+samplename        MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2
+SampleMaterialID1 5             10            20            40
+SampleMaterialID2 5             10            20            40
+SampleMaterialID3 5             10            20            40
+BlankMaterialID1  5             10            20            40
+BlankMaterialID2  5             10            20            40
+BlankMaterialID3  5             10            20            40
 ```
 
 濃度の単位は 1 μL 当たりのコピー数です。
@@ -756,14 +797,16 @@ cldenoiseseqd \
 無効化すればデノイジング効率が低下してしまうため、DADA2開発者が用意しているPseudo-pooling法をここでは使用しています(Priorは使用していません)。
 Pseudo-pooling法に関してはDADA2の公式Webサイトをご参照下さい。
 
-### clremovechimevによる参照配列データベースを用いないキメラ除去
+### clremovechimevによるキメラ除去1回目
 
 以下のコマンドでVSEARCH [@Rognes2016VSEARCHversatileopen] に実装されているUCHIME3アルゴリズム [@Edgar2016UCHIME2improvedchimera] を使用したキメラ配列検出・除去を適用します。
 
 ```default
 clremovechimev \
---mode=denovo \
+--mode=both \
 --uchimedenovo=3 \
+--referencedb=cdu12s \
+--addtoref=standard.fasta \
 05_denoised \
 06_chimeraremoved
 ```
@@ -776,10 +819,60 @@ clremovechimev \
 `--uchimedenovo`
 : UCHIME de novoのバージョンを指定(1 | 2 | 3から選択)
 
+`--referencedb`
+: 参照配列データベース
+
+`--addtoref`
+: 参照配列データベースに追加する参照配列ファイル
+
 コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。
 
-`--mode=denovo`というのは参照配列データベースを用いないキメラ除去モードのことを指します。
-UCHIME de novoは多少内容の異なる3つのバージョンがありますが、デノイジングした塩基配列に対して最適化されているのはUCHIME3なので、それを選択しています。
+`--mode=both`では、参照配列データベースを用いないキメラ除去と参照配列データベースを用いるキメラ除去の両方をそれぞれ実行して、どちらにおいてもキメラではないと判定された配列を残して、それ以外は除去します。
+参照配列データベースを用いないキメラ除去法であるUCHIME de novoは異なる3つのバージョンがありますが、デノイジングした塩基配列に対して最適化されているのはUCHIME3なので、`--uchimedenovo`ではそれを選択しています。
+参照配列データベースを用いたキメラ除去モードでは、参照配列データベースを指定してやる必要があります。
+Claidentのインストーラで自動インストールされる参照配列データベースは以下の通りです。
+
+cdu12s
+: ミトコンドリア12S用
+
+cdu16s
+: ミトコンドリア16S用
+
+cducox1
+: ミトコンドリアCOX1(COI)用
+
+cducytb
+: ミトコンドリアCyt-b用
+
+cdudloop
+: ミトコンドリアD-loop(調節領域)用
+
+cdumatk
+: 葉緑体matK用
+
+cdurbcl
+: 葉緑体rbcL用
+
+cdutrnhpsba
+: 葉緑体trnH-psbA用
+
+キメラ除去用参照配列データベースは「`インストール先/share/claident/uchimedb`」にあるため、このフォルダの内容を見ればインストールされている参照配列データベースがわかります。
+
+手動でインストールする必要がありますが、細菌16SにはSILVAのSSURefやSSUParc、真菌ITSにはUNITEのFull UNITE+INSD dataset for eukaryotesを推奨します。
+MiFishで増幅されるのはミトコンドリア12S領域の一部なので、cdu12sを使用します。
+名前がcduから始まるキメラ検出用参照配列データベースは、筆者が公共データベースの完全長または完全長に近い長さのミトコンドリアゲノム・葉緑体ゲノム配列から当該領域を切り出したものです。
+完全長または完全長に近いデータはキメラである可能性は低いだろうという仮定に基づいています。
+
+内部標準DNAを添加して行うPCRでは、内部標準DNAと内部標準DNA間のキメラや、内部標準DNAと生物のDNA間のキメラも形成されます。
+そこで、内部標準DNA配列(「`standard.fasta`」に含まれている)を`--addtoref`で参照配列に追加することで、キメラの検出力向上を狙っています。
+
+参照配列データベースに適したものがなく、内部標準DNAを混合してPCRするライブラリ調製を行っている場合は、内部標準DNA配列(「`standard.fasta`」に含まれている)を`--referencedb`に指定して`--mode=both`でキメラ除去を行って下さい。
+その際は`--addtoref`は不要です。
+
+参照配列データベースに適したものがなく、内部標準DNAを混合してPCRするライブラリ調製を行っていない場合は`--mode=both`の代わりに`--mode=denovo`として参照配列データベースを用いないキメラ除去だけを実行します。
+この場合も`--addtoref`は不要です。
+ただし、内部標準DNAを混合してPCRするライブラリ調製を行ったことのあるラボでライブラリ調製を行っている場合、増幅された内部標準DNAでラボが汚染されていて、PCRの際に混入する可能性があります。
+そのため、内部標準DNAを混合してPCRするライブラリ調製を行った場合と同様のデータ解析を念のため行っておいた方が良いかもしれません。
 
 ### clclusterstdvによる内部標準配列クラスタリング
 
@@ -813,8 +906,10 @@ clclusterstdv \
 合成された内部標準DNAと生物のDNAの区別ができないので、非定量メタバーコーディングとしてもデータを使用することはできません。
 
 なお、内部標準DNAを混合してPCRするライブラリ調製を行っていない場合はこの処理は飛ばします。
+ただし、内部標準DNAを混合してPCRするライブラリ調製を行ったことのあるラボでライブラリ調製を行っている場合、増幅された内部標準DNAでラボが汚染されていて、PCRの際に混入する可能性があります。
+そのため、内部標準DNAを混合してPCRするライブラリ調製を行った場合と同様のデータ解析を念のため行っておいた方が良いかもしれません。
 
-### clremovechimevによる参照配列データベースを用いたキメラ除去
+### clremovechimevによるキメラ除去2回目
 
 以下のコマンドでVSEARCH [@Rognes2016VSEARCHversatileopen] に実装されているUCHIMEアルゴリズム [@Edgar2011UCHIMEimprovessensitivity] を使用したキメラ配列検出・除去を適用します。
 
@@ -842,44 +937,18 @@ clremovechimev \
 コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。
 
 `--mode=ref`は参照配列データベースを用いたキメラ除去モードを指します。
-Claidentのインストーラで自動インストールされる参照配列データベースは以下の通りです。
+キメラ除去用参照配列データベースについてはキメラ除去1回目の節を参照して下さい。
 
-cdu12s
-: ミトコンドリア12S用
-
-cdu16s
-: ミトコンドリア16S用
-
-cducox1
-: ミトコンドリアCOX1(COI)用
-
-cducytb
-: ミトコンドリアCyt-b用
-
-cdudloop
-: ミトコンドリアD-loop(調節領域)用
-
-cdumatk
-: 葉緑体matK用
-
-cdurbcl
-: 葉緑体rbcL用
-
-cdutrnhpsba
-: 葉緑体trnH-psbA用
-
-キメラ除去用参照配列データベースは「`インストール先/share/claident/uchimedb`」にあるため、このフォルダの内容を見ればインストールされている参照配列データベースがわかります。
-
-手動でインストールする必要がありますが、細菌16SにはSILVAのSSURefやSSUParc、真菌ITSにはUNITEのFull UNITE+INSD dataset for eukaryotesを推奨します。
-MiFishで増幅されるのはミトコンドリア12S領域の一部なので、cdu12sを使用します。
-名前がcduから始まるキメラ検出用参照配列データベースは、筆者が公共データベースの完全長または完全長に近い長さのミトコンドリアゲノム・葉緑体ゲノム配列から当該領域を切り出したものです。
-完全長または完全長に近いデータはキメラである可能性は低いだろうという仮定に基づいています。
 内部標準DNAを添加して行うPCRでは、内部標準DNAと内部標準DNA間のキメラや、内部標準DNAと生物のDNA間のキメラも形成されます。
-そこで、内部標準DNAと判定された配列群(「`07_stdclustered/stdvariations.fasta`」に含まれている)を参照配列に追加することで、キメラの検出力向上を狙っています。
+そこで、内部標準DNAと判定された配列群(「`07_stdclustered/stdvariations.fasta`」に含まれている)を`--addtoref`で参照配列に追加することで、キメラの検出力向上を狙っています。
 「`standard.fasta`」 (合成業者に依頼した際の配列、すなわち合成エラーを一切含まない配列)ではなく「`07_stdclustered/stdvariations.fasta`」 (不一致をある程度許容して内部標準配列と判定された配列、すなわち合成エラーを含む内部標準配列)を使用するのは、合成エラーのある内部標準DNAと合成エラーのある内部標準DNA間のキメラや合成エラーのある内部標準DNAと生物のDNA間のキメラをできるだけ検出するためです。
 
-参照配列データベースに適したものがない場合はこの処理は飛ばします。
-ただし、参照配列データベースに適したものがないものの内部標準DNAを混合してPCRするライブラリ調製を行っている場合は、内部標準DNAと判定された配列群(「`07_stdclustered/stdvariations.fasta`」に含まれている)を参照配列データベースに指定してキメラ除去を行って下さい。
+参照配列データベースに適したものがなく、内部標準DNAを混合してPCRするライブラリ調製を行っている場合は、内部標準DNAと判定された配列群(「`07_stdclustered/stdvariations.fasta`」に含まれている)を`--referencedb`に指定してキメラ除去を行って下さい。
+その際は`--addtoref`は不要です。
+
+参照配列データベースに適したものがなく、内部標準DNAを混合してPCRするライブラリ調製を行っていない場合はこの処理は不要です。
+ただし、内部標準DNAを混合してPCRするライブラリ調製を行ったことのあるラボでライブラリ調製を行っている場合、増幅された内部標準DNAでラボが汚染されていて、PCRの際に混入する可能性があります。
+そのため、内部標準DNAを混合してPCRするライブラリ調製を行った場合と同様のデータ解析を念のため行っておいた方が良いかもしれません。
 
 ### clremovecontamによるインデックスホッピング除去
 
@@ -944,7 +1013,7 @@ clremovecontam \
 : ブランクのサンプルIDリストを記したテキストファイル
 
 `--ignoreotuseq`
-: デコンタミネーションの対象外にするOTUリストを記したテキストファイル
+: デコンタミネーションの対象外にするOTUの塩基配列ファイル
 
 `--stdconctable`
 : 内部標準DNA濃度表のタブ区切りテキスト
@@ -962,6 +1031,10 @@ clremovecontam \
 なお、抽出DNA溶液量表と濾過水量表がなく、内部標準DNA濃度表のみが与えられた場合、環境水中のDNA濃度の代わりに抽出DNA溶液中のDNA濃度を算出し、その値に基づいてデコンタミネーションを行います。
 抽出DNA溶液量表も濾過水量表も内部標準DNA濃度表もない場合、リード数の値をそのまま使用してデコンタミネーションを行います。
 内部標準DNA濃度を使用した濃度推定値を使用する場合、ライブラリ調製において濃度均一化処理などを行っていても適用可能ですが、リード数の値をそのまま使用する場合、1) ライブラリ調製の過程で濃度均一化処理を一切行っていない、2) PCRの合計サイクル数は最小限に留めている(どのサンプルもプラトーに達していない)、必要があります。
+
+もし、野外での採集からDNA抽出およびライブラリ調製の過程で大量のコンタミネーションが起こっていた場合、フィールドブランクからも多くのDNAが検出され、結果としてサンプルから検出されたDNAがことごとくコンタミネーション由来であると判定されて0に置換される可能性があります。
+これは意図した動作なのですが、0に置換される件数があまりにも多いと、群集生態学的な分析を一切行うことができなくなります。
+せっかく多くの費用と労力を費やして得たデータがコンタミネーションだらけで使用できない、ということがここで判明するのはあまりにも悲しいことですので、採集からライブラリ調製におけるコンタミネーション防止には細心の注意を払うようにしましょう。
 
 塩基配列データ処理はここまでとなりますが、ここまでで得られたASVをさらにクラスタリングしてまとめたい場合があると思います。
 そのような場合は、`clclassseqv`コマンドで追加のクラスタリングを行うことができます。
@@ -1096,7 +1169,7 @@ species_wosp_man
 データベースの種類が多すぎて使い分けが難しいのですが、どれが最適なのかは分類群や研究目的によって異なります。
 MiFishによるメタバーコーディングを日本の淡水域や日本近海のサンプルで行う場合、動物以外の配列やミトコンドリアゲノム以外の配列も同定したいなら、overall_species_wspを推奨します。
 しかし、overall系データベースは巨大で、搭載しているメモリが少ないマシンではメモリ不足になってしまいます。
-そのような場合、動物以外の配列やミトコンドリアゲノム以外の配列は同定できなくなりますが、animals_mt_species_wspが良いでしょう。
+そのような場合、動物以外の配列や対象外の配列は同定できなくなりますが、animals_12S_species_wspやanimals_mt_species_wspが良いでしょう。
 真菌や細菌などで属レベルの同定が非常に重要なケースでは、～_species_wsp_manを使うと良いかもしれません。
 使い分けに悩んだ場合は、各データベースを使用して同定した結果をマージしていいとこ取りすることができますので、全部やってしまえばいいでしょう。
 
