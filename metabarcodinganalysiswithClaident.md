@@ -156,9 +156,9 @@ Claidentによるデータ解析は、以下の流れで行います。
 2. ペアエンド配列の連結
 3. 低品質配列の除去 [@Edgar2015Errorfilteringpair]
 4. デノイジング [@Callahan2016DADA2Highresolutionsample]
-5. 参照配列データベースを用いないキメラ除去 [@Edgar2016UCHIME2improvedchimera;@Rognes2016VSEARCHversatileopen]
+5. キメラ除去1回目 [@Edgar2011UCHIMEimprovessensitivity;@Edgar2016UCHIME2improvedchimera;@Rognes2016VSEARCHversatileopen]
 6. 内部標準配列クラスタリング [@Edgar2010Searchclusteringorders;@Rognes2016VSEARCHversatileopen]
-7. 参照配列データベースを用いたキメラ除去 [@Edgar2011UCHIMEimprovessensitivity;@Rognes2016VSEARCHversatileopen]
+7. キメラ除去2回目 [@Edgar2011UCHIMEimprovessensitivity;@Rognes2016VSEARCHversatileopen]
 8. インデックスホッピング除去 [@Esling2015Accuratemultiplexingfiltering]
 9. ネガティブコントロールを利用したデコンタミネーション
 10. 分子同定 [@Tanabe2013TwoNewComputational]
