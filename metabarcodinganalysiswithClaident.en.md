@@ -132,7 +132,7 @@ export PREFIX=/home/tanabe/claident20240101
 ```
 
 Claident will then be installed under “`/home/tanabe/claident20240101`”.
-If you change the installation path, “`install_path/bin`”, which contains the executable commands of Claident, is not on your `PATH` environment variable, and analysis commands of Claident cannot be executed without the full path.
+If you change the installation path, “`InstallPath/bin`”, which contains the executable commands of Claident, is not on your `PATH` environment variable, and analysis commands of Claident cannot be executed without the full path.
 Therefore, you need to add it to PATH environment variable before running Claident as the following:
 
 ```default
@@ -143,7 +143,7 @@ If typing this every time is inconvenient, append the line to the end of “`~/.
 
 Using different installation directories lets you keep multiple Claident versions on the same machine.
 Each command refers to the configuration file “`~/.claident`”, so switching versions also requires replacing that file.
-A template is located at “`install_path/share/claident/.claident`”; copying it over “`~/.claident`” completes the switch.
+A template is located at “`InstallPath/share/claident/.claident`”; copying it over “`~/.claident`” completes the switch.
 If you truly need multiple versions, it is often simplest to create separate user accounts, install each version within the respective home directory, and switch users when you wish to change versions.
 
 ## Overall Workflow and Prerequisites for Data Analysis
@@ -860,7 +860,7 @@ cdurbcl
 cdutrnhpsba
 : For chloroplast trnH-psbA region
 
-The reference databases for chimera-removal are located under “`install_path/share/claident/uchimedb`”.
+The reference databases for chimera-removal are located under “`InstallPath/share/claident/uchimedb`”.
 You can list the contents of that folder to see which databases are available.
 
 For bacterial 16S, SILVA SSURef or SSUParc is recommended, and for fungal ITS, the UNITE's “Full UNITE+INSD dataset for eukaryotes” is recommended.
@@ -1064,7 +1064,7 @@ By following these TSV files you can track the changes introduced by each proces
 This section describes the molecular identification workflow based on the QCauto method and the 95%-3NN method [@Tanabe2013TwoNewComputational].
 The QCauto method yields very few misidentifications, but lower taxonomic ranks such as species or genus are prone to be labelled “unidentified”.
 The 95%-3NN method can usually identify down to low taxonomic ranks such as species or genus, but it tends to produce more misidentifications when the reference sequence database is not well curated.
-When MiFish metabarcoding is conducted on Japanese freshwater or coastal samples, the reference sequence database maintained by the Chiba Prefectural Museum group is well curated, so the 95%-3NN method rarely causes problems.
+When MiFish metabarcoding is conducted on Japanese freshwater or coastal samples, the reference sequence database maintained by a group of the Chiba Prefectural Museum is well curated, so the 95%-3NN method rarely causes problems.
 However, when other reference databases have insufficient coverage, we recommend using the QCauto results.
 
 Before proceeding, create an output directory for molecular identification with the following command.
@@ -1170,7 +1170,7 @@ species_man
 species_wosp_man
 : Contains reference sequences identified to species or lower, but sequences whose species name contains “sp.” or whose genus name is empty are excluded
 
-Reference databases for molecular identification are located in “`install_path/share/claident/blastdb`”, so list contents of this folder provides which databases are installed.
+Reference databases for molecular identification are located in “`InstallPath/share/claident/blastdb`”, so list contents of this folder provides which databases are installed.
 
 Because there are so many databases, choosing the best one can be difficult, and the optimal choice depends on the target taxon and research goals.
 When MiFish metabarcoding is applied to Japanese freshwater or coastal samples and you also wish to identify non-animal or non-mitochondrial sequences, we recommend “`overall_species_wsp`”.
@@ -1432,7 +1432,7 @@ The meaning of the command line options is as follows:
 
 Following the command line options, specify the input file and output file.
 
-By executing the following command, you can create a table of OTUs for the taxonomic group specified by `--includetaxa` (fish in this case) based on molecular identification results:
+By executing the following command, you can create a table of OTUs for the taxa specified by `--includetaxa` (fish in this case) based on molecular identification results:
 
 ```default
 clfiltersum \
@@ -1541,23 +1541,23 @@ The meaning of the command line options is as follows:
 `--nreplicate`
 : Number of rarefaction replicates
 
-Following the command line options, specify the input file and output file prefix.
+Following the command line options, specify the input file and prefix of output files.
 
 The output files generated after execution are as follows:
 
-`output_file_prefix-r[number].tsv`
+`PrefixOfOutputFiles-r[number].tsv`
 : Tab-delimited text of rarefied OTU composition table
 
-`output_file_prefix_inputpcov.tsv`
+`PrefixOfOutputFiles_inputpcov.tsv`
 : Tab-delimited text of coverage estimates for each input sample
 
-`output_file_prefix_inputnseq.tsv`
+`PrefixOfOutputFiles_inputnseq.tsv`
 : Tab-delimited text of total read counts for each input sample
 
-`output_file_prefix_outputpcov.tsv`
+`PrefixOfOutputFiles_outputpcov.tsv`
 : Tab-delimited text of coverage estimates for each output sample
 
-`output_file_prefix_outputnseq.tsv`
+`PrefixOfOutputFiles_outputnseq.tsv`
 : Tab-delimited text of total read counts for each output sample
 
 After rarefaction is complete, extract only internal standard OTUs from all 10 replicates with the following command:
@@ -1601,7 +1601,7 @@ do clfiltersum \
 done
 ```
 
-In the above example, coverage-based rarefaction is performed using OTU composition tables of all taxonomic groups, and fish OTUs and non-fish OTUs are separated after rarefaction.
+In the above example, coverage-based rarefaction is performed using OTU composition tables of all taxa, and fish OTUs and non-fish OTUs are separated after rarefaction.
 However, if there is no interest in non-fish from the beginning, or if non-fish are considered likely to be contamination based on prior knowledge, it might be better to perform coverage-based rarefaction using only fish OTU composition tables.
 
 It is important to note that what can be achieved with these coverage-based rarefaction methods, whether metagMisc or Claident, is merely “equalization of sequencing coverage for communities”.
@@ -1690,18 +1690,18 @@ The meaning of the command line options is as follows:
 : Replace spaces and colons used in output OTU names with underscores (select from ENABLE | DISABLE)
 
 `--fuseotu`
-: Whether to merge OTUs with the same taxonomic group name (select from ENABLE | DISABLE)
-: If DISABLE is selected, output OTU names will be “`input_OTU_name:taxonomic_group_name`” and composition content is not changed
-: If DISABLE is selected and `--taxnamereplace` is also enabled, output OTU names will be “`input_OTU_name_taxonomic_group_name`”
+: Whether to merge OTUs with the same taxon name (select from ENABLE | DISABLE)
+: If DISABLE is selected, output OTU names will be “`InputOTUName:TaxonName`” and composition content is not changed
+: If DISABLE is selected and `--taxnamereplace` is also enabled, output OTU names will be “`InputOTUName_TaxonName`”
 
 `--numbering`
 : Whether to add numbers as prefixes to output OTU names in sort order (select from ENABLE | DISABLE)
 : If ENABLE is selected and there are 100 output OTUs, numbers from `001` to `100` with aligned width are added separated by colon “`:`”
 : If `--taxnamereplace` is also enabled, separation is by underscore “`_`” instead of colon
-: If both `--fuseotu` and `--taxnamereplace` are also enabled, the format becomes “`number_taxonomic_group_name`”
-: If `--fuseotu` is also enabled and `--taxnamereplace` is disabled, the format becomes “`number:taxonomic_group_name`”
-: If `--fuseotu` is disabled and `--taxnamereplace` is enabled, the format becomes “`number_input_OTU_name_taxonomic_group_name`”
-: If both `--fuseotu` and `--taxnamereplace` are disabled, the format becomes “`number:input_OTU_name:taxonomic_group_name`”
+: If both `--fuseotu` and `--taxnamereplace` are also enabled, the format becomes “`Number_TaxonName`”
+: If `--fuseotu` is also enabled and `--taxnamereplace` is disabled, the format becomes “`Number:TaxonName`”
+: If `--fuseotu` is disabled and `--taxnamereplace` is enabled, the format becomes “`Number_InputOTUName_TaxonName`”
+: If both `--fuseotu` and `--taxnamereplace` are disabled, the format becomes “`Number:InputOTUName:TaxonName`”
 
 `--sortkey`
 : Key to determine sort order (select from ABUNDANCE | RANKNAME)
@@ -1724,8 +1724,8 @@ clsumtaxa \
 12_community/sample_species_matrix_fishes_concentration.tsv
 ```
 
-Note that when `--fuseotu` is enabled, OTUs are merged based only on taxonomic group names, so even with `--targetrank=species`, species named “`unidentified higher_taxonomic_group_name`” will exist, and multiple species may be merged into these.
-This is because OTUs that could not be identified at low taxonomic ranks were assigned as “`unidentified higher_taxonomic_group_name`” by `clfillassign`.
+Note that when `--fuseotu` is enabled, OTUs are merged based only on taxon names, so even with `--targetrank=species`, species named “`unidentified HigherTaxonName`” will exist, and multiple species may be merged into these.
+This is because OTUs that could not be identified at low taxonomic ranks were assigned as “`unidentified HigherTaxonName`” by `clfillassign`.
 Therefore, this results in species composition tables that include OTUs where multiple species are incorrectly merged.
 While such species composition tables can be used for plotting, for statistical analysis, use OTU composition tables with ASVs or OTUs clustered based on sequence similarity as units.
 
