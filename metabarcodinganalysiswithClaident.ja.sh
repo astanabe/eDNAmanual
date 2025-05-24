@@ -5,7 +5,7 @@ metabarcodinganalysiswithClaident.ja.md \
 -t json \
 --filter=pandoc-citeproc \
 --highlight-style=zenburn \
--N \
+--number-sections \
 --bibliography=metabarcodinganalysiswithClaident.ja.yaml \
 --csl=citationstyle.csl
 
@@ -20,19 +20,25 @@ metabarcodinganalysiswithClaident.ja.json \
 -f json \
 -t pdf \
 --highlight-style=zenburn \
--N \
+--number-sections \
+--toc \
+--toc-depth 4 \
 --pdf-engine=lualatex \
 -H template.tex
 
 pandoc \
 metabarcodinganalysiswithClaident.ja.json \
--o metabarcodinganalysiswithClaident.ja.docx \
+-o metabarcodinganalysiswithClaident.ja.html \
 -f json \
--t docx \
+-t html \
+--standalone \
 --highlight-style=zenburn \
--N
+--number-sections \
+--toc \
+--toc-depth 4 \
+--self-contained
 
 rm metabarcodinganalysiswithClaident.ja.json
 
-#pandoc metabarcodinganalysiswithClaident.ja.md -o metabarcodinganalysiswithClaident.ja.pdf --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.ja.yaml --csl=citationstyle.csl --pdf-engine=lualatex -H template.tex
-#pandoc metabarcodinganalysiswithClaident.ja.md -o metabarcodinganalysiswithClaident.ja.docx --filter=pandoc-citeproc --highlight-style=zenburn -N --bibliography=metabarcodinganalysiswithClaident.ja.yaml --csl=citationstyle.csl
+#pandoc metabarcodinganalysiswithClaident.ja.md -o metabarcodinganalysiswithClaident.ja.pdf --filter=pandoc-citeproc --highlight-style=zenburn --number-sections --bibliography=metabarcodinganalysiswithClaident.ja.yaml --csl=citationstyle.csl --pdf-engine=lualatex -H template.tex
+#pandoc metabarcodinganalysiswithClaident.ja.md -o metabarcodinganalysiswithClaident.ja.docx --filter=pandoc-citeproc --highlight-style=zenburn --number-sections --bibliography=metabarcodinganalysiswithClaident.ja.yaml --csl=citationstyle.csl

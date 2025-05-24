@@ -3,10 +3,12 @@ title: Quantitative Metabarcoding Analysis Using Claident
 author: Akifumi S. Tanabe (Graduate School of Life Sciences, Tohoku University)
 date: 2025-05-24
 output: 
-  pdf_document:
+  pdf_document: 
     latex_engine: lualatex
 documentclass: bxjsarticle
-classoption: pandoc
+classoption: 
+- pandoc
+- english
 papersize: a4
 figureTitle: Fig.
 figPrefix: Fig.
@@ -132,7 +134,7 @@ export PREFIX=/home/tanabe/claident20240101
 ```
 
 Claident will then be installed under “`/home/tanabe/claident20240101`”.
-If you change the installation path, “`InstallPath/bin`”, which contains the executable commands of Claident, is not on your `PATH` environment variable, and analysis commands of Claident cannot be executed without the full path.
+If you change the installation path, “`[Install Path]/bin`”, which contains the executable commands of Claident, is not on your `PATH` environment variable, and analysis commands of Claident cannot be executed without the full path.
 Therefore, you need to add it to PATH environment variable before running Claident as the following:
 
 ```default
@@ -143,7 +145,7 @@ If typing this every time is inconvenient, append the line to the end of “`~/.
 
 Using different installation directories lets you keep multiple Claident versions on the same machine.
 Each command refers to the configuration file “`~/.claident`”, so switching versions also requires replacing that file.
-A template is located at “`InstallPath/share/claident/.claident`”; copying it over “`~/.claident`” completes the switch.
+A template is located at “`[Install Path]/share/claident/.claident`”; copying it over “`~/.claident`” completes the switch.
 If you truly need multiple versions, it is often simplest to create separate user accounts, install each version within the respective home directory, and switch users when you wish to change versions.
 
 ## Overall Workflow and Prerequisites for Data Analysis
@@ -228,19 +230,19 @@ In metabarcoding you may sequence the same primer product of the same sample in 
 To distinguish these cases, write the sample ID in the form:
 
 ```
-RunID__MaterialID__PrimerID
+[Run ID]__[Material ID]__[Primer ID]
 ```
 
-RunID is any string that you will specify later as an option of the analysis commands and should identify the sequencing run or lane.
-PrimerID is a string specified in one of the files described later and identifies the primer set used (e.g. `MiFish` for MiFish primer set).
-MaterialID is the usual sample ID assigned to the physical material.
-If the MaterialID is the same while RunID or PrimerID differs, the underlying template DNA is the same.
+`[Run ID]` is any string that you will specify later as an option of the analysis commands and should identify the sequencing run or lane.
+`[Primer ID]` is a string specified in one of the files described later and identifies the primer set used (e.g. `MiFish` for MiFish primer set).
+`[Material ID]` is the usual sample ID assigned to the physical material.
+If the `[Material ID]` is the same while `[Run ID]` or `[Primer ID]` differs, the underlying template DNA is the same.
 Because the physical sample and Claident's notion of a sample are not necessarily one-to-one, this naming scheme lets you see which physical sample corresponds to a sample ID at a glance.
 
 If you prepare technical replicates, treat them as separate samples when they remain distinct throughout DNA extraction, library preparation, and sequencing; otherwise treat them as one sample.
-When treating them as separate, it is useful to append `-R1`, `-R2`, and so on to the rnd of MaterialID to indicate the replicate.
+When treating them as separate, it is useful to append `-R1`, `-R2`, and so on to the rnd of `[Material ID]` to indicate the replicate.
 
-Note that `__` (two or more consecutive underscores) cannot appear in RunID, PrimerID, or MaterialID.
+Note that `__` (two or more consecutive underscores) cannot appear in `[Run ID]`, `[Primer ID]`, or `[Material ID]`.
 Allowed characters are alphanumerics, hyphens, and underscores only.
 Using other characters may cause unexpected errors.
 
@@ -263,18 +265,18 @@ This is a text file in which one blank's sample ID is written per line.
 It must be written in the following format.
 
 ```default
-RunID__BlankMaterialID1__PrimerID
-RunID__BlankMaterialID2__PrimerID
-RunID__BlankMaterialID3__PrimerID
+[Run ID]__[Blank Material ID 1]__[Primer ID]
+[Run ID]__[Blank Material ID 2]__[Primer ID]
+[Run ID]__[Blank Material ID 3]__[Primer ID]
 ```
 
 Claident recognizes the items listed in this file as blanks.
-You may omit RunID and PrimerID and write them in the following format.
+You may omit `[Run ID]` and `[Primer ID]` and write them in the following format.
 
 ```default
-BlankMaterialID1
-BlankMaterialID2
-BlankMaterialID3
+[Blank Material ID 1]
+[Blank Material ID 2]
+[Blank Material ID 3]
 ```
 
 #### Filtered Water Volume Table (watervoltable.tsv)
@@ -284,23 +286,23 @@ If multiple filters were used and you want to record them separately, list multi
 (They are summed when concentration is estimated.)
 
 ```default
-RunID__SampleMaterialID1__PrimerID  1000  1000
-RunID__SampleMaterialID2__PrimerID  1000  500
-RunID__SampleMaterialID3__PrimerID  1500
-RunID__BlankMaterialID1__PrimerID   500
-RunID__BlankMaterialID2__PrimerID   500
-RunID__BlankMaterialID3__PrimerID   500
+[Run ID]__[Sample Material ID 1]__[Primer ID]  1000  1000
+[Run ID]__[Sample Material ID 2]__[Primer ID]  1000  500
+[Run ID]__[Sample Material ID 3]__[Primer ID]  1500
+[Run ID]__[Blank Material ID 1]__[Primer ID]   500
+[Run ID]__[Blank Material ID 2]__[Primer ID]   500
+[Run ID]__[Blank Material ID 3]__[Primer ID]   500
 ```
 
-You may omit RunID and PrimerID and write them as follows.
+You may omit `[Run ID]` and `[Primer ID]` and write them as follows.
 
 ```default
-SampleMaterialID1  1000  1000
-SampleMaterialID2  1000  500
-SampleMaterialID3  1500
-BlankMaterialID1   500
-BlankMaterialID2   500
-BlankMaterialID3   500
+[Sample Material ID 1]  1000  1000
+[Sample Material ID 2]  1000  500
+[Sample Material ID 3]  1500
+[Blank Material ID 1]   500
+[Blank Material ID 2]   500
+[Blank Material ID 3]   500
 ```
 
 These numbers are used to estimate the DNA concentration in the original environmental water sample.
@@ -315,23 +317,23 @@ If multiple filters were used and multiple DNA solutions were obtained, list mul
 (They are summed when concentration is estimated.)
 
 ```default
-RunID__SampleMaterialID1__PrimerID  200  200
-RunID__SampleMaterialID2__PrimerID  200  200
-RunID__SampleMaterialID3__PrimerID  200
-RunID__BlankMaterialID1__PrimerID   200
-RunID__BlankMaterialID2__PrimerID   200
-RunID__BlankMaterialID3__PrimerID   200
+[Run ID]__[Sample Material ID 1]__[Primer ID]  200  200
+[Run ID]__[Sample Material ID 2]__[Primer ID]  200  200
+[Run ID]__[Sample Material ID 3]__[Primer ID]  200
+[Run ID]__[Blank Material ID 1]__[Primer ID]   200
+[Run ID]__[Blank Material ID 2]__[Primer ID]   200
+[Run ID]__[Blank Material ID 3]__[Primer ID]   200
 ```
 
-You may omit RunID and PrimerID and write them as follows.
+You may omit `[Run ID]` and `[Primer ID]` and write them as follows.
 
 ```default
-SampleMaterialID1  200  200
-SampleMaterialID2  200  200
-SampleMaterialID3  200
-BlankMaterialID1   200
-BlankMaterialID2   200
-BlankMaterialID3   200
+[Sample Material ID 1]  200  200
+[Sample Material ID 2]  200  200
+[Sample Material ID 3]  200
+[Blank Material ID 1]   200
+[Blank Material ID 2]   200
+[Blank Material ID 3]   200
 ```
 
 These numbers are used to estimate the total number of DNA copies in the extracted DNA solution.
@@ -370,25 +372,25 @@ This is a tab-delimited text file in which the concentration of each internal-st
 Prepare a table like the following.
 
 ```default
-samplename                         MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2
-RunID__SampleMaterialID1__PrimerID 5             10            20            40
-RunID__SampleMaterialID2__PrimerID 5             10            20            40
-RunID__SampleMaterialID3__PrimerID 5             10            20            40
-RunID__BlankMaterialID1__PrimerID  5             10            20            40
-RunID__BlankMaterialID2__PrimerID  5             10            20            40
-RunID__BlankMaterialID3__PrimerID  5             10            20            40
+samplename                                    MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2
+[Run ID]__[Sample Material ID 1]__[Primer ID] 5             10            20            40
+[Run ID]__[Sample Material ID 2]__[Primer ID] 5             10            20            40
+[Run ID]__[Sample Material ID 3]__[Primer ID] 5             10            20            40
+[Run ID]__[Blank Material ID 1]__[Primer ID]  5             10            20            40
+[Run ID]__[Blank Material ID 2]__[Primer ID]  5             10            20            40
+[Run ID]__[Blank Material ID 3]__[Primer ID]  5             10            20            40
 ```
 
-You may omit RunID and PrimerID and write them as follows.
+You may omit `[Run ID]` and `[Primer ID]` and write them as follows.
 
 ```default
-samplename        MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2
-SampleMaterialID1 5             10            20            40
-SampleMaterialID2 5             10            20            40
-SampleMaterialID3 5             10            20            40
-BlankMaterialID1  5             10            20            40
-BlankMaterialID2  5             10            20            40
-BlankMaterialID3  5             10            20            40
+samplename             MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2
+[Sample Material ID 1] 5             10            20            40
+[Sample Material ID 2] 5             10            20            40
+[Sample Material ID 3] 5             10            20            40
+[Blank Material ID 1]  5             10            20            40
+[Blank Material ID 2]  5             10            20            40
+[Blank Material ID 3]  5             10            20            40
 ```
 
 The unit of concentration is copies per microliter.
@@ -402,7 +404,7 @@ Internal-standard DNA names must match the names in the internal-standard DNA se
 
 These FASTA files contain the parts of the forward and reverse primers of the 1st PCR that are actually sequenced.
 Remove the regions where the index primers of the 2nd PCR anneal so that only the regions read by the sequencer remain.
-For example, if MiFish-U-F `ACACTCTTTCCCTACACGACGCTCTTCCGATCTNNNNNNGTCGGTAAAACTCGTGCCAGC` is used as the forward primer in the 1st PCR, write `NNNNNNGTCGGTAAAACTCGTGCCAGC` as the sequence.
+For example, if MiFish-U-F `ACA CTC TTT CCC TAC ACG ACG CTC TTC CGA TCT NNN NNN GTC GGT AAA ACT CGT GCC AGC` is used as the forward primer in the 1st PCR, write `NNN NNN GTC GGT AAA ACT CGT GCC AGC` as the sequence.
 Multiple primer sequences can be listed in each file, but the first forward primer is paired only with the first reverse primer, and combinations with the remaining reverse primers are not considered.
 Degenerate base codes such as `R`, `Y`, `M`, `K`, and `N` can be used in the sequences.
 When slightly different primer sequences such as MiFish variants are mixed, align them and write the degenerate consensus sequence.
@@ -442,7 +444,7 @@ NNNNNNGCATAGTGGGGTATCTAATCCTAGTTTG
  NNNNNNCATAGGAGGGTGTCTAATCCCCGTTTG
 ```
 
-The sequence names in these files are used as the PrimerID portion of the Claident's sample IDs, so they must match the PrimerID used in the other files described above.
+The sequence names in these files are used as the `[Primer ID]` portion of the Claident's sample IDs, so they must match the `[Primer ID]` used in the other files described above.
 
 #### Index Regions (index1.fasta and index2.fasta)
 
@@ -453,22 +455,22 @@ The index sequences listed in “`SampleSheet.csv`” for Illumina sequencers ar
 The reverse index file “`index1.fasta`” will look like the following.
 
 ```default
->SampleMaterialID1
+>[Sample Material ID 1]
 ACCTGCAA
->SampleMaterialID2
+>[Sample Material ID 2]
 GTTCCTTG
->SampleMaterialID3
+>[Sample Material ID 3]
 CCAGATCT
->BlankMaterialID1
+>[Blank Material ID 1]
 AAGTGTGA
->BlankMaterialID2
+>[Blank Material ID 2]
 CCATGATC
->BlankMaterialID3
+>[Blank Material ID 3]
 TCATGTCT
 ```
 
 The forward index file “`index2.fasta`” is almost the same except for the sequences.
-Ensure that the sequence names correspond to the MaterialID and that the order of the sequences is exactly the same.
+Ensure that the sequence names correspond to the `[Material ID]` and that the order of the sequences is exactly the same.
 
 To apply the index-hopping removal function, **information on every index used in the sequencing run is required**.
 Even if some samples or negative controls were discarded after problems were discovered during preparation or sequencing, the data for those samples contain information needed for index-hopping removal.
@@ -498,7 +500,7 @@ sudo apt install rpm2cpio cpio pstack
 cd workingdirectory
 mkdir temporary
 cd temporary
-rpm2cpio ../bcl-convert-4.2.4-2.el8.x86_64.rpm | cpio  -id
+rpm2cpio ../bcl-convert-4.2.4-2.el8.x86_64.rpm | cpio -id
 sudo mkdir -p /usr/local/bin
 sudo cp usr/bin/bcl-convert /usr/local/bin/
 sudo mkdir -p /var/log/bcl-convert
@@ -550,11 +552,11 @@ The following command will output the undemultiplexed FASTQ files to the directo
 ```default
 bcl-convert \
 --sample-sheet Dummy.csv \
---bcl-input-directory RunDataDirectory \
+--bcl-input-directory [Run Data Directory] \
 --output-directory 01_undemultiplexed
 ```
 
-Here, `RunDataDirectory` is the directory that contains the run data copied from the sequencer or from the analysis computer attached to the sequencer.
+Here, `[Run Data Directory]` is the directory that contains the run data copied from the sequencer or from the analysis computer attached to the sequencer.
 It should contain a “`Data`” directory.
 Copy this directory in advance to the machine on which BCL Convert is installed.
 By default, BCL Convert automatically determines the number of CPUs to use (it uses all available CPUs).
@@ -621,7 +623,7 @@ Before starting analysis with Claident, your working directory should contain th
 This section explains how to process the actual nucleotide sequence data.
 All commands should be executed in the terminal.
 It is assumed that the working directory is the current directory.
-Replace the placeholder `NumberOfCPUcores` in command options with the integer number of CPU cores to use during processing.
+Replace the placeholder `[Number Of CPU cores]` in command options with the integer number of CPU cores to use during processing.
 Files that have already been explained earlier are not described again here.
 Several steps access the disk heavily, so processing is greatly affected if the working directory is on a slow disk.
 Therefore, we strongly recommend placing the working directory on a fast SSD.
@@ -632,7 +634,7 @@ Run the following command to perform demultiplexing.
 
 ```default
 clsplitseq \
---runname=RunID \
+--runname=[Run ID] \
 --forwardprimerfile=forwardprimer.fasta \
 --reverseprimerfile=reverseprimer.fasta \
 --truncateN=enable \
@@ -641,7 +643,7 @@ clsplitseq \
 --minqualtag=30 \
 --compress=xz \
 --seqnamestyle=illumina \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 01_undemultiplexed/Undetermined_S0_L001_R1_001.fastq.gz \
 01_undemultiplexed/Undetermined_S0_L001_I1_001.fastq.gz \
 01_undemultiplexed/Undetermined_S0_L001_I2_001.fastq.gz \
@@ -652,7 +654,7 @@ clsplitseq \
 The meaning of each command-line option is as follows.
 
 `--runname`
-: Give any RunID which can be set arbitrarily by the user
+: Give any `[Run ID]` which can be set arbitrarily by the user
 
 `--forwardprimerfile`
 : Forward primer sequence file
@@ -692,7 +694,7 @@ This order matches the order in which an Illumina sequencer reads the data in du
 Because this command uses primer sequences as well as index sequences for demultiplexing, it can demultiplex more finely than when only index sequences are used.
 Therefore, even if amplicons from other primers are mixed into the data, they can be separated as long as the primer sequences are sufficiently different.
 
-This command also outputs sequences whose MaterialID is an “unused index combination”.
+This command also outputs sequences whose `[Material ID]` is an “unused index combination”.
 Those samples will be used later in the index-hopping detection and removal step.
 
 In the output files, the parts matching the primer sequences have been removed.
@@ -702,7 +704,7 @@ If the data size is large, this step takes a very long time.
 
 If you do not have undemultiplexed FASTQ and only have demultiplexed FASTQ, you can use `cltruncprimer` instead.
 Except that the `--minqualtag` option is ineffective and that the input is the folder containing the demultiplexed FASTQ, the usage is the same as the `clsplitseq` command.
-However, the MaterialID in the index sequence file must be included in the file name of each demultiplexed FASTQ.
+However, the `[Material ID]` in the index sequence file must be included in the file name of each demultiplexed FASTQ.
 Because demultiplexed FASTQ does not contain all sequences with “unused index combinations”, index-hopping detection cannot be applied.
 Even if you saved sequences with unused index combinations in advance, Claident has no way to recognize them as “unused index combinations”, so support is impossible.
 
@@ -718,7 +720,7 @@ After demultiplexing, concatenate paired-end reads with the following command.
 clconcatpairv \
 --mode=ovl \
 --compress=xz \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 02_demultiplexed \
 03_concatenated
 ```
@@ -745,7 +747,7 @@ clfilterseqv \
 --maxnee=2.0 \
 --maxnNs=0 \
 --compress=xz \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 03_concatenated \
 04_filtered
 ```
@@ -785,7 +787,7 @@ Apply denoising based on DADA2 [@Callahan2016DADA2Highresolutionsample] with the
 ```default
 cldenoiseseqd \
 --pool=pseudo \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 04_filtered \
 05_denoised
 ```
@@ -860,7 +862,7 @@ cdurbcl
 cdutrnhpsba
 : For chloroplast trnH-psbA region
 
-The reference databases for chimera-removal are located under “`InstallPath/share/claident/uchimedb`”.
+The reference databases for chimera-removal are located under “`[Install Path]/share/claident/uchimedb`”.
 You can list the contents of that folder to see which databases are available.
 
 For bacterial 16S, SILVA SSURef or SSUParc is recommended, and for fungal ITS, the UNITE's “Full UNITE+INSD dataset for eukaryotes” is recommended.
@@ -886,7 +888,7 @@ The following command clusters sequences corresponding to the internal-standard 
 clclusterstdv \
 --standardseq=standard.fasta \
 --minident=0.9 \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 06_chimeraremoved \
 07_stdclustered
 ```
@@ -923,7 +925,7 @@ clremovechimev \
 --mode=ref \
 --referencedb=cdu12s \
 --addtoref=07_stdclustered/stdvariations.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 07_stdclustered \
 08_chimeraremoved
 ```
@@ -963,7 +965,7 @@ clremovecontam \
 --ignoresamplelist=blanklist.txt \
 --index1file=index1.fasta \
 --index2file=index2.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 08_chimeraremoved \
 09_hoppingremoved
 ```
@@ -1005,7 +1007,7 @@ clremovecontam \
 --stdconctable=stdconctable.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 09_hoppingremoved \
 10_decontaminated
 ```
@@ -1079,10 +1081,10 @@ Claident ships with many reference sequence databases for molecular identificati
 The bundled databases are named as follows.
 
 ```
-Taxon_Locus_TaxonomicRankOfReferences
+[Taxon]_[Locus]_[Taxonomic Rank Of References]
 ```
 
-`Taxon_Locus` can be one of the following.
+`[Taxon]_[Locus]` can be one of the following.
 
 overall
 : All organisms and all loci
@@ -1135,7 +1137,7 @@ prokaryota_16S
 prokaryota_all
 : All loci of Prokaryotes
 
-`TaxonomicRankOfReferences` can be one of the following.
+`[Taxonomic Rank Of References]` can be one of the following.
 
 class
 : Contains reference sequences identified to class or lower (available only for overall)
@@ -1170,7 +1172,7 @@ species_man
 species_wosp_man
 : Contains reference sequences identified to species or lower, but sequences whose species name contains “sp.” or whose genus name is empty are excluded
 
-Reference databases for molecular identification are located in “`InstallPath/share/claident/blastdb`”, so list contents of this folder provides which databases are installed.
+Reference databases for molecular identification are located in “`[Install Path]/share/claident/blastdb`”, so list contents of this folder provides which databases are installed.
 
 Because there are so many databases, choosing the best one can be difficult, and the optimal choice depends on the target taxon and research goals.
 When MiFish metabarcoding is applied to Japanese freshwater or coastal samples and you also wish to identify non-animal or non-mitochondrial sequences, we recommend “`overall_species_wsp`”.
@@ -1188,7 +1190,7 @@ The following command will generate a cache database for the decontaminated sequ
 clmakecachedb \
 --blastdb=animals_mt_species_wsp \
 --ignoreotuseq=standard.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 10_decontaminated/decontaminated.fasta \
 11_taxonomy/cachedb_species_wsp
 ```
@@ -1218,7 +1220,7 @@ clidentseq \
 --method=QC \
 --blastdb=11_taxonomy/cachedb_species_wsp \
 --ignoreotuseq=standard.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 10_decontaminated/decontaminated.fasta \
 11_taxonomy/neighborhoods_qcauto_species_wsp.txt
 ```
@@ -1275,7 +1277,7 @@ clidentseq \
 --method=3,95% \
 --blastdb=11_taxonomy/cachedb_species_wsp \
 --ignoreotuseq=standard.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 10_decontaminated/decontaminated.fasta \
 11_taxonomy/neighborhoods_95p3nn_species_wsp.txt
 ```
@@ -1525,7 +1527,7 @@ clrarefysum \
 --minpcov=0.99 \
 --minntotalseqsample=1000 \
 --nreplicate=10 \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 12_community/sample_otu_matrix_all.tsv \
 12_community/sample_otu_matrix_all_rarefied
 ```
@@ -1545,19 +1547,19 @@ Following the command line options, specify the input file and prefix of output 
 
 The output files generated after execution are as follows:
 
-`PrefixOfOutputFiles-r[number].tsv`
+`[Prefix Of Output Files]-r[Number].tsv`
 : Tab-delimited text of rarefied OTU composition table
 
-`PrefixOfOutputFiles_inputpcov.tsv`
+`[Prefix Of Output Files]_inputpcov.tsv`
 : Tab-delimited text of coverage estimates for each input sample
 
-`PrefixOfOutputFiles_inputnseq.tsv`
+`[Prefix Of Output Files]_inputnseq.tsv`
 : Tab-delimited text of total read counts for each input sample
 
-`PrefixOfOutputFiles_outputpcov.tsv`
+`[Prefix Of Output Files]_outputpcov.tsv`
 : Tab-delimited text of coverage estimates for each output sample
 
-`PrefixOfOutputFiles_outputnseq.tsv`
+`[Prefix Of Output Files]_outputnseq.tsv`
 : Tab-delimited text of total read counts for each output sample
 
 After rarefaction is complete, extract only internal standard OTUs from all 10 replicates with the following command:
@@ -1620,7 +1622,7 @@ clestimateconc \
 --stdconctable=stdconctable.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 12_community/sample_otu_matrix_fishes.tsv \
 12_community/sample_otu_matrix_fishes_concentration.tsv
 ```
@@ -1650,7 +1652,7 @@ do clestimateconc \
 --stdconctable=stdconctable.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
---numthreads=NumberOfCPUcores \
+--numthreads=[Number Of CPU cores] \
 12_community/sample_otu_matrix_fishes_rarefied-r$n.tsv \
 12_community/sample_otu_matrix_fishes_rarefied-r$n_concentration.tsv
 done
@@ -1691,17 +1693,17 @@ The meaning of the command line options is as follows:
 
 `--fuseotu`
 : Whether to merge OTUs with the same taxon name (select from ENABLE | DISABLE)
-: If DISABLE is selected, output OTU names will be “`InputOTUName:TaxonName`” and composition content is not changed
-: If DISABLE is selected and `--taxnamereplace` is also enabled, output OTU names will be “`InputOTUName_TaxonName`”
+: If DISABLE is selected, output OTU names will be “`[Input OTU Name]:[Taxon Name]`” and composition content is not changed
+: If DISABLE is selected and `--taxnamereplace` is also enabled, output OTU names will be “`[Input OTU Name]_[Taxon Name]`”
 
 `--numbering`
 : Whether to add numbers as prefixes to output OTU names in sort order (select from ENABLE | DISABLE)
 : If ENABLE is selected and there are 100 output OTUs, numbers from `001` to `100` with aligned width are added separated by colon “`:`”
 : If `--taxnamereplace` is also enabled, separation is by underscore “`_`” instead of colon
-: If both `--fuseotu` and `--taxnamereplace` are also enabled, the format becomes “`Number_TaxonName`”
-: If `--fuseotu` is also enabled and `--taxnamereplace` is disabled, the format becomes “`Number:TaxonName`”
-: If `--fuseotu` is disabled and `--taxnamereplace` is enabled, the format becomes “`Number_InputOTUName_TaxonName`”
-: If both `--fuseotu` and `--taxnamereplace` are disabled, the format becomes “`Number:InputOTUName:TaxonName`”
+: If both `--fuseotu` and `--taxnamereplace` are also enabled, the format becomes “`[Number]_[Taxon Name]`”
+: If `--fuseotu` is also enabled and `--taxnamereplace` is disabled, the format becomes “`[Number]:[Taxon Name]`”
+: If `--fuseotu` is disabled and `--taxnamereplace` is enabled, the format becomes “`[Number]_[Input OTU Name]_[Taxon Name]`”
+: If both `--fuseotu` and `--taxnamereplace` are disabled, the format becomes “`[Number]:[Input OTU Name]:[Taxon Name]`”
 
 `--sortkey`
 : Key to determine sort order (select from ABUNDANCE | RANKNAME)
@@ -1724,8 +1726,8 @@ clsumtaxa \
 12_community/sample_species_matrix_fishes_concentration.tsv
 ```
 
-Note that when `--fuseotu` is enabled, OTUs are merged based only on taxon names, so even with `--targetrank=species`, species named “`unidentified HigherTaxonName`” will exist, and multiple species may be merged into these.
-This is because OTUs that could not be identified at low taxonomic ranks were assigned as “`unidentified HigherTaxonName`” by `clfillassign`.
+Note that when `--fuseotu` is enabled, OTUs are merged based only on taxon names, so even with `--targetrank=species`, species named “`unidentified [Higher Taxon Name]`” will exist, and multiple species may be merged into these.
+This is because OTUs that could not be identified at low taxonomic ranks were assigned as “`unidentified [Higher Taxon Name]`” by `clfillassign`.
 Therefore, this results in species composition tables that include OTUs where multiple species are incorrectly merged.
 While such species composition tables can be used for plotting, for statistical analysis, use OTU composition tables with ASVs or OTUs clustered based on sequence similarity as units.
 

@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Akifumi S. Tanabe (Graduate School of Life Sciences, Tohoku University)" />
+  <meta name="dcterms.date" content="2025-05-24" />
+  <title>Quantitative Metabarcoding Analysis Using Claident</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #cccccc; background-color: #303030; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ffcfaf; } /* Alert */
+    code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+    code span.at { } /* Attribute */
+    code span.bn { color: #dca3a3; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #f0dfaf; } /* ControlFlow */
+    code span.ch { color: #dca3a3; } /* Char */
+    code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+    code span.co { color: #7f9f7f; } /* Comment */
+    code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+    code span.do { color: #7f9f7f; } /* Documentation */
+    code span.dt { color: #dfdfbf; } /* DataType */
+    code span.dv { color: #dcdccc; } /* DecVal */
+    code span.er { color: #c3bf9f; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #c0bed1; } /* Float */
+    code span.fu { color: #efef8f; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+    code span.kw { color: #f0dfaf; } /* Keyword */
+    code span.op { color: #f0efd0; } /* Operator */
+    code span.ot { color: #efef8f; } /* Other */
+    code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+    code span.sc { color: #dca3a3; } /* SpecialChar */
+    code span.ss { color: #cc9393; } /* SpecialString */
+    code span.st { color: #cc9393; } /* String */
+    code span.va { } /* Variable */
+    code span.vs { color: #cc9393; } /* VerbatimString */
+    code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Quantitative Metabarcoding Analysis Using Claident</h1>
+<p class="author">Akifumi S. Tanabe (Graduate School of Life Sciences, Tohoku University)</p>
+<p class="date">2025-05-24</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#quantitative-metabarcoding-analysis-using-claident"><span class="toc-section-number">1</span> Quantitative Metabarcoding Analysis Using Claident</a>
+<ul>
+<li><a href="#operating-environment-and-installation-of-claident"><span class="toc-section-number">1.1</span> Operating Environment and Installation of Claident</a></li>
+<li><a href="#overall-workflow-and-prerequisites-for-data-analysis"><span class="toc-section-number">1.2</span> Overall Workflow and Prerequisites for Data Analysis</a>
+<ul>
+<li><a href="#about-sample-ids-in-claident"><span class="toc-section-number">1.2.1</span> About “Sample IDs” in Claident</a></li>
+<li><a href="#about-otus-and-asvs"><span class="toc-section-number">1.2.2</span> About OTUs and ASVs</a></li>
+<li><a href="#required-files-and-directory-structure"><span class="toc-section-number">1.2.3</span> Required Files and Directory Structure</a>
+<ul>
+<li><a href="#blank-list-blanklist.txt"><span class="toc-section-number">1.2.3.1</span> Blank List (blanklist.txt)</a></li>
+<li><a href="#filtered-water-volume-table-watervoltable.tsv"><span class="toc-section-number">1.2.3.2</span> Filtered Water Volume Table (watervoltable.tsv)</a></li>
+<li><a href="#extracted-dna-solution-volume-table-solutionvoltable.tsv"><span class="toc-section-number">1.2.3.3</span> Extracted DNA Solution Volume Table (solutionvoltable.tsv)</a></li>
+<li><a href="#internal-standard-dna-sequences-standard.fasta"><span class="toc-section-number">1.2.3.4</span> Internal-Standard DNA Sequences (standard.fasta)</a></li>
+<li><a href="#internal-standard-dna-concentration-table-stdconctable.tsv"><span class="toc-section-number">1.2.3.5</span> Internal-Standard DNA Concentration Table (stdconctable.tsv)</a></li>
+<li><a href="#primer-regions-read-first-by-the-sequencer-forwardprimer.fasta-and-reverseprimer.fasta"><span class="toc-section-number">1.2.3.6</span> Primer Regions Read First by the Sequencer (forwardprimer.fasta and reverseprimer.fasta)</a></li>
+<li><a href="#index-regions-index1.fasta-and-index2.fasta"><span class="toc-section-number">1.2.3.7</span> Index Regions (index1.fasta and index2.fasta)</a></li>
+<li><a href="#undemultiplexed-fastq"><span class="toc-section-number">1.2.3.8</span> Undemultiplexed FASTQ</a></li>
+<li><a href="#directory-structure"><span class="toc-section-number">1.2.3.9</span> Directory Structure</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#processing-of-nucleotide-sequence-data"><span class="toc-section-number">1.3</span> Processing of Nucleotide Sequence Data</a>
+<ul>
+<li><a href="#demultiplexing-with-clsplitseq"><span class="toc-section-number">1.3.1</span> Demultiplexing with clsplitseq</a></li>
+<li><a href="#concatenating-paired-end-reads-with-clconcatpairv"><span class="toc-section-number">1.3.2</span> Concatenating Paired-End Reads with clconcatpairv</a></li>
+<li><a href="#removing-low-quality-reads-with-clfilterseqv"><span class="toc-section-number">1.3.3</span> Removing Low-Quality Reads with clfilterseqv</a></li>
+<li><a href="#denoising-with-cldenoiseseqd"><span class="toc-section-number">1.3.4</span> Denoising with cldenoiseseqd</a></li>
+<li><a href="#first-chimera-removal-with-clremovechimev"><span class="toc-section-number">1.3.5</span> First Chimera Removal with clremovechimev</a></li>
+<li><a href="#clustering-internal-standard-sequences-with-clclusterstdv"><span class="toc-section-number">1.3.6</span> Clustering Internal-Standard Sequences with clclusterstdv</a></li>
+<li><a href="#second-chimera-removal-with-clremovechimev"><span class="toc-section-number">1.3.7</span> Second Chimera Removal with clremovechimev</a></li>
+<li><a href="#removing-index-hopping-with-clremovecontam"><span class="toc-section-number">1.3.8</span> Removing Index-Hopping with clremovecontam</a></li>
+<li><a href="#decontamination-using-negative-controls-with-clremovecontam"><span class="toc-section-number">1.3.9</span> Decontamination Using Negative Controls with clremovecontam</a></li>
+</ul></li>
+<li><a href="#molecular-identification"><span class="toc-section-number">1.4</span> Molecular Identification</a>
+<ul>
+<li><a href="#reference-sequence-databases-for-molecular-identification"><span class="toc-section-number">1.4.1</span> Reference Sequence Databases for Molecular Identification</a></li>
+<li><a href="#building-a-cache-database-with-clmakecachedb"><span class="toc-section-number">1.4.2</span> Building a Cache Database with clmakecachedb</a></li>
+<li><a href="#molecular-identification-with-the-qcauto-method"><span class="toc-section-number">1.4.3</span> Molecular Identification with the QCauto Method</a>
+<ul>
+<li><a href="#retrieving-neighborhood-sequences-with-clidentseq"><span class="toc-section-number">1.4.3.1</span> Retrieving Neighborhood Sequences with clidentseq</a></li>
+<li><a href="#assigning-taxonomy-with-classigntax"><span class="toc-section-number">1.4.3.2</span> Assigning Taxonomy with classigntax</a></li>
+</ul></li>
+<li><a href="#molecular-identification-with-the-95-3nn-method"><span class="toc-section-number">1.4.4</span> Molecular Identification with the 95%-3NN Method</a>
+<ul>
+<li><a href="#retrieving-neighborhood-sequences-with-clidentseq-1"><span class="toc-section-number">1.4.4.1</span> Retrieving Neighborhood Sequences with clidentseq</a></li>
+<li><a href="#assigning-taxonomy-with-classigntax-1"><span class="toc-section-number">1.4.4.2</span> Assigning Taxonomy with classigntax</a></li>
+</ul></li>
+<li><a href="#reusing-identification-results-with-clmakeidentdb"><span class="toc-section-number">1.4.5</span> Reusing Identification Results with clmakeidentdb</a></li>
+<li><a href="#merging-multiple-identification-results-with-clmergeassign"><span class="toc-section-number">1.4.6</span> Merging Multiple Identification Results with clmergeassign</a></li>
+<li><a href="#filling-missing-taxonomic-ranks-with-clfillassign"><span class="toc-section-number">1.4.7</span> Filling missing taxonomic ranks with <code>clfillassign</code></a></li>
+</ul></li>
+<li><a href="#generating-otu-composition-tables"><span class="toc-section-number">1.5</span> Generating OTU Composition Tables</a>
+<ul>
+<li><a href="#processing-otu-composition-tables-with-clfiltersum"><span class="toc-section-number">1.5.1</span> Processing OTU Composition Tables with clfiltersum</a></li>
+<li><a href="#coverage-based-rarefaction-of-otu-composition-tables-with-clrarefysum"><span class="toc-section-number">1.5.2</span> Coverage-based Rarefaction of OTU Composition Tables with clrarefysum</a></li>
+<li><a href="#dna-concentration-estimation-using-clestimateconc-and-internal-standard-dna-read-counts"><span class="toc-section-number">1.5.3</span> DNA Concentration Estimation Using clestimateconc and Internal Standard DNA Read Counts</a></li>
+<li><a href="#creating-species-composition-tables-from-otu-composition-tables"><span class="toc-section-number">1.5.4</span> Creating Species Composition Tables from OTU Composition Tables</a></li>
+</ul></li>
+<li><a href="#towards-community-ecological-analysis-using-otu-composition-tables"><span class="toc-section-number">1.6</span> Towards Community Ecological Analysis Using OTU Composition Tables</a></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="quantitative-metabarcoding-analysis-using-claident"><span class="header-section-number">1</span> Quantitative Metabarcoding Analysis Using Claident</h1>
+<p>Claident is a suite of sequence-analysis programs for metabarcoding and DNA barcoding that I develop and maintain. The name is pronounced “Clai-den” (the final <em>t</em> is silent) and is derived from “CLAssification” and “IDENTification”. Its main differences from the MiFish pipeline <span class="citation" data-cites="Sato2018MitoFishMiFishPipeline Zhu2023MitoFishMitoAnnotatorMiFish">(Sato <em>et al.</em> 2018; Zhu <em>et al.</em> 2023)</span> are:</p>
+<ul>
+<li>Supports data not only from fish metabarcodes amplified with the MiFish primers <span class="citation" data-cites="Miya2015MiFishsetuniversal Miya2020MiFishmetabarcodinghighthroughput">(Miya <em>et al.</em> 2020, 2015)</span> but from any gene locus of any organism or virus.</li>
+<li>Handles both non-quantitative and quantitative metabarcoding <span class="citation" data-cites="Ushio2018Quantitativemonitoringmultispecies">(Ushio <em>et al.</em> 2018a)</span>.</li>
+<li>Offers more flexible and detailed analyses.</li>
+<li>Provides no web service; all processing will be done on your own computer.</li>
+<li>Requires more prerequisite knowledges and equipments to use.</li>
+</ul>
+<p>This textbook explains how to install Claident and how to perform quantitative metabarcoding using internal-standard DNA. A support page for this textbook is available at:</p>
+<ul>
+<li><a href="https://github.com/astanabe/eDNAmanual" class="uri">https://github.com/astanabe/eDNAmanual</a></li>
+</ul>
+<p>Sample data, example files, and this manuscript are placed there.</p>
+<p>For additional information on Claident, see:</p>
+<ul>
+<li><a href="https://www.claident.org/" class="uri">https://www.claident.org/</a></li>
+</ul>
+<p>The instructions below assume you are <strong>already comfortable working in a Linux or macOS terminal environment</strong>. If not, please acquire the necessary skills beforehand.</p>
+<h2 data-number="1.1" id="operating-environment-and-installation-of-claident"><span class="header-section-number">1.1</span> Operating Environment and Installation of Claident</h2>
+<p>Claident is designed to run on:</p>
+<ul>
+<li>Debian 11 or later (including WSL environment on Windows)</li>
+<li>Ubuntu 20.04 or later (including WSL environment on Windows)</li>
+<li>Linux Mint 20 or later</li>
+<li>Red Hat Enterprise Linux 8 or later</li>
+<li>AlmaLinux 8 or later (including WSL environment on Windows)</li>
+<li>Rocky Linux 8 or later</li>
+<li>macOS with Homebrew installed</li>
+<li>macOS with MacPorts installed</li>
+</ul>
+<p>If you use Windows, install WSL and Ubuntu by following Microsoft’s official instructions:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/ja-jp/windows/wsl/install" class="uri">https://learn.microsoft.com/ja-jp/windows/wsl/install</a></li>
+</ul>
+<p>Note that Ubuntu on Windows can use at most about 250 GB of disk space and only half of the physical memory (as of this writing). Large-scale analyses may therefore exceed those limits. Whenever possible, use a dedicated analysis machine with plenty of RAM and a fast SSD, because species identification with large reference databases is both memory- and I/O-intensive.</p>
+<p>Claident cannot be installed correctly if environment-modifying software such as Anaconda or Miniconda is active. Temporarily disable them, or log in with a user account where they are not used, before installation.</p>
+<p>On Debian / Ubuntu / Linux Mint / Ubuntu on Windows, run the following commands in a terminal to install Claident:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>sudo apt install wget</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>mkdir temporary</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>cd temporary</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>wget https://www.claident.org/installClaident_Debian.sh</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>wget https://www.claident.org/installOptions_Debian.sh</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>wget https://www.claident.org/installUCHIMEDB_Debian.sh</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>wget https://www.claident.org/installDB_Debian.sh</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>sh installClaident_Debian.sh</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>sh installOptions_Debian.sh</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>sh installUCHIMEDB_Debian.sh</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>sh installDB_Debian.sh</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>cd ..</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>rm -rf temporary</span></code></pre></div>
+<p>On macOS, first install Homebrew as described at the following URL:</p>
+<ul>
+<li><a href="https://brew.sh/" class="uri">https://brew.sh/</a></li>
+</ul>
+<p>Then execute the following commands on Terminal to install Claident:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>brew install wget</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>mkdir temporary</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>cd temporary</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>wget https://www.claident.org/installClaident_macOSHomebrew.sh</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>wget https://www.claident.org/installOptions_macOSHomebrew.sh</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>wget https://www.claident.org/installUCHIMEDB_macOSHomebrew.sh</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>wget https://www.claident.org/installDB_macOSHomebrew.sh</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>sh installClaident_macOSHomebrew.sh</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>sh installOptions_macOSHomebrew.sh</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>sh installUCHIMEDB_macOSHomebrew.sh</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>sh installDB_macOSHomebrew.sh</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>cd ..</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>rm -rf temporary</span></code></pre></div>
+<p>If you can reach the outside network only through a proxy server, set the environment variables like below before running the installation scripts:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>export http_proxy=http://proxyaddress:portnumber</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>export https_proxy=http://proxyaddress:portnumber</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>export ftp_proxy=http://proxyaddress:portnumber</span></code></pre></div>
+<p>If the proxy requires password authentication, run the following instead:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>export http_proxy=http://username:password@proxyaddress:portnumber</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>export https_proxy=http://username:password@proxyaddress:portnumber</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>export ftp_proxy=http://username:password@proxyaddress:portnumber</span></code></pre></div>
+<p>By default, the scripts will install Claident under “<code>/usr/local</code>”. To install Claident to another location, set the <code>PREFIX</code> environment variable beforehand like below:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>export PREFIX=/home/tanabe/claident20240101</span></code></pre></div>
+<p>Claident will then be installed under “<code>/home/tanabe/claident20240101</code>”. If you change the installation path, “<code>[Install Path]/bin</code>”, which contains the executable commands of Claident, is not on your <code>PATH</code> environment variable, and analysis commands of Claident cannot be executed without the full path. Therefore, you need to add it to PATH environment variable before running Claident as the following:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>export PATH=/home/tanabe/claident20240101/bin:$PATH</span></code></pre></div>
+<p>If typing this every time is inconvenient, append the line to the end of “<code>~/.bashrc</code>” (or your shell’s startup file); it will then run automatically whenever you open a terminal.</p>
+<p>Using different installation directories lets you keep multiple Claident versions on the same machine. Each command refers to the configuration file “<code>~/.claident</code>”, so switching versions also requires replacing that file. A template is located at “<code>[Install Path]/share/claident/.claident</code>”; copying it over “<code>~/.claident</code>” completes the switch. If you truly need multiple versions, it is often simplest to create separate user accounts, install each version within the respective home directory, and switch users when you wish to change versions.</p>
+<h2 data-number="1.2" id="overall-workflow-and-prerequisites-for-data-analysis"><span class="header-section-number">1.2</span> Overall Workflow and Prerequisites for Data Analysis</h2>
+<p>Data analysis with Claident is carried out in the following steps.</p>
+<ol type="1">
+<li>Demultiplexing</li>
+<li>Merging paired-end reads</li>
+<li>Removal of low-quality reads <span class="citation" data-cites="Edgar2015Errorfilteringpair">(Edgar &amp; Flyvbjerg 2015)</span></li>
+<li>Denoising <span class="citation" data-cites="Callahan2016DADA2Highresolutionsample">(Callahan <em>et al.</em> 2016)</span></li>
+<li>First chimera removal <span class="citation" data-cites="Edgar2011UCHIMEimprovessensitivity Edgar2016UCHIME2improvedchimera Rognes2016VSEARCHversatileopen">(Edgar 2016; Edgar <em>et al.</em> 2011; Rognes <em>et al.</em> 2016)</span></li>
+<li>Clustering of internal-standard sequences <span class="citation" data-cites="Edgar2010Searchclusteringorders Rognes2016VSEARCHversatileopen">(Edgar 2010; Rognes <em>et al.</em> 2016)</span></li>
+<li>Second chimera removal <span class="citation" data-cites="Edgar2011UCHIMEimprovessensitivity Rognes2016VSEARCHversatileopen">(Edgar <em>et al.</em> 2011; Rognes <em>et al.</em> 2016)</span></li>
+<li>Removal of index-hopping <span class="citation" data-cites="Esling2015Accuratemultiplexingfiltering">(Esling <em>et al.</em> 2015)</span></li>
+<li>Decontamination using negative controls</li>
+<li>Molecular identification <span class="citation" data-cites="Tanabe2013TwoNewComputational">(Tanabe &amp; Toju 2013)</span></li>
+<li>Construction and processing of the OTU composition table</li>
+<li>Coverage-based rarefaction <span class="citation" data-cites="Chao2012Coveragebasedrarefactionextrapolation">(Chao &amp; Jost 2012)</span></li>
+<li>Estimation of DNA concentration using the read counts of internal-standard DNA <span class="citation" data-cites="Ushio2018Quantitativemonitoringmultispecies">(Ushio <em>et al.</em> 2018a)</span></li>
+</ol>
+<p>The final OTU table can be visualized, summarized, and tested in R or another statistical environment. Claident itself does not provide statistical analysis functions for OTU tables.</p>
+<p>Claident can handle most metabarcoding data, but in this textbook I assume data that meet the conditions below. Data that do not meet all of them can still be analyzed, but are outside the scope of this explanation.</p>
+<ul>
+<li>Environmental DNA samples obtained by filtering water and extracting DNA from the filter, together with field blanks as negative controls.</li>
+<li>Library preparation as follows:
+<ul>
+<li>Add several internal-standard DNAs of known concentration and perform tailed PCR with the MiFish primers (1st PCR).</li>
+<li>Use the 1st-PCR product as template and perform tailed PCR with index primers (2nd PCR).</li>
+<li>The resulting library is a dual-index library with an index at each end.</li>
+</ul></li>
+<li>Pool the 2nd-PCR products of all samples and sequence them on an Illumina sequencer <strong>using a dedicated run or an entire lane</strong>.
+<ul>
+<li>Paired-end sequencing with overlap, so the reads can be merged.</li>
+<li>The run data including .bcl files or undemultiplexed FASTQ files including the index reads are available.</li>
+</ul></li>
+</ul>
+<p>Accordingly, for every sample and blank you must know the following:</p>
+<ul>
+<li>Whether it is a sample or a blank</li>
+<li>Volume of filtered water</li>
+<li>Volume of extracted DNA solution (the buffer volume used in the final elution, not the recovered volume)</li>
+<li>Internal-standard DNA sequences</li>
+<li>Concentration of internal-standard DNA</li>
+<li>The part of the 1st-PCR primers that is read first by the sequencer</li>
+<li>The part of the 2nd-PCR primers that is read as the index</li>
+</ul>
+<p>For cases such as single-end reads, paired-end reads without overlap, libraries prepared without adding internal-standard DNA, or only demultiplexed FASTQ files being available, please refer to the shell scripts on the following page.</p>
+<ul>
+<li><a href="https://github.com/astanabe/ClaidentTutorial" class="uri">https://github.com/astanabe/ClaidentTutorial</a></li>
+</ul>
+<p>If you have no field blanks or too few of them, you can substitute extraction blanks or 1st-PCR blanks; however, you cannot combine field blanks with other blanks. <strong>You need at least 10 blanks</strong> — that is, ten or more field blanks, <strong>or</strong> ten or more extraction blanks, <strong>or</strong> ten or more 1st-PCR blanks.</p>
+<p>Primers for the 1st PCR have already been developed, such as MiFish <span class="citation" data-cites="Miya2015MiFishsetuniversal Miya2020MiFishmetabarcodinghighthroughput">(Miya <em>et al.</em> 2020, 2015)</span>, MiDeca <span class="citation" data-cites="Komai2019Developmentnewset">(Komai <em>et al.</em> 2019)</span>, MiMammal <span class="citation" data-cites="Ushio2017EnvironmentalDNAenables">(Ushio <em>et al.</em> 2017)</span>, MiBird <span class="citation" data-cites="Ushio2018Demonstrationpotentialenvironmental">(Ushio <em>et al.</em> 2018b)</span>, Amph16S <span class="citation" data-cites="Sakata2022DevelopmentevaluationPCR">(Sakata <em>et al.</em> 2022)</span>, and MtInsects-16S <span class="citation" data-cites="Takenaka2023DevelopmentnovelPCR">(Takenaka <em>et al.</em> 2023)</span>. Choose an appropriate primer set according to the target taxon. If you try to design new primers, collect sequences for the target taxon and locus from public databases, find a highly conserved region flanking a sufficiently variable region of suitable length, and design primers there. In addition, it is common to append about six <code>N</code> bases to the beginning of each 1st-PCR primer so that the sequencer starts with a diverse base composition; otherwise, the fluorescence signal may saturate on Illumina sequencers. Some oligo synthesis services generate primers in which most of the <code>N</code> become <code>T</code>, so choose the vendor carefully.</p>
+<p>Ready-made index primers for the 2nd PCR are available from Illumina and other suppliers. Some sets are also provided at the URLs below.</p>
+<ul>
+<li><a href="https://github.com/astanabe/TruSeqStyleIndexPrimers" class="uri">https://github.com/astanabe/TruSeqStyleIndexPrimers</a></li>
+<li><a href="https://github.com/astanabe/NexteraStyleIndexPrimers" class="uri">https://github.com/astanabe/NexteraStyleIndexPrimers</a></li>
+</ul>
+<p>Because a low base diversity in the index region also causes sequencing errors, examine the combinations of indices carefully. Ideally, the proportion of <code>A/C</code> to <code>G/T</code> should be close to 1:1 at every position, and caution is required when only a few samples are pooled. To use Claident to detect and remove index-hopping, each sample needs “10 or more unused index combinations that share one of the two indices”.</p>
+<p>Prepare the internal-standard DNA solution by dissolving synthesized DNA in TE buffer and adjusting it to the desired concentration by absolute quantitation with a fluorescent assay or digital PCR, followed by dilution and mixing. Double-stranded DNA synthesis services include Strings DNA Fragments (ThermoFisher) and gBlocks (Integrated DNA Technologies). To design an internal-standard DNA sequence, collect insert regions that can be amplified by the chosen primer set, mutate more than 10 % of the bases at random while keeping the GC content unchanged, and attach the primer sequences to both ends. Ideally, the sequence should differ by ≥ 10 %, preferably ≥ 15 %, from any known organism. Example sequences for the MiFish primers are listed in Appendix S1 of <span class="citation" data-cites="Ushio2022efficientearlypoolingprotocol">Ushio <em>et al.</em> (2022)</span>.</p>
+<p>From here on I assume <strong>data from one dedicated run or one dedicated lane</strong>. If you have data from multiple runs or lanes, perform the analysis up to index-hopping removal <strong>separately for each run or lane</strong>, and then merge the results with the <code>clclassseqv</code> command.</p>
+<h3 data-number="1.2.1" id="about-sample-ids-in-claident"><span class="header-section-number">1.2.1</span> About “Sample IDs” in Claident</h3>
+<p>The concept of a sample ID in Claident is as follows. In metabarcoding you may sequence the same primer product of the same sample in multiple runs, or multiple primer products of the same sample in one sequencing run. To distinguish these cases, write the sample ID in the form:</p>
+<pre><code>[Run ID]__[Material ID]__[Primer ID]</code></pre>
+<p><code>[Run ID]</code> is any string that you will specify later as an option of the analysis commands and should identify the sequencing run or lane. <code>[Primer ID]</code> is a string specified in one of the files described later and identifies the primer set used (e.g. <code>MiFish</code> for MiFish primer set). <code>[Material ID]</code> is the usual sample ID assigned to the physical material. If the <code>[Material ID]</code> is the same while <code>[Run ID]</code> or <code>[Primer ID]</code> differs, the underlying template DNA is the same. Because the physical sample and Claident’s notion of a sample are not necessarily one-to-one, this naming scheme lets you see which physical sample corresponds to a sample ID at a glance.</p>
+<p>If you prepare technical replicates, treat them as separate samples when they remain distinct throughout DNA extraction, library preparation, and sequencing; otherwise treat them as one sample. When treating them as separate, it is useful to append <code>-R1</code>, <code>-R2</code>, and so on to the rnd of <code>[Material ID]</code> to indicate the replicate.</p>
+<p>Note that <code>__</code> (two or more consecutive underscores) cannot appear in <code>[Run ID]</code>, <code>[Primer ID]</code>, or <code>[Material ID]</code>. Allowed characters are alphanumerics, hyphens, and underscores only. Using other characters may cause unexpected errors.</p>
+<h3 data-number="1.2.2" id="about-otus-and-asvs"><span class="header-section-number">1.2.2</span> About OTUs and ASVs</h3>
+<p>Amplicon Sequence Variant (ASV) or Exact Sequence Variant (ESV) is a set of sequences that are identical — or inferred to be identical — in all positions. Operational Taxonomic Unit (OTU), as the name implies, is any classification unit defined at the analyst’s discretion. It is a common misconception that OTUs are “units obtained by clustering sequences at a given similarity”, but that contradicts the literal meaning of the term. If you decide to analyze ASVs as your classification units, those ASVs are OTUs. In Claident, OTU is ASV in most cases, but in the following, I will use OTU wherever OTU may not coincide with ASV.</p>
+<h3 data-number="1.2.3" id="required-files-and-directory-structure"><span class="header-section-number">1.2.3</span> Required Files and Directory Structure</h3>
+<p>This section explains the files that must be prepared before analysis. File names are arbitrary, but the names assumed in later commands are shown.</p>
+<h4 data-number="1.2.3.1" id="blank-list-blanklist.txt"><span class="header-section-number">1.2.3.1</span> Blank List (blanklist.txt)</h4>
+<p>This is a text file in which one blank’s sample ID is written per line. It must be written in the following format.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>[Run ID]__[Blank Material ID 1]__[Primer ID]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>[Run ID]__[Blank Material ID 2]__[Primer ID]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>[Run ID]__[Blank Material ID 3]__[Primer ID]</span></code></pre></div>
+<p>Claident recognizes the items listed in this file as blanks. You may omit <code>[Run ID]</code> and <code>[Primer ID]</code> and write them in the following format.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>[Blank Material ID 1]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>[Blank Material ID 2]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>[Blank Material ID 3]</span></code></pre></div>
+<h4 data-number="1.2.3.2" id="filtered-water-volume-table-watervoltable.tsv"><span class="header-section-number">1.2.3.2</span> Filtered Water Volume Table (watervoltable.tsv)</h4>
+<p>This is a tab-delimited text file in which one sample ID and the filtered water volume are written per line, separated by tab characters. If multiple filters were used and you want to record them separately, list multiple numbers separated by tabs. (They are summed when concentration is estimated.)</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>[Run ID]__[Sample Material ID 1]__[Primer ID]  1000  1000</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>[Run ID]__[Sample Material ID 2]__[Primer ID]  1000  500</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>[Run ID]__[Sample Material ID 3]__[Primer ID]  1500</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>[Run ID]__[Blank Material ID 1]__[Primer ID]   500</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>[Run ID]__[Blank Material ID 2]__[Primer ID]   500</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>[Run ID]__[Blank Material ID 3]__[Primer ID]   500</span></code></pre></div>
+<p>You may omit <code>[Run ID]</code> and <code>[Primer ID]</code> and write them as follows.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>[Sample Material ID 1]  1000  1000</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>[Sample Material ID 2]  1000  500</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>[Sample Material ID 3]  1500</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>[Blank Material ID 1]   500</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>[Blank Material ID 2]   500</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a>[Blank Material ID 3]   500</span></code></pre></div>
+<p>These numbers are used to estimate the DNA concentration in the original environmental water sample. Any unit may be used, but milliliters are recommended unless there is a special reason. You can append any string after a trailing tab, so you may write the unit there. However, the program does not convert different units to a common unit.</p>
+<h4 data-number="1.2.3.3" id="extracted-dna-solution-volume-table-solutionvoltable.tsv"><span class="header-section-number">1.2.3.3</span> Extracted DNA Solution Volume Table (solutionvoltable.tsv)</h4>
+<p>This is a tab-delimited text file in which one sample or blank ID and the volume of the extracted DNA solution are written per line, separated by tab characters. If multiple filters were used and multiple DNA solutions were obtained, list multiple numbers separated by tabs. (They are summed when concentration is estimated.)</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>[Run ID]__[Sample Material ID 1]__[Primer ID]  200  200</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>[Run ID]__[Sample Material ID 2]__[Primer ID]  200  200</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>[Run ID]__[Sample Material ID 3]__[Primer ID]  200</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a>[Run ID]__[Blank Material ID 1]__[Primer ID]   200</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>[Run ID]__[Blank Material ID 2]__[Primer ID]   200</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>[Run ID]__[Blank Material ID 3]__[Primer ID]   200</span></code></pre></div>
+<p>You may omit <code>[Run ID]</code> and <code>[Primer ID]</code> and write them as follows.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>[Sample Material ID 1]  200  200</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>[Sample Material ID 2]  200  200</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>[Sample Material ID 3]  200</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>[Blank Material ID 1]   200</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>[Blank Material ID 2]   200</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>[Blank Material ID 3]   200</span></code></pre></div>
+<p>These numbers are used to estimate the total number of DNA copies in the extracted DNA solution. Any unit may be used, but microliters are recommended unless there is a special reason. You can append any string after a trailing tab, so you may write the unit there. However, the program does not convert different units to a common unit.</p>
+<p>Note that this is the buffer volume used for DNA elution, not the volume actually recovered in DNA extraction. For example, if you add 200 µL of elution buffer to a spin column or magnetic beads and finally obtain 190 µL of DNA extract, ten more microliters of DNA extract actually exist but were not recovered, so 200 µL should be written here. It is assumed that the wash buffer used before DNA elution has been completely removed.</p>
+<h4 data-number="1.2.3.4" id="internal-standard-dna-sequences-standard.fasta"><span class="header-section-number">1.2.3.4</span> Internal-Standard DNA Sequences (standard.fasta)</h4>
+<p>This is a FASTA file containing the internal-standard DNA sequences. Multiple sequences can be listed. Below is an example FASTA file containing four internal-standard DNA sequences.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>&gt;MiFish_STD_01</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>CACCGCGGTTATACGACAGGCCCAAGTTGAACGCAGTCGGCGTAAAGAGTGGTTAAAAG...</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>&gt;MiFish_STD_02</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a>CACCGCGGTTATACGACAGGCCCAAGTTGATCTTGAACGGCGTAAAGAGTGGTTAGATT...</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>&gt;MiFish_STD_03</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>CACCGCGGTTATACGACAGGCCCAAGTTGAAGCGACGCGGCGTAAAGAGTGGTTATCAC...</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>&gt;MiFish_STD_04-2</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>CACCGCGGTTATACGACAGGCCCAAGTTGAGATCCCACGGCGTAAAGAGTGGTTAGAAC...</span></code></pre></div>
+<p>Internal-standard DNAs are identified based on these sequences. The sequences may include or omit the primer-annealing regions that were used when ordering from the synthesis service. Sequence names must match those in the internal-standard DNA concentration table described below.</p>
+<h4 data-number="1.2.3.5" id="internal-standard-dna-concentration-table-stdconctable.tsv"><span class="header-section-number">1.2.3.5</span> Internal-Standard DNA Concentration Table (stdconctable.tsv)</h4>
+<p>This is a tab-delimited text file in which the concentration of each internal-standard DNA added in the 1st PCR is listed for each sample. Prepare a table like the following.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>samplename                                    MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>[Run ID]__[Sample Material ID 1]__[Primer ID] 5             10            20            40</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>[Run ID]__[Sample Material ID 2]__[Primer ID] 5             10            20            40</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>[Run ID]__[Sample Material ID 3]__[Primer ID] 5             10            20            40</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>[Run ID]__[Blank Material ID 1]__[Primer ID]  5             10            20            40</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a>[Run ID]__[Blank Material ID 2]__[Primer ID]  5             10            20            40</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a>[Run ID]__[Blank Material ID 3]__[Primer ID]  5             10            20            40</span></code></pre></div>
+<p>You may omit <code>[Run ID]</code> and <code>[Primer ID]</code> and write them as follows.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>samplename             MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>[Sample Material ID 1] 5             10            20            40</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>[Sample Material ID 2] 5             10            20            40</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>[Sample Material ID 3] 5             10            20            40</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a>[Blank Material ID 1]  5             10            20            40</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a>[Blank Material ID 2]  5             10            20            40</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>[Blank Material ID 3]  5             10            20            40</span></code></pre></div>
+<p>The unit of concentration is copies per microliter. This assumes that equal volumes of sample DNA solution and internal-standard DNA solution were added for the 1st PCR. Therefore, if twice the volume of internal-standard DNA solution as sample DNA solution was added, double the numbers. If the sample DNA solution was diluted tenfold and an equal volume of internal-standard DNA solution was added, multiply the numbers by ten. If both the sample DNA solution and the internal-standard DNA solution were diluted tenfold before mixing, use the numbers as they are. Internal-standard DNA names must match the names in the internal-standard DNA sequence file.</p>
+<h4 data-number="1.2.3.6" id="primer-regions-read-first-by-the-sequencer-forwardprimer.fasta-and-reverseprimer.fasta"><span class="header-section-number">1.2.3.6</span> Primer Regions Read First by the Sequencer (forwardprimer.fasta and reverseprimer.fasta)</h4>
+<p>These FASTA files contain the parts of the forward and reverse primers of the 1st PCR that are actually sequenced. Remove the regions where the index primers of the 2nd PCR anneal so that only the regions read by the sequencer remain. For example, if MiFish-U-F <code>ACA CTC TTT CCC TAC ACG ACG CTC TTC CGA TCT NNN NNN GTC GGT AAA ACT CGT GCC AGC</code> is used as the forward primer in the 1st PCR, write <code>NNN NNN GTC GGT AAA ACT CGT GCC AGC</code> as the sequence. Multiple primer sequences can be listed in each file, but the first forward primer is paired only with the first reverse primer, and combinations with the remaining reverse primers are not considered. Degenerate base codes such as <code>R</code>, <code>Y</code>, <code>M</code>, <code>K</code>, and <code>N</code> can be used in the sequences. When slightly different primer sequences such as MiFish variants are mixed, align them and write the degenerate consensus sequence. For example, if MiFish-E-v2, MiFish-U and MiFish-U2 are mixed, the contents of the forward primer sequence file “<code>forwardprimer.fasta</code>” will be as follows.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>&gt;MiFish</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>NNNNNNNGYYGGTAAAWCTCGTGCCAGC</span></code></pre></div>
+<p>The sequences used to build this degenerate consensus are shown below (aligned for readability).</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>&gt;MiFish-E-F-v2</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a>NNNNNNRGTTGGTAAATCTCGTGCCAGC</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a>&gt;MiFish-U-F</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a> NNNNNNGTCGGTAAAACTCGTGCCAGC</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a>&gt;MiFish-U2-F</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true"></a> NNNNNNGCCGGTAAAACTCGTGCCAGC</span></code></pre></div>
+<p>The reverse primer file “<code>reverseprimer.fasta</code>” will be as follows.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>&gt;MiFish</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a>NNNNNNNCATAGKRGGGTRTCTAATCCYMGTTTG</span></code></pre></div>
+<p>The sequences used to build this degenerate consensus are shown below (aligned for readability).</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>&gt;MiFish-E-R-v2</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a>NNNNNNGCATAGTGGGGTATCTAATCCTAGTTTG</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a>&gt;MiFish-U-R</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a> NNNNNNCATAGTGGGGTATCTAATCCCAGTTTG</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a>&gt;MiFish-U2-R</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true"></a> NNNNNNCATAGGAGGGTGTCTAATCCCCGTTTG</span></code></pre></div>
+<p>The sequence names in these files are used as the <code>[Primer ID]</code> portion of the Claident’s sample IDs, so they must match the <code>[Primer ID]</code> used in the other files described above.</p>
+<h4 data-number="1.2.3.7" id="index-regions-index1.fasta-and-index2.fasta"><span class="header-section-number">1.2.3.7</span> Index Regions (index1.fasta and index2.fasta)</h4>
+<p>These FASTA files must contain only the index regions of the index primers used in the 2nd PCR. Index2 (the i5 index) lies in the forward index primer, and its read orientation depends on the instrument. Index1 (the i7 index) lies in the reverse index primer and is read in the orientation opposite to the primer sequence ordered. The index sequences listed in “<code>SampleSheet.csv</code>” for Illumina sequencers are already standardized for read orientation, so you can copy them directly. The reverse index file “<code>index1.fasta</code>” will look like the following.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>&gt;[Sample Material ID 1]</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a>ACCTGCAA</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>&gt;[Sample Material ID 2]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a>GTTCCTTG</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a>&gt;[Sample Material ID 3]</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true"></a>CCAGATCT</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true"></a>&gt;[Blank Material ID 1]</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true"></a>AAGTGTGA</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true"></a>&gt;[Blank Material ID 2]</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true"></a>CCATGATC</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true"></a>&gt;[Blank Material ID 3]</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true"></a>TCATGTCT</span></code></pre></div>
+<p>The forward index file “<code>index2.fasta</code>” is almost the same except for the sequences. Ensure that the sequence names correspond to the <code>[Material ID]</code> and that the order of the sequences is exactly the same.</p>
+<p>To apply the index-hopping removal function, <strong>information on every index used in the sequencing run is required</strong>. Even if some samples or negative controls were discarded after problems were discovered during preparation or sequencing, the data for those samples contain information needed for index-hopping removal. Therefore, do not delete such data until index-hopping removal is finished.</p>
+<h4 data-number="1.2.3.8" id="undemultiplexed-fastq"><span class="header-section-number">1.2.3.8</span> Undemultiplexed FASTQ</h4>
+<p>When you outsource sequencing, you usually receive demultiplexed FASTQ files based on “<code>SampleSheet.csv</code>”. However, Illumina’s demultiplexing program may fail when too many samples are multiplexed in one run or one lane, does not take index base quality into account, allows single mismatches, and discards reads with unused index combinations, making index-hopping detection impossible. For these reasons, demultiplexing with Claident’s built-in program <code>clsplitseq</code> is recommended. To demultiplex with <code>clsplitseq</code>, install Illumina’s BCL Convert on a Linux machine and generate undemultiplexed FASTQ files that include the index reads from the run data. Locating the working directory on a fast SSD is strongly recommended.</p>
+<p>You can download BCL Convert from the following URL.</p>
+<ul>
+<li><a href="https://jp.support.illumina.com/sequencing/sequencing_software/bcl-convert.html" class="uri">https://jp.support.illumina.com/sequencing/sequencing_software/bcl-convert.html</a></li>
+</ul>
+<p>The latest version at the time of writing is v4.3.6. Up to v4.2.4, anyone could download the software, but v4.3.6 requires user registration and login to Illumina Basespace, a cloud service provided by Illumina, and the serial number of the Illumina sequencer being used to download the software. If you have a FASTQ file obtained from an Illumina sequencer, you can open the FASTQ file with a text editor or <code>less</code> command and find the serial number of the sequencer in the sequence data (the string between “@” and the first “:” in the line starting with “@” indicating the sequence name is the serial number of the sequencer), so you can use it to download v4.3.6. In most cases, v4.2.4 will work fine, so the following instructions are for v4.2.4, but for v4.3.6, there are no differences other than the version number.</p>
+<p>On Debian, Ubuntu, Linux Mint, or Ubuntu on Windows, download the distribution file for Oracle Linux 8 labeled “(Oracle 8)” and place it in the working directory “<code>workingdirectory</code>” and execute the following commands in a terminal to install it.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>sudo apt install rpm2cpio cpio pstack</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>cd workingdirectory</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a>mkdir temporary</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>cd temporary</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>rpm2cpio ../bcl-convert-4.2.4-2.el8.x86_64.rpm | cpio -id</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a>sudo mkdir -p /usr/local/bin</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a>sudo cp usr/bin/bcl-convert /usr/local/bin/</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a>sudo mkdir -p /var/log/bcl-convert</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a>sudo chmod 777 /var/log/bcl-convert</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true"></a>cd ..</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true"></a>rm -rf temporary bcl-convert-4.2.4-2.el8.x86_64.rpm</span></code></pre></div>
+<p>This program is not available for macOS. To run it on macOS, install a virtual machine, install Ubuntu on it, and then install BCL Convert to that Ubuntu system.</p>
+<p>To generate undemultiplexed FASTQ files with BCL Convert, create a file named “<code>Dummy.csv</code>” containing the following with a text editor.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a>[Header]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a>FileFormatVersion,2</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a>[BCLConvert_Settings]</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a>OverrideCycles,Y150N1;I8;I8;Y150N1</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a>CreateFastqForIndexReads,1</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a>[BCLConvert_Data]</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a>Lane,Sample_ID,index,index2</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a>1,Dummy,CCCCCCCC,CCCCCCCC</span></code></pre></div>
+<p>The above “<code>Dummy.csv</code>” can be created without a text editor by executing the following command in the terminal.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>echo &#39;[Header]</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a>FileFormatVersion,2</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a>[BCLConvert_Settings]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a>OverrideCycles,Y150N1;I8;I8;Y150N1</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a>CreateFastqForIndexReads,1</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true"></a>[BCLConvert_Data]</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true"></a>Lane,Sample_ID,index,index2</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true"></a>1,Dummy,CCCCCCCC,CCCCCCCC&#39; &gt; Dummy.csv</span></code></pre></div>
+<p>This file assumes an 8-base dual index and 151 cycles for both forward and reverse reads (the last cycles are discarded on both forward and reverse reads). If the index length or number of cycles is different, it must be changed accordingly. A dummy sample named <code>Dummy</code> with both index1 and index2 set to <code>CCCCCCCC</code> is included because BCL Convert produces an error if no sample lines are present. If <strong>any</strong> of the samples where both index1 and index2 are <code>CCCCCCCC</code>, index1 is <code>CCCCCCCC</code>, or index2 is <code>CCCCCCCC</code> exist, rewrite them to appropriate sequences. If no such sample where both index1 and index2 are <code>CCCCCCCC</code> exists but some reads appear in the <code>Dummy</code> FASTQ files, they are probably caused by sequencing errors and can be ignored. If the index length is not 8 bases, change both the <code>OverrideCycles</code> line and the length of <code>C</code> characters. For example, for a 10-base dual index with 301 cycles forward and reverse (discarding the last cycle), use <code>OverrideCycles,Y300N1;I10;I10;Y300N1</code> and <code>CCCCCCCCCC</code>, respectively.</p>
+<p>Specify this file with <code>--sample-sheet</code> to disable BCL Convert’s internal demultiplexing and to create undemultiplexed FASTQ files. The following command will output the undemultiplexed FASTQ files to the directory “<code>01_undemultiplexed</code>”.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>bcl-convert \</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a>--sample-sheet Dummy.csv \</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a>--bcl-input-directory [Run Data Directory] \</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a>--output-directory 01_undemultiplexed</span></code></pre></div>
+<p>Here, <code>[Run Data Directory]</code> is the directory that contains the run data copied from the sequencer or from the analysis computer attached to the sequencer. It should contain a “<code>Data</code>” directory. Copy this directory in advance to the machine on which BCL Convert is installed. By default, BCL Convert automatically determines the number of CPUs to use (it uses all available CPUs).</p>
+<p>The above example assumes an instrument with a single lane. For instruments with multiple lanes, increase the number of dummy sample lines in the <code>[BCLConvert_Data]</code> section of “<code>Dummy.csv</code>” to match the number of lanes, as shown below.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>[Header]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>FileFormatVersion,2</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a>[BCLConvert_Settings]</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a>OverrideCycles,Y150N1;I8;I8;Y150N1</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a>CreateFastqForIndexReads,1</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true"></a>[BCLConvert_Data]</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true"></a>Lane,Sample_ID,index,index2</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true"></a>1,Dummy1,CCCCCCCC,CCCCCCCC</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true"></a>2,Dummy2,CCCCCCCC,CCCCCCCC</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true"></a>3,Dummy3,CCCCCCCC,CCCCCCCC</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true"></a>4,Dummy4,CCCCCCCC,CCCCCCCC</span></code></pre></div>
+<p>You can restrict the output to a specific lane by adding the <code>--bcl-only-lane</code> option. For example, <code>--bcl-only-lane 1</code> will output the first lane only. If you omit this option, data for all lanes will be written to separate files.</p>
+<p>Running BCL Convert as described above will produce the following four files, in addition to the <code>Dummy</code> files, when only lane 1 is output.</p>
+<dl>
+<dt>Undetermined_S0_L001_I1_001.fastq.gz</dt>
+<dd>Undemultiplexed FASTQ for index1 (8 bases long)
+</dd>
+<dt>Undetermined_S0_L001_I2_001.fastq.gz</dt>
+<dd>Undemultiplexed FASTQ for index2 (8 bases long)
+</dd>
+<dt>Undetermined_S0_L001_R1_001.fastq.gz</dt>
+<dd>Undemultiplexed FASTQ for the forward reads of the inserts (150 bases long)
+</dd>
+<dt>Undetermined_S0_L001_R2_001.fastq.gz</dt>
+<dd>Undemultiplexed FASTQ for the reverse reads of the inserts (150 bases long)
+</dd>
+</dl>
+<p>Here “<code>L001</code>” represents the lane number, so the file names differ for other lanes.</p>
+<h4 data-number="1.2.3.9" id="directory-structure"><span class="header-section-number">1.2.3.9</span> Directory Structure</h4>
+<p>Before starting analysis with Claident, your working directory should contain the following files and directories.</p>
+<ul>
+<li>Working directory
+<ul>
+<li>blanklist.txt</li>
+<li>watervoltable.tsv</li>
+<li>solutionvoltable.tsv</li>
+<li>standard.fasta</li>
+<li>stdconctable.tsv</li>
+<li>forwardprimer.fasta</li>
+<li>reverseprimer.fasta</li>
+<li>index1.fasta</li>
+<li>index2.fasta</li>
+<li>01_undemultiplexed (directory)
+<ul>
+<li>Undetermined_S0_L001_I1_001.fastq.gz</li>
+<li>Undetermined_S0_L001_I2_001.fastq.gz</li>
+<li>Undetermined_S0_L001_R1_001.fastq.gz</li>
+<li>Undetermined_S0_L001_R2_001.fastq.gz</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 data-number="1.3" id="processing-of-nucleotide-sequence-data"><span class="header-section-number">1.3</span> Processing of Nucleotide Sequence Data</h2>
+<p>This section explains how to process the actual nucleotide sequence data. All commands should be executed in the terminal. It is assumed that the working directory is the current directory. Replace the placeholder <code>[Number Of CPU cores]</code> in command options with the integer number of CPU cores to use during processing. Files that have already been explained earlier are not described again here. Several steps access the disk heavily, so processing is greatly affected if the working directory is on a slow disk. Therefore, we strongly recommend placing the working directory on a fast SSD.</p>
+<h3 data-number="1.3.1" id="demultiplexing-with-clsplitseq"><span class="header-section-number">1.3.1</span> Demultiplexing with clsplitseq</h3>
+<p>Run the following command to perform demultiplexing.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>clsplitseq \</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a>--runname=[Run ID] \</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a>--forwardprimerfile=forwardprimer.fasta \</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true"></a>--reverseprimerfile=reverseprimer.fasta \</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true"></a>--truncateN=enable \</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true"></a>--index1file=index1.fasta \</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true"></a>--index2file=index2.fasta \</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true"></a>--minqualtag=30 \</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true"></a>--compress=xz \</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true"></a>--seqnamestyle=illumina \</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true"></a>01_undemultiplexed/Undetermined_S0_L001_R1_001.fastq.gz \</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true"></a>01_undemultiplexed/Undetermined_S0_L001_I1_001.fastq.gz \</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true"></a>01_undemultiplexed/Undetermined_S0_L001_I2_001.fastq.gz \</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true"></a>01_undemultiplexed/Undetermined_S0_L001_R2_001.fastq.gz \</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true"></a>02_demultiplexed</span></code></pre></div>
+<p>The meaning of each command-line option is as follows.</p>
+<dl>
+<dt><code>--runname</code></dt>
+<dd>Give any <code>[Run ID]</code> which can be set arbitrarily by the user
+</dd>
+<dt><code>--forwardprimerfile</code></dt>
+<dd>Forward primer sequence file
+</dd>
+<dt><code>--reverseprimerfile</code></dt>
+<dd>Reverse primer sequence file
+</dd>
+<dt><code>--truncateN</code></dt>
+<dd>Whether to exclude the leading cluster of <code>N</code> bases in the primer sequence when calculating primer similarity
+</dd>
+<dt><code>--index1file</code></dt>
+<dd>Reverse index sequence file
+</dd>
+<dt><code>--index2file</code></dt>
+<dd>Forward index sequence file
+</dd>
+<dt><code>--minqualtag</code></dt>
+<dd>Lower limit of quality value for index sequences
+</dd>
+<dt><code>--compress</code></dt>
+<dd>Compression format to use (select from GZIP | BZIP2 | XZ | DISABLE)
+</dd>
+<dt><code>--seqnamestyle</code></dt>
+<dd>Sequence read name/label format (select from ILLUMINA | MGI | OTHER | NOCHANGE)
+</dd>
+</dl>
+<p>After the command-line options, specify the input files and the output folder.</p>
+<p>Note that the input files must be specified in the following order.</p>
+<ol type="1">
+<li>Undemultiplexed FASTQ of the forward read of the insert.</li>
+<li>Undemultiplexed FASTQ of index1.</li>
+<li>Undemultiplexed FASTQ of index2.</li>
+<li>Undemultiplexed FASTQ of the reverse read of the insert.</li>
+</ol>
+<p>This order matches the order in which an Illumina sequencer reads the data in dual-index paired-end mode.</p>
+<p>Because this command uses primer sequences as well as index sequences for demultiplexing, it can demultiplex more finely than when only index sequences are used. Therefore, even if amplicons from other primers are mixed into the data, they can be separated as long as the primer sequences are sufficiently different.</p>
+<p>This command also outputs sequences whose <code>[Material ID]</code> is an “unused index combination”. Those samples will be used later in the index-hopping detection and removal step.</p>
+<p>In the output files, the parts matching the primer sequences have been removed. Those parts are primer nucleotide sequences and are not actual biological sequences.</p>
+<p>If the data size is large, this step takes a very long time.</p>
+<p>If you do not have undemultiplexed FASTQ and only have demultiplexed FASTQ, you can use <code>cltruncprimer</code> instead. Except that the <code>--minqualtag</code> option is ineffective and that the input is the folder containing the demultiplexed FASTQ, the usage is the same as the <code>clsplitseq</code> command. However, the <code>[Material ID]</code> in the index sequence file must be included in the file name of each demultiplexed FASTQ. Because demultiplexed FASTQ does not contain all sequences with “unused index combinations”, index-hopping detection cannot be applied. Even if you saved sequences with unused index combinations in advance, Claident has no way to recognize them as “unused index combinations”, so support is impossible.</p>
+<p>Even when demultiplexing was performed with <code>clsplitseq</code>, index-hopping removal cannot be applied unless the library preparation ensured that each sample has ten or more “unused index combinations that share one of the two indices”. To apply index-hopping removal, all of the following must be satisfied. Library preparation in which each sample has ten or more unused index combinations sharing one index, sequencing on a dedicated run or lane, and demultiplexing with <code>clsplitseq</code> must all be satisfied.</p>
+<h3 data-number="1.3.2" id="concatenating-paired-end-reads-with-clconcatpairv"><span class="header-section-number">1.3.2</span> Concatenating Paired-End Reads with clconcatpairv</h3>
+<p>After demultiplexing, concatenate paired-end reads with the following command.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a>clconcatpairv \</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>--mode=ovl \</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a>--compress=xz \</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true"></a>02_demultiplexed \</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true"></a>03_concatenated</span></code></pre></div>
+<p>The meaning of each command-line option is as follows.</p>
+<dl>
+<dt><code>--mode</code></dt>
+<dd>Specify whether the data are overlapped paired-end or non-overlapped paired-end (select from OVL | NON)
+</dd>
+<dt><code>--compress</code></dt>
+<dd>Compression format to use (select from GZIP | BZIP2 | XZ | DISABLE)
+</dd>
+</dl>
+<p>After the command-line options, specify the input folder and the output folder.</p>
+<h3 data-number="1.3.3" id="removing-low-quality-reads-with-clfilterseqv"><span class="header-section-number">1.3.3</span> Removing Low-Quality Reads with clfilterseqv</h3>
+<p>The following command calculates the expected number of errors from quality values and removes low-quality reads. <span class="citation" data-cites="Edgar2015Errorfilteringpair">(Edgar &amp; Flyvbjerg 2015)</span></p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>clfilterseqv \</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a>--maxqual=41 \</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a>--minlen=100 \</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a>--maxlen=250 \</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a>--maxnee=2.0 \</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true"></a>--maxnNs=0 \</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true"></a>--compress=xz \</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true"></a>03_concatenated \</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true"></a>04_filtered</span></code></pre></div>
+<p>The meaning of each command-line option is as follows.</p>
+<dl>
+<dt><code>--maxqual</code></dt>
+<dd>Upper limit for quality values.
+</dd>
+<dd>Values above this are set to this value
+</dd>
+<dt><code>--minlen</code></dt>
+<dd>Lower limit for sequence length
+</dd>
+<dt><code>--maxlen</code></dt>
+<dd>Upper limit for sequence length
+</dd>
+<dt><code>--maxnee</code></dt>
+<dd>Upper limit for expected errors
+</dd>
+<dt><code>--maxnNs</code></dt>
+<dd>Upper limit for the number of <code>N</code> bases in a sequence
+</dd>
+<dt><code>--compress</code></dt>
+<dd>Compression format to use (select from GZIP | BZIP2 | XZ | DISABLE)
+</dd>
+</dl>
+<p>After the command-line options, specify the input folder and the output folder.</p>
+<p>A maximum quality value is specified here because sequences with excessively high quality values sometimes cause errors during the denoising step described below. Sequences with many expected errors or containing <code>N</code> bases are excluded for the same reason. Upper and lower limits for sequence length are determined based on the expected insert length. If you wish to decide the upper limit for expected errors and the length limits from the data, the output of the <code>clcalcfastqstatv</code> command may be useful.</p>
+<h3 data-number="1.3.4" id="denoising-with-cldenoiseseqd"><span class="header-section-number">1.3.4</span> Denoising with cldenoiseseqd</h3>
+<p>Apply denoising based on DADA2 <span class="citation" data-cites="Callahan2016DADA2Highresolutionsample">(Callahan <em>et al.</em> 2016)</span> with the following command.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a>cldenoiseseqd \</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a>--pool=pseudo \</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a>04_filtered \</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a>05_denoised</span></code></pre></div>
+<p>The meaning of each command-line option is as follows.</p>
+<dl>
+<dt><code>--pool</code></dt>
+<dd>Specify the sample pooling method (select from ENABLE | DISABLE | PSEUDO)
+</dd>
+</dl>
+<p>After the command-line options, specify the input folder and the output folder.</p>
+<p>Enabling pooling improves denoising efficiency, but computation time grows rapidly as the number of samples increases. Disabling pooling reduces the denoising efficiency, so we use the pseudo-pooling method provided by the DADA2 developers here. For details on pseudo-pooling, refer to the official DADA2 website.</p>
+<h3 data-number="1.3.5" id="first-chimera-removal-with-clremovechimev"><span class="header-section-number">1.3.5</span> First Chimera Removal with clremovechimev</h3>
+<p>The following command applies chimera removal using both <em>de novo</em> chimera detection based on the UCHIME3 algorithm <span class="citation" data-cites="Edgar2016UCHIME2improvedchimera">(Edgar 2016)</span> and reference-based chimera detection based on UCHIME algorithm <span class="citation" data-cites="Edgar2011UCHIMEimprovessensitivity">(Edgar <em>et al.</em> 2011)</span> implemented in VSEARCH <span class="citation" data-cites="Rognes2016VSEARCHversatileopen">(Rognes <em>et al.</em> 2016)</span>.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>clremovechimev \</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a>--mode=both \</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a>--uchimedenovo=3 \</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true"></a>--referencedb=cdu12s \</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true"></a>--addtoref=standard.fasta \</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true"></a>05_denoised \</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true"></a>06_chimeraremoved</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--mode</code></dt>
+<dd>Operating mode (select from BOTH | DENOVO | REF)
+</dd>
+<dt><code>--uchimedenovo</code></dt>
+<dd>UCHIME de novo version (select from 1 | 2 | 3)
+</dd>
+<dt><code>--referencedb</code></dt>
+<dd>Reference sequence database
+</dd>
+<dt><code>--addtoref</code></dt>
+<dd>Reference sequence file that will be appended to the database
+</dd>
+</dl>
+<p>After the options specify the input folder followed by the output folder.</p>
+<p>When <code>--mode=both</code> is specified Claident performs both reference-free <em>de novo</em> chimera removal and reference-based chimera removal then keeps only the sequences judged as non-chimeric by both methods. Among the three UCHIME de novo versions UCHIME3 is optimized for denoised sequences so <code>--uchimedenovo</code> is set to 3. You must specify a reference database for the reference-based method. The following databases are installed automatically by the Claident installer.</p>
+<dl>
+<dt>cdu12s</dt>
+<dd>For mitochondrial 12S region
+</dd>
+<dt>cdu16s</dt>
+<dd>For mitochondrial 16S region
+</dd>
+<dt>cducox1</dt>
+<dd>For mitochondrial COX1 (COI) region
+</dd>
+<dt>cducytb</dt>
+<dd>For mitochondrial Cyt-b region
+</dd>
+<dt>cdudloop</dt>
+<dd>For mitochondrial D-loop (control region)
+</dd>
+<dt>cdumatk</dt>
+<dd>For chloroplast matK region
+</dd>
+<dt>cdurbcl</dt>
+<dd>For chloroplast rbcL region
+</dd>
+<dt>cdutrnhpsba</dt>
+<dd>For chloroplast trnH-psbA region
+</dd>
+</dl>
+<p>The reference databases for chimera-removal are located under “<code>[Install Path]/share/claident/uchimedb</code>”. You can list the contents of that folder to see which databases are available.</p>
+<p>For bacterial 16S, SILVA SSURef or SSUParc is recommended, and for fungal ITS, the UNITE’s “Full UNITE+INSD dataset for eukaryotes” is recommended. Because the MiFish primers amplify part of the mitochondrial 12S region we use <code>cdu12s</code> here. The databases whose names start with cdu were constructed by me by extracting the target region from full-length or nearly full-length mitochondrial or chloroplast genomes in public databases under the assumption that such long sequences are unlikely to be chimeric.</p>
+<p>When PCR is performed with internal-standard DNA, chimeras can form not only between internal-standard DNAs but also between internal-standard DNA and biological DNA, in addition to chimeras between biological DNAs. Therefore, we append the internal-standard DNA sequences in “<code>standard.fasta</code>” to the reference database by <code>--addtoref</code> to improve detection sensitivity.</p>
+<p>If no suitable reference database exists and you performed PCR with a mixture of internal-standard DNAs, specify “<code>standard.fasta</code>” to <code>--referencedb</code> and set <code>--mode=both</code>. In that case <code>--addtoref</code> is unnecessary.</p>
+<p>If no suitable reference database exists and you did not add internal-standard DNA during library preparation, run chimera removal with <code>--mode=denovo</code>. <code>--addtoref</code> is also unnecessary in that situation. However if your laboratory has previously prepared libraries containing internal-standard DNA, the amplified internal-standard DNA may contaminate new PCRs. In that case, you might need to treat the data as though internal-standard DNA had been added.</p>
+<h3 data-number="1.3.6" id="clustering-internal-standard-sequences-with-clclusterstdv"><span class="header-section-number">1.3.6</span> Clustering Internal-Standard Sequences with clclusterstdv</h3>
+<p>The following command clusters sequences corresponding to the internal-standard DNA using the UCLUST algorithm <span class="citation" data-cites="Edgar2010Searchclusteringorders">(Edgar 2010)</span> implemented in VSEARCH <span class="citation" data-cites="Rognes2016VSEARCHversatileopen">(Rognes <em>et al.</em> 2016)</span>.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a>clclusterstdv \</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a>--standardseq=standard.fasta \</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a>--minident=0.9 \</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a>06_chimeraremoved \</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true"></a>07_stdclustered</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--standardseq</code></dt>
+<dd>Internal-standard DNA sequence file
+</dd>
+<dt><code>--minident</code></dt>
+<dd>Lower similarity threshold above which a sequence is regarded as internal-standard DNA
+</dd>
+</dl>
+<p>After the options, specify the input folder followed by the output folder.</p>
+<p>If the maximum similarity between the internal-standard sequences and biological sequences is low (below 0.85), a threshold around 0.90 is sufficient. The MiFish internal-standard sequences listed in Appendix S1 of <span class="citation" data-cites="Ushio2022efficientearlypoolingprotocol">Ushio <em>et al.</em> (2022)</span> satisfy this condition. If the similarity between internal-standard DNA and biological DNA is high (0.85 or above) and the synthesis error rate of the internal-standard DNA is expected to be low you may raise the threshold to around 0.97. Judge whether the synthesis error rate is low from the manufacturer’s stated error rate and synthesis method. If unsure, vary the threshold from 0.90 to 0.97 in steps of 0.01, find the point at which the read count classified as internal-standard DNA changes abruptly and set the threshold to the smaller value at that change. If no abrupt change is observed the synthesis error rate is probably very high or biological DNA similar to the internal-standard are present which makes quantification impossible. In that case you need to resynthesize new internal-standard DNA and repeat the entire procedure. Because internal-standard DNA cannot be distinguished from biological DNA, the data cannot be used even for non-quantitative metabarcoding.</p>
+<p>If internal-standard DNA was not added during library preparation, skip this step. However if library preparation is performed in a laboratory where internal-standard DNA was previously used, the workspace may be contaminated with amplified internal-standard DNA that could enter new PCRs. In that case, you might need to treat the data as though internal-standard DNA had been added.</p>
+<h3 data-number="1.3.7" id="second-chimera-removal-with-clremovechimev"><span class="header-section-number">1.3.7</span> Second Chimera Removal with clremovechimev</h3>
+<p>The following command applies reference-based chimera detection and removal using the UCHIME algorithm <span class="citation" data-cites="Edgar2011UCHIMEimprovessensitivity">(Edgar <em>et al.</em> 2011)</span> implemented in VSEARCH <span class="citation" data-cites="Rognes2016VSEARCHversatileopen">(Rognes <em>et al.</em> 2016)</span>.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>clremovechimev \</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a>--mode=ref \</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true"></a>--referencedb=cdu12s \</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true"></a>--addtoref=07_stdclustered/stdvariations.fasta \</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true"></a>07_stdclustered \</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true"></a>08_chimeraremoved</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--mode</code></dt>
+<dd>Select the operating mode (select from BOTH | DENOVO | REF)
+</dd>
+<dt><code>--referencedb</code></dt>
+<dd>Reference sequence database
+</dd>
+<dt><code>--addtoref</code></dt>
+<dd>Reference sequence file that will be appended to the database
+</dd>
+</dl>
+<p>After the options, specify the input folder followed by the output folder.</p>
+<p><code>--mode=ref</code> performs reference-based chimera removal. For details on the reference databases see the section on the first chimera removal.</p>
+<p>When PCR is performed with internal-standard DNA, chimeras can form not only between internal-standard DNAs but also between internal-standard DNA and biological DNA, in addition to chimeras between biological DNAs. Therefore, we append the sequences judged to be internal-standard DNA “<code>07_stdclustered/stdvariations.fasta</code>” to the reference database by <code>--addtoref</code> to improve detection sensitivity. We use “<code>07_stdclustered/stdvariations.fasta</code>” instead of “<code>standard.fasta</code>” because the former includes sequences containing synthesis errors which allows us to detect chimeras between erroneous internal-standard DNAs and chimeras between erroneous internal-standard DNA and biological DNA.</p>
+<p>If no suitable reference database exists and internal-standard DNA was added in library preparation, specify “<code>07_stdclustered/stdvariations.fasta</code>” to <code>--referencedb</code> and omit <code>--addtoref</code>.</p>
+<p>If no suitable reference database exists and internal-standard DNA was not added skip this step. Again if your lab may be contaminated with internal-standard DNA you may still perform this analysis.</p>
+<h3 data-number="1.3.8" id="removing-index-hopping-with-clremovecontam"><span class="header-section-number">1.3.8</span> Removing Index-Hopping with clremovecontam</h3>
+<p>The following command removes index-hopping following the approach of <span class="citation" data-cites="Esling2015Accuratemultiplexingfiltering">Esling <em>et al.</em> (2015)</span>.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a>clremovecontam \</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a>--test=thompson \</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a>--ignoresamplelist=blanklist.txt \</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a>--index1file=index1.fasta \</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true"></a>--index2file=index2.fasta \</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true"></a>08_chimeraremoved \</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true"></a>09_hoppingremoved</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--test</code></dt>
+<dd>Statistical test to use (select from THOMPSON | BINOMIAL)
+</dd>
+<dt><code>--ignoresamplelist</code></dt>
+<dd>Text file listing sample IDs to be excluded from processing
+</dd>
+<dt><code>--index1file</code></dt>
+<dd>Reverse index sequence file
+</dd>
+<dd>This is the same file that was supplied to <code>clsplitseq</code>
+</dd>
+<dt><code>--index2file</code></dt>
+<dd>Forward index sequence file
+</dd>
+<dd>This is the same file that was supplied to <code>clsplitseq</code>
+</dd>
+</dl>
+<p>After the options, specify the input folder followed by the output folder.</p>
+<p>For each sample, Claident compares the read count of each ASV in “unused index combinations sharing one index with sample” with the read count in that sample. If the sample count is not an outlier, the reads are judged to have arisen from index-hopping and their counts are set to 0.</p>
+<p>Blanks are excluded with <code>--ignoresamplelist</code> because removing index-hopping from blanks would discard the information needed for the decontamination step below.</p>
+<p>Skip this step if the requirements for index-hopping removal are not fulfilled.</p>
+<h3 data-number="1.3.9" id="decontamination-using-negative-controls-with-clremovecontam"><span class="header-section-number">1.3.9</span> Decontamination Using Negative Controls with clremovecontam</h3>
+<p>The following command estimates the DNA concentration of each ASV in samples and field blanks then sets the counts to 0 for samples whose concentration is not an outlier compared with concentrations of blanks.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>clremovecontam \</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a>--test=thompson \</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a>--blanklist=blanklist.txt \</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a>--ignoreotuseq=standard.fasta \</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true"></a>--stdconctable=stdconctable.tsv \</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true"></a>--solutionvoltable=solutionvoltable.tsv \</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true"></a>--watervoltable=watervoltable.tsv \</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true"></a>09_hoppingremoved \</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true"></a>10_decontaminated</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--test</code></dt>
+<dd>Statistical test to use (select from THOMPSON | BINOMIAL)
+</dd>
+<dt><code>--blanklist</code></dt>
+<dd>Text file listing blanks’ sample IDs
+</dd>
+<dt><code>--ignoreotuseq</code></dt>
+<dd>FASTA file of OTU sequences that should be excluded from decontamination
+</dd>
+<dt><code>--stdconctable</code></dt>
+<dd>Tab-delimited internal-standard DNA concentration table
+</dd>
+<dt><code>--solutionvoltable</code></dt>
+<dd>Tab-delimited extracted DNA solution volume table
+</dd>
+<dt><code>--watervoltable</code></dt>
+<dd>Tab-delimited filtered water volume table
+</dd>
+</dl>
+<p>After the options, specify the input folder followed by the output folder.</p>
+<p>We exclude internal-standard sequences with <code>--ignoreotuseq</code> to avoid deleting them by mistake.</p>
+<p>If only the internal-standard DNA concentration table is available, Claident estimates DNA concentration in the extracted solution instead of the environmental water and decontaminates based on those concentrations. If none of the three tables are available, Claident uses raw read counts for decontamination. When concentration estimates based on internal-standard DNA are used, the method is valid even if library preparation involved concentration normalization. If raw read counts are used, you must ensure that no concentration normalization was applied during library preparation and that the total number of PCR cycles was kept to a minimum so that no sample reached plateau.</p>
+<p>In rare cases severe contamination during sampling or laboratory work can cause almost all sequences in samples to be judged contaminants and set to 0. Because such an outcome prevents any community-level analysis, you must exercise great care to avoid contamination from sampling through library preparation.</p>
+<p>Sequence processing ends here but you may wish to cluster ASVs further or merge multiple sequencing runs. You can perform additional clustering and merging with the <code>clclassseqv</code> command.</p>
+<p>From the denoising step onward each output folder contains the following three files. The prefix “～” is common to all three.</p>
+<dl>
+<dt>～.fasta</dt>
+<dd>FASTA file of ASV or OTU sequences at that step
+</dd>
+<dt>～.otu.gz</dt>
+<dd>File recording ASV or OTU membership at that step
+</dd>
+<dt>～.tsv</dt>
+<dd>Tab-delimited table of ASV or OTU read counts per sample at that step
+</dd>
+</dl>
+<p>By following these TSV files you can track the changes introduced by each processing step.</p>
+<h2 data-number="1.4" id="molecular-identification"><span class="header-section-number">1.4</span> Molecular Identification</h2>
+<p>This section describes the molecular identification workflow based on the QCauto method and the 95%-3NN method <span class="citation" data-cites="Tanabe2013TwoNewComputational">(Tanabe &amp; Toju 2013)</span>. The QCauto method yields very few misidentifications, but lower taxonomic ranks such as species or genus are prone to be labelled “unidentified”. The 95%-3NN method can usually identify down to low taxonomic ranks such as species or genus, but it tends to produce more misidentifications when the reference sequence database is not well curated. When MiFish metabarcoding is conducted on Japanese freshwater or coastal samples, the reference sequence database maintained by a group of the Chiba Prefectural Museum is well curated, so the 95%-3NN method rarely causes problems. However, when other reference databases have insufficient coverage, we recommend using the QCauto results.</p>
+<p>Before proceeding, create an output directory for molecular identification with the following command.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a>mkdir 11_taxonomy</span></code></pre></div>
+<h3 data-number="1.4.1" id="reference-sequence-databases-for-molecular-identification"><span class="header-section-number">1.4.1</span> Reference Sequence Databases for Molecular Identification</h3>
+<p>Claident ships with many reference sequence databases for molecular identification. The bundled databases are named as follows.</p>
+<pre><code>[Taxon]_[Locus]_[Taxonomic Rank Of References]</code></pre>
+<p><code>[Taxon]_[Locus]</code> can be one of the following.</p>
+<dl>
+<dt>overall</dt>
+<dd>All organisms and all loci
+</dd>
+<dt>animals_12S</dt>
+<dd>Animals 12S
+</dd>
+<dt>animals_16S</dt>
+<dd>Animals 16S
+</dd>
+<dt>animals_COX1</dt>
+<dd>Animals COX1 (COI)
+</dd>
+<dt>animals_CytB</dt>
+<dd>Animals CytB
+</dd>
+<dt>animals_D-loop</dt>
+<dd>Animals D-loop
+</dd>
+<dt>animals_mt</dt>
+<dd>Animal mitochondrial DNA
+</dd>
+<dt>eukaryota_LSU</dt>
+<dd>Eukaryotes LSU (28S)
+</dd>
+<dt>eukaryota_SSU</dt>
+<dd>Eukaryotes SSU (18S)
+</dd>
+<dt>fungi_all</dt>
+<dd>All loci of Fungi
+</dd>
+<dt>fungi_ITS</dt>
+<dd>Fungi ITS
+</dd>
+<dt>plants_cp</dt>
+<dd>Plant chloroplast DNA
+</dd>
+<dt>plants_matK</dt>
+<dd>Plant matK
+</dd>
+<dt>plants_rbcL</dt>
+<dd>Plant rbcL
+</dd>
+<dt>plants_trnH-psbA</dt>
+<dd>Plant trnH-psbA
+</dd>
+<dt>prokaryota_16S</dt>
+<dd>Prokaryotes 16S
+</dd>
+<dt>prokaryota_all</dt>
+<dd>All loci of Prokaryotes
+</dd>
+</dl>
+<p><code>[Taxonomic Rank Of References]</code> can be one of the following.</p>
+<dl>
+<dt>class</dt>
+<dd>Contains reference sequences identified to class or lower (available only for overall)
+</dd>
+<dt>order</dt>
+<dd>Contains reference sequences identified to order or lower (available only for overall)
+</dd>
+<dt>family</dt>
+<dd>Contains reference sequences identified to family or lower (available only for overall)
+</dd>
+<dt>genus</dt>
+<dd>Contains reference sequences identified to genus or lower
+</dd>
+<dt>species_wsp</dt>
+<dd>Contains reference sequences identified to species or lower even if species name contains “sp.”
+</dd>
+<dt>species</dt>
+<dd>Contains reference sequences identified to species or lower, but sequences whose species name ends with “sp.” are excluded
+</dd>
+<dt>species_wosp</dt>
+<dd>Contains reference sequences identified to species or lower, but sequences whose species name contains “sp.” are excluded
+</dd>
+<dt>genus_man</dt>
+<dd>Contains reference sequences identified to genus or lower and where the genus name is not empty
+</dd>
+<dt>species_wsp_man</dt>
+<dd>Contains reference sequences identified to species or lower. Sequences whose species name contains “sp.” are included, but sequences with an empty genus name are excluded
+</dd>
+<dt>species_man</dt>
+<dd>Contains reference sequences identified to species or lower, but sequences whose species name ends with “sp.” or whose genus name is empty are excluded
+</dd>
+<dt>species_wosp_man</dt>
+<dd>Contains reference sequences identified to species or lower, but sequences whose species name contains “sp.” or whose genus name is empty are excluded
+</dd>
+</dl>
+<p>Reference databases for molecular identification are located in “<code>[Install Path]/share/claident/blastdb</code>”, so list contents of this folder provides which databases are installed.</p>
+<p>Because there are so many databases, choosing the best one can be difficult, and the optimal choice depends on the target taxon and research goals. When MiFish metabarcoding is applied to Japanese freshwater or coastal samples and you also wish to identify non-animal or non-mitochondrial sequences, we recommend “<code>overall_species_wsp</code>”. However, the <code>overall</code>-series databases are very large, so machines with little RAM may run out of memory. In such cases you will not be able to identify non-animal or off-target sequences, but “<code>animals_12S_species_wsp</code>” or “<code>animals_mt_species_wsp</code>” are good alternatives. When genus-level identification is critically important for fungi or bacteria, a database that ends with “<code>_species_wsp_man</code>” may produce better results. If you are unsure which database to use, you can perform identification with several databases and later merge the results to take the best assignment for each OTU.</p>
+<h3 data-number="1.4.2" id="building-a-cache-database-with-clmakecachedb"><span class="header-section-number">1.4.2</span> Building a Cache Database with clmakecachedb</h3>
+<p>For molecular identification using Claident, generating a cache database is highly recommended. The following command will generate a cache database for the decontaminated sequences.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a>clmakecachedb \</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true"></a>--blastdb=animals_mt_species_wsp \</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true"></a>--ignoreotuseq=standard.fasta \</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true"></a>10_decontaminated/decontaminated.fasta \</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true"></a>11_taxonomy/cachedb_species_wsp</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--blastdb</code></dt>
+<dd>Reference sequence database to use for molecular identification
+</dd>
+<dt><code>--ignoreotuseq</code></dt>
+<dd>OTUs that match sequence names contained in the specified FASTA sequence file will be ignored
+</dd>
+</dl>
+<p>After the options, specify the input file followed by the output folder.</p>
+<p>This step may consume large amounts of memory. While it is running, open another terminal and monitor free memory with <code>top</code>. If the machine runs out of RAM, press Ctrl+C to abort, switch to a smaller database, or increase the memory.</p>
+<h3 data-number="1.4.3" id="molecular-identification-with-the-qcauto-method"><span class="header-section-number">1.4.3</span> Molecular Identification with the QCauto Method</h3>
+<h4 data-number="1.4.3.1" id="retrieving-neighborhood-sequences-with-clidentseq"><span class="header-section-number">1.4.3.1</span> Retrieving Neighborhood Sequences with clidentseq</h4>
+<p>The following command retrieves the neighborhood sequences from the cache database based on the QCauto method.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a>clidentseq \</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true"></a>--method=QC \</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true"></a>--blastdb=11_taxonomy/cachedb_species_wsp \</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true"></a>--ignoreotuseq=standard.fasta \</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true"></a>10_decontaminated/decontaminated.fasta \</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true"></a>11_taxonomy/neighborhoods_qcauto_species_wsp.txt</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--method</code></dt>
+<dd>Molecular identification algorithm to use
+</dd>
+<dt><code>--blastdb</code></dt>
+<dd>Cache database or reference database to use for molecular identification
+</dd>
+<dt><code>--ignoreotuseq</code></dt>
+<dd>OTUs that match sequence names contained in the specified FASTA sequence file will be ignored
+</dd>
+</dl>
+<p>After the options, specify the input file followed by the output file.</p>
+<h4 data-number="1.4.3.2" id="assigning-taxonomy-with-classigntax"><span class="header-section-number">1.4.3.2</span> Assigning Taxonomy with classigntax</h4>
+<p>The following command assigns a taxon to each OTU using the LCA algorithm <span class="citation" data-cites="Huson2007MEGANanalysismetagenomic">(Huson <em>et al.</em> 2007)</span> based on the identification information of the acquired neighborhood sequences.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a>classigntax \</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true"></a>--taxdb=animals_mt_species_wsp \</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true"></a>11_taxonomy/neighborhoods_qcauto_species_wsp.txt \</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true"></a>11_taxonomy/taxonomy_qcauto_species_wsp.tsv</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--taxdb</code></dt>
+<dd>Taxonomic database corresponding to the <code>--blastdb</code> used for <code>clmakecachedb</code>
+</dd>
+</dl>
+<p>After the options, specify the input file followed by the output file.</p>
+<p>The output is a tab-delimited file containing one identification result per OTU.</p>
+<p>In the LCA algorithm, the taxonomic rank is raised until all neighborhood sequences support the same taxon, and taxonomic ranks that do not satisfy the condition are “unidentified”. In other words, it adopts the strict consensus taxonomy of the neighborhood sequence. In this method, if even one misidentified sequence is contaminated in the neighborhood sequences, it will no longer be identified. Here, sequences that support the identification result are called “supporters” and sequences that do not support the identification result are called “opposers”. For <code>classigntax</code>, you can add <code>--maxpopposer=0.05 --minsoratio=19</code> to the command line option to allow the presence of “opposers” up to 5% and adopt a 95% majority rule consensus taxonomy. If misidentified sequences are contaminated with neighborhood sequences, query sequence can still be identified by using this method if only a small percentage of the misidentified sequence is present. The <code>--minsoratio=19</code> option sets the minimum ratio of the number of “supporters” to the number of “opposers” to 19, and it is necessary because there can be sequences that are neither supporters nor opposers due to the lack of information on that taxonomic rank.</p>
+<h3 data-number="1.4.4" id="molecular-identification-with-the-95-3nn-method"><span class="header-section-number">1.4.4</span> Molecular Identification with the 95%-3NN Method</h3>
+<h4 data-number="1.4.4.1" id="retrieving-neighborhood-sequences-with-clidentseq-1"><span class="header-section-number">1.4.4.1</span> Retrieving Neighborhood Sequences with clidentseq</h4>
+<p>The following command retrieves the neighborhood sequences from the cache database based on the 95%-3NN method.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a>clidentseq \</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a>--method=3,95% \</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true"></a>--blastdb=11_taxonomy/cachedb_species_wsp \</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true"></a>--ignoreotuseq=standard.fasta \</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true"></a>10_decontaminated/decontaminated.fasta \</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true"></a>11_taxonomy/neighborhoods_95p3nn_species_wsp.txt</span></code></pre></div>
+<h4 data-number="1.4.4.2" id="assigning-taxonomy-with-classigntax-1"><span class="header-section-number">1.4.4.2</span> Assigning Taxonomy with classigntax</h4>
+<p>The following command assigns a taxon to each OTU using the LCA algorithm <span class="citation" data-cites="Huson2007MEGANanalysismetagenomic">(Huson <em>et al.</em> 2007)</span> based on the identification information of the acquired neighborhood sequences.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a>classigntax \</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true"></a>--taxdb=animals_mt_species_wsp \</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true"></a>--minnsupporter=3 \</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true"></a>11_taxonomy/neighborhoods_95p3nn_species_wsp.txt \</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true"></a>11_taxonomy/taxonomy_95p3nn_species_wsp.tsv</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--minnsupporter</code></dt>
+<dd>Minimum number of neighborhood sequences that must support the result
+</dd>
+</dl>
+<p>In this method Claident retrieves up to the top three reference sequences whose identity is 95% or higher and then assigns taxonomy with the LCA algorithm <span class="citation" data-cites="Huson2007MEGANanalysismetagenomic">(Huson <em>et al.</em> 2007)</span>.</p>
+<h3 data-number="1.4.5" id="reusing-identification-results-with-clmakeidentdb"><span class="header-section-number">1.4.5</span> Reusing Identification Results with clmakeidentdb</h3>
+<p>The following commands can be used to create a database of molecular identification results by the QCauto method.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a>clmakeidentdb \</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a>--append \</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true"></a>11_taxonomy/neighborhoods_qcauto_species_wsp.txt \</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true"></a>11_taxonomy/qcauto_species_wsp.identdb</span></code></pre></div>
+<p>The following commands can also be used to create a database of molecular identification results by the 95%-3NN method.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a>clmakeidentdb \</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true"></a>--append \</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true"></a>11_taxonomy/neighborhoods_95p3nn_species_wsp.txt \</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true"></a>11_taxonomy/95p3nn_species_wsp.identdb</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--append</code></dt>
+<dd>Append to the output file if it already exists
+</dd>
+</dl>
+<p>After the options, specify the input file followed by the output file.</p>
+<p>Each output file stores molecular identification results obtained by <code>clidentseq</code>. If you supply such a database to <code>clmakecachedb</code> and <code>clidentseq</code> with <code>--identdb</code>, OTUs already present in this database are skipped, which saves computation time. Because different methods and/or databases can naturally yield different molecular identification results, do not mix results from different methods or databases when appending the results to the existing file.</p>
+<h3 data-number="1.4.6" id="merging-multiple-identification-results-with-clmergeassign"><span class="header-section-number">1.4.6</span> Merging Multiple Identification Results with clmergeassign</h3>
+<p>The above analysis should have yielded at least the molecular identification results by the QCauto method and the 95%-3NN method for each OTU. In some cases, more molecular identification results may have been obtained for the same OTU by performing molecular identifications in multiple databases. You can merge such multiple identification results by accepting non-conflicting taxonomy of the lowest rank for each OTU. The following command prefers the conservative QCauto result but replaces it with a 95%-3NN result when that result is not in conflict and reaches a lower taxonomic rank.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a>clmergeassign \</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true"></a>--preferlower \</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true"></a>--priority=descend \</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true"></a>11_taxonomy/taxonomy_qcauto_species_wsp.tsv \</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true"></a>11_taxonomy/taxonomy_95p3nn_species_wsp.tsv \</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true"></a>11_taxonomy/taxonomy_merged.tsv</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--preferlower</code></dt>
+<dd>Prefer results that reach lower taxonomic ranks
+</dd>
+<dt><code>--priority</code></dt>
+<dd>Priority of the input files (select from ASCEND | DESCEND | EQUAL | formula)
+</dd>
+<dd>To write an formula, assign numerical values beginning with 0 in the order in which they are specified as the input files, then construct formula such as “<code>0&lt;1=2&lt;3&lt;4</code>”
+</dd>
+<dd>This preference takes precedence over <code>--preferlower</code>
+</dd>
+</dl>
+<p>After the options, specify the multiple input files followed by the output file.</p>
+<p>If <code>--priority=descend</code> is specified, the earlier input file has priority over the later.</p>
+<h3 data-number="1.4.7" id="filling-missing-taxonomic-ranks-with-clfillassign"><span class="header-section-number">1.4.7</span> Filling missing taxonomic ranks with <code>clfillassign</code></h3>
+<p>The output of <code>classigntax</code> as it is leaves the taxonomic ranks without identification information blank. The following command can fill in all such blanks.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a>clfillassign \</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true"></a>--fullfill=enable \</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true"></a>11_taxonomy/taxonomy_merged.tsv \</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true"></a>11_taxonomy/taxonomy_merged_filled.tsv</span></code></pre></div>
+<p>The meanings of the command line options are as follows.</p>
+<dl>
+<dt><code>--fullfill</code></dt>
+<dd>Whether to fill in all taxonomic ranks supported by Claident, including taxonomic ranks that do not exist in the file (select from ENABLE | DISABLE)
+</dd>
+</dl>
+<p>After the options, specify the input file followed by the output file.</p>
+<p>Missing ranks are filled as follows. If lower ranks information exist, their values propagate upward. If no lower rank information exists, the lowest rank information is copied and prefixed with “<code>unidentified</code>”. For example, if order is “<code>Foo</code>” and infraorder is “<code>Bar</code>” but suborder, which is a rank between an order and an infraorder, is blank, suborder becomes “<code>Bar</code>”. If parvorder and all lower ranks are blank, they become “<code>unidentified Bar</code>”.</p>
+<h2 data-number="1.5" id="generating-otu-composition-tables"><span class="header-section-number">1.5</span> Generating OTU Composition Tables</h2>
+<p>The OTU composition table referred to here is a table of read counts for each OTU in each sample. It can be represented in the following format:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a>samplename  OTU1  OTU2  OTU3  OTU4</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a>Sample1     3813   130  1949 34959</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true"></a>Sample2    18389    19   194  1948</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true"></a>Sample3       18     1   148   184</span></code></pre></div>
+<p>This table serves as the source data for statistical analysis. Here, I will explain the preprocessing required before entering into actual statistical analysis.</p>
+<p>Before that, create an output directory for the OTU composition table in the working directory with the following command:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a>mkdir 12_community</span></code></pre></div>
+<p>Also, the OTU composition table that serves as the starting point for processing already exists as “<code>10_decontaminated/decontaminated.tsv</code>”, so copy it to the directory created above with the following command:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a>cp \</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a>10_decontaminated/decontaminated.tsv \</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv</span></code></pre></div>
+<h3 data-number="1.5.1" id="processing-otu-composition-tables-with-clfiltersum"><span class="header-section-number">1.5.1</span> Processing OTU Composition Tables with clfiltersum</h3>
+<p>With the following command, you can create a table containing only internal standard OTUs (other OTUs will be excluded):</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a>clfiltersum \</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true"></a>--otuseq=standard.fasta \</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true"></a>12_community/sample_otu_matrix_standard.tsv</span></code></pre></div>
+<p>The meaning of the command line options is as follows:</p>
+<dl>
+<dt><code>--otuseq</code></dt>
+<dd>Extracts OTU data that matches sequence names included in the specified FASTA sequence file
+</dd>
+</dl>
+<p>Following the command line options, specify the input file and output file.</p>
+<p>By executing the following command, you can create a table of OTUs for the taxa specified by <code>--includetaxa</code> (fish in this case) based on molecular identification results:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a>clfiltersum \</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true"></a>--includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true"></a>--includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true"></a>--includetaxa=subclass,Dipnomorpha \</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes.tsv</span></code></pre></div>
+<p>The meaning of the command line options is as follows:</p>
+<dl>
+<dt><code>--negativeotuseq</code></dt>
+<dd>Excludes OTU data that matches sequence names included in the specified FASTA sequence file
+</dd>
+<dt><code>--taxfile</code></dt>
+<dd>Tab-delimited text file of molecular identification results (in the output format of <code>classigntax</code>)
+</dd>
+<dt><code>--includetaxa</code></dt>
+<dd>Extracts OTU data for the corresponding taxonomic names
+</dd>
+<dd>It is also possible to limit the taxonomic rank in which taxonomic names are searched
+</dd>
+<dd>Multiple specifications are possible
+</dd>
+</dl>
+<p>By replacing <code>--includetaxa</code> with <code>--excludetaxa</code> as shown below, you can create a table of non-fish OTUs:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a>clfiltersum \</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true"></a>--excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true"></a>--excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true"></a>--excludetaxa=subclass,Dipnomorpha \</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true"></a>12_community/sample_otu_matrix_nonfishes.tsv</span></code></pre></div>
+<p>Let’s try doing the same thing in a different way. The following command extracts only the OTU names from the fish OTU table and saves them to “<code>12_community/fishotus.txt</code>”:</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true"></a>head -n 1 12_community/sample_otu_matrix_fishes.tsv \</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true"></a>| perl -ne &#39;@row=split(/\t/);shift(@row);print(join(&quot;\n&quot;,@row).&quot;\n&quot;);&#39; \</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true"></a>&gt; 12_community/fishotus.txt</span></code></pre></div>
+<p>Since <code>clfiltersum</code> has an option to extract OTUs whose names are not included in a given text file, you can create a table of non-fish OTUs as follows using the file created above:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a>clfiltersum \</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true"></a>--negativeotulist=12_community/fishotus.txt \</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true"></a>12_community/sample_otu_matrix_nonfishes2.tsv</span></code></pre></div>
+<p>The meaning of the command line options is as follows:</p>
+<dl>
+<dt><code>--negativeotulist</code></dt>
+<dd>Text file containing a list of OTU names to be excluded
+</dd>
+</dl>
+<h3 data-number="1.5.2" id="coverage-based-rarefaction-of-otu-composition-tables-with-clrarefysum"><span class="header-section-number">1.5.2</span> Coverage-based Rarefaction of OTU Composition Tables with clrarefysum</h3>
+<p>While community ecological analysis can be performed with OTU composition tables, the varying coverage (completeness of sampling surveys) among samples may lead to misinterpretation where high-coverage samples with inherently fewer species appear to have more species than low-coverage samples that actually have more species. Coverage-based rarefaction is a process that avoids such problems by equalizing coverage between samples <span class="citation" data-cites="Chao2012Coveragebasedrarefactionextrapolation">(Chao &amp; Jost 2012)</span>. Note that rarefaction can refer to either “obtaining rarefied OTU composition tables” or “obtaining rarefaction curves”, but in this textbook, please consider it to refer to the former.</p>
+<p>As a method for performing coverage-based rarefaction, there is an approach that estimates coverage based on “the number of OTUs observed only once in that sample (singletons)” and “the number of OTUs observed only twice in that sample (doubletons)” <span class="citation" data-cites="Chao2012Coveragebasedrarefactionextrapolation">(Chao &amp; Jost 2012)</span>. However, in metabarcoding data, these numbers are not considered sufficiently reliable due to the presence of large amounts of sequencing errors <span class="citation" data-cites="Chiu2016Estimatingcomparingmicrobial">(Chiu &amp; Chao 2016)</span>. While one might think that denoised data would be problem-free, there is currently insufficient evidence for this. <span class="citation" data-cites="Chiu2016Estimatingcomparingmicrobial">Chiu &amp; Chao (2016)</span> proposed a method to correct the number of singletons even in data with such sequencing errors, and this method can be applied by enabling <code>correct_singletons</code> when rarefying with the <code>phyloseq_coverage_raref()</code> function in the metagMisc R package.</p>
+<p>However, the method of <span class="citation" data-cites="Chiu2016Estimatingcomparingmicrobial">Chiu &amp; Chao (2016)</span> is premised on non-denoised data. When denoising is applied, ASVs with low read counts (including singletons) are either discarded during processing or considered to be derived from sequencing errors of neighboring ASVs with higher read counts, resulting in a dramatic reduction from non-denoised data. Therefore, applying the method of <span class="citation" data-cites="Chiu2016Estimatingcomparingmicrobial">Chiu &amp; Chao (2016)</span> directly to denoised data is considered problematic.</p>
+<p>Here, <span class="math inline">(1 − slope of rarefaction curve)</span> can be regarded as coverage itself <span class="citation" data-cites="Chao2012Coveragebasedrarefactionextrapolation">(Chao &amp; Jost 2012)</span>. Based on this idea, Claident supports rarefaction that equalizes the slope at the endpoints of rarefaction curves between samples. As it uses the slope of rarefaction curves where the influence of singleton counts is reduced, it can be expected to be more robust against sequencing errors than methods that estimate coverage from singleton and doubleton counts. However, since computational complexity increases, optimization using parallelization has been implemented in Claident.</p>
+<p>The following command removes samples with fewer than 1000 reads, calculates coverage for each remaining sample, and performs rarefaction on all samples to align with the same coverage as the sample with the lowest coverage. However, if the coverage of the sample with the lowest coverage is less than 0.99, it aligns to 0.99, and samples with coverage less than 0.99 are removed. Because rarefaction involves randomly discarding reads, results may vary with repetition. Therefore, rarefaction is performed 10 times, and each result is saved.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a>clrarefysum \</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a>--minpcov=0.99 \</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true"></a>--minntotalseqsample=1000 \</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true"></a>--nreplicate=10 \</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true"></a>12_community/sample_otu_matrix_all_rarefied</span></code></pre></div>
+<p>The meaning of the command line options is as follows:</p>
+<dl>
+<dt><code>--minpcov</code></dt>
+<dd>Lower limit of coverage to align (samples below this are discarded)
+</dd>
+<dt><code>--minntotalseqsample</code></dt>
+<dd>Lower limit of read count before rarefaction (samples below this are discarded)
+</dd>
+<dt><code>--nreplicate</code></dt>
+<dd>Number of rarefaction replicates
+</dd>
+</dl>
+<p>Following the command line options, specify the input file and prefix of output files.</p>
+<p>The output files generated after execution are as follows:</p>
+<dl>
+<dt><code>[Prefix Of Output Files]-r[Number].tsv</code></dt>
+<dd>Tab-delimited text of rarefied OTU composition table
+</dd>
+<dt><code>[Prefix Of Output Files]_inputpcov.tsv</code></dt>
+<dd>Tab-delimited text of coverage estimates for each input sample
+</dd>
+<dt><code>[Prefix Of Output Files]_inputnseq.tsv</code></dt>
+<dd>Tab-delimited text of total read counts for each input sample
+</dd>
+<dt><code>[Prefix Of Output Files]_outputpcov.tsv</code></dt>
+<dd>Tab-delimited text of coverage estimates for each output sample
+</dd>
+<dt><code>[Prefix Of Output Files]_outputnseq.tsv</code></dt>
+<dd>Tab-delimited text of total read counts for each output sample
+</dd>
+</dl>
+<p>After rarefaction is complete, extract only internal standard OTUs from all 10 replicates with the following command:</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true"></a>for n in `seq -w 1 10`</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true"></a>do clfiltersum \</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true"></a>--otuseq=standard.fasta \</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true"></a>12_community/sample_otu_matrix_all_rarefied-r$n.tsv \</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true"></a>12_community/sample_otu_matrix_standard_rarefied-r$n.tsv</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true"></a>done</span></code></pre></div>
+<p>The following command extracts only fish OTUs:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true"></a>for n in `seq -w 1 10`</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true"></a>do clfiltersum \</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true"></a>--includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true"></a>--includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true"></a>--includetaxa=subclass,Dipnomorpha \</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true"></a>12_community/sample_otu_matrix_all_rarefied-r$n.tsv \</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_rarefied-r$n.tsv</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true"></a>done</span></code></pre></div>
+<p>The following command extracts non-fish OTUs:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true"></a>for n in `seq -w 1 10`</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true"></a>do clfiltersum \</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true"></a>--excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true"></a>--excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true"></a>--excludetaxa=subclass,Dipnomorpha \</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true"></a>12_community/sample_otu_matrix_all_rarefied-r$n.tsv \</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true"></a>12_community/sample_otu_matrix_nonfishes_rarefied-r$n.tsv</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true"></a>done</span></code></pre></div>
+<p>In the above example, coverage-based rarefaction is performed using OTU composition tables of all taxa, and fish OTUs and non-fish OTUs are separated after rarefaction. However, if there is no interest in non-fish from the beginning, or if non-fish are considered likely to be contamination based on prior knowledge, it might be better to perform coverage-based rarefaction using only fish OTU composition tables.</p>
+<p>It is important to note that what can be achieved with these coverage-based rarefaction methods, whether metagMisc or Claident, is merely “equalization of sequencing coverage for communities”. “Equalization of coverage for communities of sampled water”, “equalization of coverage for communities of DNA collected on filtration filters”, or “equalization of coverage for communities of DNA solution input to PCR” are not performed. In metabarcoding, there are numerous sampling steps, i.e., “extracting a portion”, so sequencing coverage is not the only aspect where uniformity becomes problematic. However, subsequent analyses are performed under the assumption that all of these are saturated (coverage is approximately 1.0). If any abnormal results are obtained, it might be necessary to consider the possibility that this assumption is not satisfied.</p>
+<h3 data-number="1.5.3" id="dna-concentration-estimation-using-clestimateconc-and-internal-standard-dna-read-counts"><span class="header-section-number">1.5.3</span> DNA Concentration Estimation Using clestimateconc and Internal Standard DNA Read Counts</h3>
+<p>The following command estimates the DNA concentration of OTUs in environmental water samples based on internal standard DNA read counts with known concentrations:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true"></a>clestimateconc \</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true"></a>--stdtable=12_community/sample_otu_matrix_standard.tsv \</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true"></a>--stdconctable=stdconctable.tsv \</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true"></a>--solutionvoltable=solutionvoltable.tsv \</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true"></a>--watervoltable=watervoltable.tsv \</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes.tsv \</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_concentration.tsv</span></code></pre></div>
+<p>The meaning of the command line options is as follows:</p>
+<dl>
+<dt><code>--stdtable</code></dt>
+<dd>Tab-delimited text of internal standard OTU read count table (not required if internal standard OTU read counts are included in the input file)
+</dd>
+<dt><code>--stdconctable</code></dt>
+<dd>Tab-delimited text of internal standard DNA concentration table
+</dd>
+<dt><code>--solutionvoltable</code></dt>
+<dd>Tab-delimited text of extracted DNA solution volume table
+</dd>
+<dt><code>--watervoltable</code></dt>
+<dd>Tab-delimited text of filtered water volume table
+</dd>
+</dl>
+<p>Following the command line options, specify the input file and output file.</p>
+<p>To estimate DNA concentrations for data with 10 rarefaction replicates, execute the following command:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true"></a>for n in `seq -w 1 10`</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true"></a>do clestimateconc \</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true"></a>--stdtable=12_community/sample_otu_matrix_standard_rarefied-r$n.tsv \</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true"></a>--stdconctable=stdconctable.tsv \</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true"></a>--solutionvoltable=solutionvoltable.tsv \</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true"></a>--watervoltable=watervoltable.tsv \</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true"></a>--numthreads=[Number Of CPU cores] \</span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_rarefied-r$n.tsv \</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_rarefied-r$n_concentration.tsv</span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true"></a>done</span></code></pre></div>
+<p>In data where coverage is not equalized, the reliability of estimated DNA concentrations varies between samples. Because it is not possible to perform analyses that consider the variation in reliability of values from data containing only DNA concentration information, it would often be better to use DNA concentration data estimated after rarefaction when conducting analyses utilizing DNA concentrations. However, depending on the analysis method, DNA concentration data estimated from original data before rarefaction might be more suitable in some cases.</p>
+<h3 data-number="1.5.4" id="creating-species-composition-tables-from-otu-composition-tables"><span class="header-section-number">1.5.4</span> Creating Species Composition Tables from OTU Composition Tables</h3>
+<p>While OTU composition tables are suitable for community ecological analysis, species composition tables or genus composition tables may be more understandable for plotting and other purposes. In such cases, species composition tables or genus composition tables can be created from OTU composition tables and molecular identification results. The following command creates a species composition table from a fish OTU composition table:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true"></a>clsumtaxa \</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true"></a>--targetrank=species \</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true"></a>--taxnamereplace=enable \</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true"></a>--fuseotu=enable \</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true"></a>--numbering=enable \</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true"></a>--sortkey=abundance \</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes.tsv \</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true"></a>12_community/sample_species_matrix_fishes.tsv</span></code></pre></div>
+<p>The meaning of the command line options is as follows:</p>
+<dl>
+<dt><code>--taxfile</code></dt>
+<dd>Tab-delimited text file of molecular identification results (in the output format of <code>classigntax</code>)
+</dd>
+<dt><code>--targetrank</code></dt>
+<dd>Use information from the specified taxonomic rank
+</dd>
+<dt><code>--taxnamereplace</code></dt>
+<dd>Replace spaces and colons used in output OTU names with underscores (select from ENABLE | DISABLE)
+</dd>
+<dt><code>--fuseotu</code></dt>
+<dd>Whether to merge OTUs with the same taxon name (select from ENABLE | DISABLE)
+</dd>
+<dd>If DISABLE is selected, output OTU names will be “<code>[Input OTU Name]:[Taxon Name]</code>” and composition content is not changed
+</dd>
+<dd>If DISABLE is selected and <code>--taxnamereplace</code> is also enabled, output OTU names will be “<code>[Input OTU Name]_[Taxon Name]</code>”
+</dd>
+<dt><code>--numbering</code></dt>
+<dd>Whether to add numbers as prefixes to output OTU names in sort order (select from ENABLE | DISABLE)
+</dd>
+<dd>If ENABLE is selected and there are 100 output OTUs, numbers from <code>001</code> to <code>100</code> with aligned width are added separated by colon “<code>:</code>”
+</dd>
+<dd>If <code>--taxnamereplace</code> is also enabled, separation is by underscore “<code>_</code>” instead of colon
+</dd>
+<dd>If both <code>--fuseotu</code> and <code>--taxnamereplace</code> are also enabled, the format becomes “<code>[Number]_[Taxon Name]</code>”
+</dd>
+<dd>If <code>--fuseotu</code> is also enabled and <code>--taxnamereplace</code> is disabled, the format becomes “<code>[Number]:[Taxon Name]</code>”
+</dd>
+<dd>If <code>--fuseotu</code> is disabled and <code>--taxnamereplace</code> is enabled, the format becomes “<code>[Number]_[Input OTU Name]_[Taxon Name]</code>”
+</dd>
+<dd>If both <code>--fuseotu</code> and <code>--taxnamereplace</code> are disabled, the format becomes “<code>[Number]:[Input OTU Name]:[Taxon Name]</code>”
+</dd>
+<dt><code>--sortkey</code></dt>
+<dd>Key to determine sort order (select from ABUNDANCE | RANKNAME)
+</dd>
+<dd>RANKNAME should be “<code>familyname</code>”, “<code>classname</code>”, “<code>&quot;species group name&quot;</code>” (quote if spaces are included), etc.
+</dd>
+</dl>
+<p>Following the command line options, specify the input file and output file.</p>
+<p>The following command creates a species composition table from an OTU composition table with DNA concentrations as values:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true"></a>clsumtaxa \</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true"></a>--targetrank=species \</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true"></a>--taxnamereplace=enable \</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true"></a>--taxranknamereplace=enable \</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true"></a>--fuseotu=enable \</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true"></a>--numbering=enable \</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true"></a>--sortkey=abundance \</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_concentration.tsv \</span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true"></a>12_community/sample_species_matrix_fishes_concentration.tsv</span></code></pre></div>
+<p>Note that when <code>--fuseotu</code> is enabled, OTUs are merged based only on taxon names, so even with <code>--targetrank=species</code>, species named “<code>unidentified [Higher Taxon Name]</code>” will exist, and multiple species may be merged into these. This is because OTUs that could not be identified at low taxonomic ranks were assigned as “<code>unidentified [Higher Taxon Name]</code>” by <code>clfillassign</code>. Therefore, this results in species composition tables that include OTUs where multiple species are incorrectly merged. While such species composition tables can be used for plotting, for statistical analysis, use OTU composition tables with ASVs or OTUs clustered based on sequence similarity as units.</p>
+<h2 data-number="1.6" id="towards-community-ecological-analysis-using-otu-composition-tables"><span class="header-section-number">1.6</span> Towards Community Ecological Analysis Using OTU Composition Tables</h2>
+<p>Through the content covered so far, OTU composition tables necessary for community ecological analysis can be obtained, but there should be at least four types: non-rarefied read count data, rarefied read count data, non-rarefied DNA concentration data, and rarefied DNA concentration data. These need to be used appropriately depending on the purpose and analysis methods. Here, we briefly introduce packages that are useful when conducting community ecological analysis in R <span class="citation" data-cites="RCoreTeam2023LanguageEnvironmentStatistical">(R Core Team 2023)</span> using OTU composition tables.</p>
+<p>First, non-rarefied read count data is used for estimating and plotting rarefaction curves and Hill numbers (effective number of species) <span class="citation" data-cites="Chao2014RarefactionextrapolationHill">(Chao <em>et al.</em> 2014)</span>. The following R packages will be helpful:</p>
+<ul>
+<li>vegan <a href="https://github.com/vegandevs/vegan" class="uri">https://github.com/vegandevs/vegan</a></li>
+<li>iNEXT <a href="https://github.com/JohnsonHsieh/iNEXT" class="uri">https://github.com/JohnsonHsieh/iNEXT</a> <span class="citation" data-cites="Hsieh2016iNEXTpackagerarefaction">(Hsieh <em>et al.</em> 2016)</span></li>
+</ul>
+<p>Rarefied read count data can be used for most analyses that do not require quantitative comparison among samples (cluster analysis, NMDS, PerMANOVA, community phylogenetic analysis). Investigating the following R packages is recommended:</p>
+<ul>
+<li>vegan <a href="https://github.com/vegandevs/vegan" class="uri">https://github.com/vegandevs/vegan</a></li>
+<li>picante <a href="https://cran.r-project.org/web/packages/picante/" class="uri">https://cran.r-project.org/web/packages/picante/</a> <span class="citation" data-cites="Kembel2010Picantetoolsintegrating">(Kembel <em>et al.</em> 2010)</span></li>
+<li>MicEco <a href="https://github.com/Russel88/MicEco" class="uri">https://github.com/Russel88/MicEco</a></li>
+<li>iNEXT.beta3D <a href="https://github.com/KaiHsiangHu/iNEXT.beta3D" class="uri">https://github.com/KaiHsiangHu/iNEXT.beta3D</a> <span class="citation" data-cites="Chao2023Rarefactionextrapolationbeta">(Chao <em>et al.</em> 2023)</span></li>
+<li>bipartite <a href="https://github.com/biometry/bipartite" class="uri">https://github.com/biometry/bipartite</a></li>
+<li>pvclust <a href="https://github.com/shimo-lab/pvclust" class="uri">https://github.com/shimo-lab/pvclust</a> <span class="citation" data-cites="Suzuki2006Pvclustpackageassessing">(Suzuki &amp; Shimodaira 2006)</span></li>
+<li>mpmcorrelogram <a href="https://cran.r-project.org/web/packages/mpmcorrelogram/" class="uri">https://cran.r-project.org/web/packages/mpmcorrelogram/</a></li>
+<li>boral <a href="https://cran.r-project.org/web/packages/boral/" class="uri">https://cran.r-project.org/web/packages/boral/</a> <span class="citation" data-cites="Hui2016boralBayesianOrdination">(Hui 2016)</span></li>
+<li>gllvm <a href="https://github.com/JenniNiku/gllvm" class="uri">https://github.com/JenniNiku/gllvm</a> <span class="citation" data-cites="Niku2019gllvmFastanalysis">(Niku <em>et al.</em> 2019)</span></li>
+</ul>
+<p>DNA concentration data can be used for analytical methods that require quantitative comparison between samples. Instead, methods that require integer values cannot be applied. The following R packages enable time series causal inference:</p>
+<ul>
+<li>rEDM <a href="https://ha0ye.github.io/rEDM/" class="uri">https://ha0ye.github.io/rEDM/</a> <span class="citation" data-cites="Ye2016Informationleverageinterconnected">(Ye &amp; Sugihara 2016)</span></li>
+<li>rUIC <a href="https://github.com/yutakaos/rUIC" class="uri">https://github.com/yutakaos/rUIC</a> <span class="citation" data-cites="Osada2023unifiedframeworknonparametric">(Osada <em>et al.</em> 2023)</span></li>
+</ul>
+<p>When targeting spatial analysis, Joint Species Distribution Modeling enables simultaneous estimation of habitat suitability for multiple species and identification of important areas with high diversity. The following R packages support fitting such complex models:</p>
+<ul>
+<li>jSDM <a href="https://ecology.ghislainv.fr/jSDM/" class="uri">https://ecology.ghislainv.fr/jSDM/</a> <span class="citation" data-cites="Warton2015ManyVariablesJoint">(Warton <em>et al.</em> 2015)</span></li>
+<li>HMSC <a href="https://github.com/hmsc-r/HMSC" class="uri">https://github.com/hmsc-r/HMSC</a> <span class="citation" data-cites="Tikhonov2020Jointspeciesdistribution">(Tikhonov <em>et al.</em> 2020)</span></li>
+</ul>
+<p>Methods for estimating networks of inter-OTU relationships from OTU composition have also been actively developed in recent years. The following are R packages that support estimation and visualization of inter-OTU relationship networks:</p>
+<ul>
+<li>SpiecEasi <a href="https://github.com/zdk123/SpiecEasi" class="uri">https://github.com/zdk123/SpiecEasi</a> <span class="citation" data-cites="Kurtz2015SparseCompositionallyRobust">(Kurtz <em>et al.</em> 2015)</span></li>
+<li>NetCoMi <a href="https://github.com/stefpeschel/NetCoMi" class="uri">https://github.com/stefpeschel/NetCoMi</a> <span class="citation" data-cites="Peschel2021NetCoMinetworkconstruction">(Peschel <em>et al.</em> 2021)</span></li>
+<li>ggClusterNet <a href="https://github.com/taowenmicro/ggClusterNet" class="uri">https://github.com/taowenmicro/ggClusterNet</a> <span class="citation" data-cites="Wen2022ggClusterNetpackagemicrobiome">(Wen <em>et al.</em> 2022)</span></li>
+</ul>
+<p>Many of the R packages introduced here and the methods implemented in them are relatively new, and I cannot claim to have fully grasped them all. In particular, please carefully examine the properties of data required as prerequisites for each method (presence/absence, integer or decimal or real values, whether intra-sample or inter-sample quantitative properties exist, etc.) in papers and manuals before use.</p>
+<p>Finally, <span class="citation" data-cites="土居2011生物群集解析のための類似度とその応用Rを使った類似度の算出グラフ化">土居 &amp; 岡村 (2011)</span>, <span class="citation" data-cites="門脇2016メタゲノムデータを用いた群集統計解析法レアファクションから仮説検定まで">門脇 (2016)</span>, and <span class="citation" data-cites="Kadowaki2023primercommunityecology">Kadowaki (2023)</span> provide introductory explanations of community ecological analysis in R, so I recommend you to read them.</p>
+<h1 class="unnumbered" data-number id="references">References</h1>
+<div id="refs" class="references hanging-indent" role="doc-bibliography">
+<div id="ref-Callahan2016DADA2Highresolutionsample">
+<p>Callahan, Benjamin J., McMurdie, Paul J., Rosen, Michael J., Han, Andrew W., Johnson, Amy Jo A. &amp; Holmes, Susan P. (2016) DADA2: High-resolution sample inference from Illumina amplicon data. <em>Nature Methods</em> 13, 581–583. <a href="https://doi.org/10.1038/nmeth.3869">https://doi.org/10.1038/nmeth.3869</a></p>
+</div>
+<div id="ref-Chao2014RarefactionextrapolationHill">
+<p>Chao, Anne, Gotelli, Nicholas J., Hsieh, T. C., Sander, Elizabeth L., Ma, K. H., Colwell, Robert K. &amp; Ellison, Aaron M. (2014) Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies. <em>Ecological Monographs</em> 84, 45–67. <a href="https://doi.org/10.1890/13-0133.1">https://doi.org/10.1890/13-0133.1</a></p>
+</div>
+<div id="ref-Chao2012Coveragebasedrarefactionextrapolation">
+<p>Chao, Anne &amp; Jost, Lou (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. <em>Ecology</em> 93, 2533–2547. <a href="https://doi.org/10.1890/11-1952.1">https://doi.org/10.1890/11-1952.1</a></p>
+</div>
+<div id="ref-Chao2023Rarefactionextrapolationbeta">
+<p>Chao, Anne, Thorn, Simon, Chiu, Chun-Huo, Moyes, Faye, Hu, Kai-Hsiang, Chazdon, Robin L., Wu, Jessie, Magnago, Luiz Fernando S., Dornelas, Maria, Zelený, David, Colwell, Robert K. &amp; Magurran, Anne E. (2023) Rarefaction and extrapolation with beta diversity under a framework of Hill numbers: The iNEXT.beta3D standardization. <em>Ecological Monographs</em> 93, e1588. <a href="https://doi.org/10.1002/ecm.1588">https://doi.org/10.1002/ecm.1588</a></p>
+</div>
+<div id="ref-Chiu2016Estimatingcomparingmicrobial">
+<p>Chiu, Chun-Huo &amp; Chao, Anne (2016) Estimating and comparing microbial diversity in the presence of sequencing errors. <em>PeerJ</em> 4, e1634. <a href="https://doi.org/10.7717/peerj.1634">https://doi.org/10.7717/peerj.1634</a></p>
+</div>
+<div id="ref-Edgar2010Searchclusteringorders">
+<p>Edgar, Robert C. (2010) Search and clustering orders of magnitude faster than BLAST. <em>Bioinformatics</em> 26, 2460–2461. <a href="https://doi.org/10.1093/bioinformatics/btq461">https://doi.org/10.1093/bioinformatics/btq461</a></p>
+</div>
+<div id="ref-Edgar2016UCHIME2improvedchimera">
+<p>Edgar, Robert C. (2016) UCHIME2: improved chimera prediction for amplicon sequencing., 074252.</p>
+</div>
+<div id="ref-Edgar2015Errorfilteringpair">
+<p>Edgar, Robert C. &amp; Flyvbjerg, Henrik (2015) Error filtering, pair assembly and error correction for next-generation sequencing reads. <em>Bioinformatics</em> 31, 3476–3482. <a href="https://doi.org/10.1093/bioinformatics/btv401">https://doi.org/10.1093/bioinformatics/btv401</a></p>
+</div>
+<div id="ref-Edgar2011UCHIMEimprovessensitivity">
+<p>Edgar, Robert C., Haas, Brian J., Clemente, Jose C., Quince, Christopher &amp; Knight, Rob (2011) UCHIME improves sensitivity and speed of chimera detection. <em>Bioinformatics</em> 27, 2194–2200. <a href="https://doi.org/10.1093/bioinformatics/btr381">https://doi.org/10.1093/bioinformatics/btr381</a></p>
+</div>
+<div id="ref-Esling2015Accuratemultiplexingfiltering">
+<p>Esling, Philippe, Lejzerowicz, Franck &amp; Pawlowski, Jan (2015) Accurate multiplexing and filtering for high-throughput amplicon-sequencing. <em>Nucleic Acids Research</em> 43, 2513–2524. <a href="https://doi.org/10.1093/nar/gkv107">https://doi.org/10.1093/nar/gkv107</a></p>
+</div>
+<div id="ref-Hsieh2016iNEXTpackagerarefaction">
+<p>Hsieh, T. C., Ma, K. H. &amp; Chao, Anne (2016) iNEXT: an R package for rarefaction and extrapolation of species diversity (Hill numbers). <em>Methods in Ecology and Evolution</em> 7, 1451–1456. <a href="https://doi.org/10.1111/2041-210X.12613">https://doi.org/10.1111/2041-210X.12613</a></p>
+</div>
+<div id="ref-Hui2016boralBayesianOrdination">
+<p>Hui, Francis K. C. (2016) boral – Bayesian Ordination and Regression Analysis of Multivariate Abundance Data in r. <em>Methods in Ecology and Evolution</em> 7, 744–750. <a href="https://doi.org/10.1111/2041-210X.12514">https://doi.org/10.1111/2041-210X.12514</a></p>
+</div>
+<div id="ref-Huson2007MEGANanalysismetagenomic">
+<p>Huson, Daniel H., Auch, Alexander F., Qi, Ji &amp; Schuster, Stephan C. (2007) MEGAN analysis of metagenomic data. <em>Genome Research</em> 17, 377–386. <a href="https://doi.org/10.1101/gr.5969107">https://doi.org/10.1101/gr.5969107</a></p>
+</div>
+<div id="ref-Kadowaki2023primercommunityecology">
+<p>Kadowaki, Kohmei (2023) A primer of community ecology using the R language. <em>Population Ecology</em> 65, 240–256. <a href="https://doi.org/10.1002/1438-390X.12158">https://doi.org/10.1002/1438-390X.12158</a></p>
+</div>
+<div id="ref-Kembel2010Picantetoolsintegrating">
+<p>Kembel, Steven W., Cowan, Peter D., Helmus, Matthew R., Cornwell, William K., Morlon, Helene, Ackerly, David D., Blomberg, Simon P. &amp; Webb, Campbell O. (2010) Picante: R tools for integrating phylogenies and ecology. <em>Bioinformatics</em> 26, 1463–1464. <a href="https://doi.org/10.1093/bioinformatics/btq166">https://doi.org/10.1093/bioinformatics/btq166</a></p>
+</div>
+<div id="ref-Komai2019Developmentnewset">
+<p>Komai, Tomoyuki, Gotoh, Ryo O., Sado, Tetsuya &amp; Miya, Masaki (2019) Development of a new set of PCR primers for eDNA metabarcoding decapod crustaceans. <em>Metabarcoding and Metagenomics</em> 3, e33835. <a href="https://doi.org/10.3897/mbmg.3.33835">https://doi.org/10.3897/mbmg.3.33835</a></p>
+</div>
+<div id="ref-Kurtz2015SparseCompositionallyRobust">
+<p>Kurtz, Zachary D., Müller, Christian L., Miraldi, Emily R., Littman, Dan R., Blaser, Martin J. &amp; Bonneau, Richard A. (2015) Sparse and Compositionally Robust Inference of Microbial Ecological Networks. <em>PLOS Computational Biology</em> 11, e1004226. <a href="https://doi.org/10.1371/journal.pcbi.1004226">https://doi.org/10.1371/journal.pcbi.1004226</a></p>
+</div>
+<div id="ref-Miya2020MiFishmetabarcodinghighthroughput">
+<p>Miya, Masaki, Gotoh, Ryo O. &amp; Sado, Tetsuya (2020) MiFish metabarcoding: a high-throughput approach for simultaneous detection of multiple fish species from environmental DNA and other samples. <em>Fisheries Science</em> 86, 939–970. <a href="https://doi.org/10.1007/s12562-020-01461-x">https://doi.org/10.1007/s12562-020-01461-x</a></p>
+</div>
+<div id="ref-Miya2015MiFishsetuniversal">
+<p>Miya, M., Sato, Y., Fukunaga, T., Sado, T., Poulsen, J. Y., Sato, K., Minamoto, T., Yamamoto, S., Yamanaka, H., Araki, H., Kondoh, M. &amp; Iwasaki, W. (2015) MiFish, a set of universal PCR primers for metabarcoding environmental DNA from fishes: detection of more than 230 subtropical marine species. <em>Royal Society Open Science</em> 2, 150088. <a href="https://doi.org/10.1098/rsos.150088">https://doi.org/10.1098/rsos.150088</a></p>
+</div>
+<div id="ref-Niku2019gllvmFastanalysis">
+<p>Niku, Jenni, Hui, Francis K. C., Taskinen, Sara &amp; Warton, David I. (2019) gllvm: Fast analysis of multivariate abundance data with generalized linear latent variable models in r. <em>Methods in Ecology and Evolution</em> 10, 2173–2182. <a href="https://doi.org/10.1111/2041-210X.13303">https://doi.org/10.1111/2041-210X.13303</a></p>
+</div>
+<div id="ref-Osada2023unifiedframeworknonparametric">
+<p>Osada, Yutaka, Ushio, Masayuki &amp; Michio, Kondoh (2023) A unified framework for nonparametric causality detection., 2023.04.20.537743.</p>
+</div>
+<div id="ref-Peschel2021NetCoMinetworkconstruction">
+<p>Peschel, Stefanie, Müller, Christian L, von Mutius, Erika, Boulesteix, Anne-Laure &amp; Depner, Martin (2021) NetCoMi: network construction and comparison for microbiome data in R. <em>Briefings in Bioinformatics</em> 22, bbaa290. <a href="https://doi.org/10.1093/bib/bbaa290">https://doi.org/10.1093/bib/bbaa290</a></p>
+</div>
+<div id="ref-RCoreTeam2023LanguageEnvironmentStatistical">
+<p>R Core Team (2023) R: A Language and Environment for Statistical Computing. <a href="https://www.R-project.org">https://www.R-project.org</a></p>
+</div>
+<div id="ref-Rognes2016VSEARCHversatileopen">
+<p>Rognes, Torbjørn, Flouri, Tomáš, Nichols, Ben, Quince, Christopher &amp; Mahé, Frédéric (2016) VSEARCH: a versatile open source tool for metagenomics. <em>PeerJ</em> 4, e2584. <a href="https://doi.org/10.7717/peerj.2584">https://doi.org/10.7717/peerj.2584</a></p>
+</div>
+<div id="ref-Sakata2022DevelopmentevaluationPCR">
+<p>Sakata, Masayuki K., Kawata, Mone U., Kurabayashi, Atsushi, Kurita, Takaki, Nakamura, Masatoshi, Shirako, Tomoyasu, Kakehashi, Ryosuke, Nishikawa, Kanto, Hossman, Mohamad Yazid, Nishijima, Takashi, Kabamoto, Junichi, Miya, Masaki &amp; Minamoto, Toshifumi (2022) Development and evaluation of PCR primers for environmental DNA (eDNA) metabarcoding of Amphibia. <em>Metabarcoding and Metagenomics</em> 6, e76534. <a href="https://doi.org/10.3897/mbmg.6.76534">https://doi.org/10.3897/mbmg.6.76534</a></p>
+</div>
+<div id="ref-Sato2018MitoFishMiFishPipeline">
+<p>Sato, Yukuto, Miya, Masaki, Fukunaga, Tsukasa, Sado, Tetsuya &amp; Iwasaki, Wataru (2018) MitoFish and MiFish Pipeline: A Mitochondrial Genome Database of Fish with an Analysis Pipeline for Environmental DNA Metabarcoding. <em>Molecular Biology and Evolution</em> 35, 1553–1555. <a href="https://doi.org/10.1093/molbev/msy074">https://doi.org/10.1093/molbev/msy074</a></p>
+</div>
+<div id="ref-Suzuki2006Pvclustpackageassessing">
+<p>Suzuki, Ryota &amp; Shimodaira, Hidetoshi (2006) Pvclust: an R package for assessing the uncertainty in hierarchical clustering. <em>Bioinformatics</em> 22, 1540–1542. <a href="https://doi.org/10.1093/bioinformatics/btl117">https://doi.org/10.1093/bioinformatics/btl117</a></p>
+</div>
+<div id="ref-Takenaka2023DevelopmentnovelPCR">
+<p>Takenaka, Masaki, Yano, Koki, Suzuki, Tomoya &amp; Tojo, Koji (2023) Development of novel PCR primer sets for DNA barcoding of aquatic insects, and the discovery of some cryptic species. <em>Limnology</em> 24, 121–136. <a href="https://doi.org/10.1007/s10201-022-00710-5">https://doi.org/10.1007/s10201-022-00710-5</a></p>
+</div>
+<div id="ref-Tanabe2013TwoNewComputational">
+<p>Tanabe, Akifumi S. &amp; Toju, Hirokazu (2013) Two New Computational Methods for Universal DNA Barcoding: A Benchmark Using Barcode Sequences of Bacteria, Archaea, Animals, Fungi, and Land Plants. <em>PLOS ONE</em> 8, e76910. <a href="https://doi.org/10.1371/journal.pone.0076910">https://doi.org/10.1371/journal.pone.0076910</a></p>
+</div>
+<div id="ref-Tikhonov2020Jointspeciesdistribution">
+<p>Tikhonov, Gleb, Opedal, Øystein H., Abrego, Nerea, Lehikoinen, Aleksi, de Jonge, Melinda M. J., Oksanen, Jari &amp; Ovaskainen, Otso (2020) Joint species distribution modelling with the r-package Hmsc. <em>Methods in Ecology and Evolution</em> 11, 442–447. <a href="https://doi.org/10.1111/2041-210X.13345">https://doi.org/10.1111/2041-210X.13345</a></p>
+</div>
+<div id="ref-Ushio2017EnvironmentalDNAenables">
+<p>Ushio, Masayuki, Fukuda, Hisato, Inoue, Toshiki, Makoto, Kobayashi, Kishida, Osamu, Sato, Keiichi, Murata, Koichi, Nikaido, Masato, Sado, Tetsuya, Sato, Yukuto, Takeshita, Masamichi, Iwasaki, Wataru, Yamanaka, Hiroki, Kondoh, Michio &amp; Miya, Masaki (2017) Environmental DNA enables detection of terrestrial mammals from forest pond water. <em>Molecular Ecology Resources</em> 17, e63–e75. <a href="https://doi.org/10.1111/1755-0998.12690">https://doi.org/10.1111/1755-0998.12690</a></p>
+</div>
+<div id="ref-Ushio2022efficientearlypoolingprotocol">
+<p>Ushio, Masayuki, Furukawa, Saori, Murakami, Hiroaki, Masuda, Reiji &amp; Nagano, Atsushi J. (2022) An efficient early-pooling protocol for environmental DNA metabarcoding. <em>Environmental DNA</em> 4, 1212–1228. <a href="https://doi.org/10.1002/edn3.337">https://doi.org/10.1002/edn3.337</a></p>
+</div>
+<div id="ref-Ushio2018Quantitativemonitoringmultispecies">
+<p>Ushio, Masayuki, Murakami, Hiroaki, Masuda, Reiji, Sado, Tetsuya, Miya, Masaki, Sakurai, Sho, Yamanaka, Hiroki, Minamoto, Toshifumi &amp; Kondoh, Michio (2018a) Quantitative monitoring of multispecies fish environmental DNA using high-throughput sequencing. <em>Metabarcoding and Metagenomics</em> 2, e23297. <a href="https://doi.org/10.3897/mbmg.2.23297">https://doi.org/10.3897/mbmg.2.23297</a></p>
+</div>
+<div id="ref-Ushio2018Demonstrationpotentialenvironmental">
+<p>Ushio, Masayuki, Murata, Koichi, Sado, Tetsuya, Nishiumi, Isao, Takeshita, Masamichi, Iwasaki, Wataru &amp; Miya, Masaki (2018b) Demonstration of the potential of environmental DNA as a tool for the detection of avian species. <em>Scientific Reports</em> 8, 4493. <a href="https://doi.org/10.1038/s41598-018-22817-5">https://doi.org/10.1038/s41598-018-22817-5</a></p>
+</div>
+<div id="ref-Warton2015ManyVariablesJoint">
+<p>Warton, David I., Blanchet, F. Guillaume, O’Hara, Robert B., Ovaskainen, Otso, Taskinen, Sara, Walker, Steven C. &amp; Hui, Francis K. C. (2015) So Many Variables: Joint Modeling in Community Ecology. <em>Trends in Ecology &amp; Evolution</em> 30, 766–779. <a href="https://doi.org/10.1016/j.tree.2015.09.007">https://doi.org/10.1016/j.tree.2015.09.007</a></p>
+</div>
+<div id="ref-Wen2022ggClusterNetpackagemicrobiome">
+<p>Wen, Tao, Xie, Penghao, Yang, Shengdie, Niu, Guoqing, Liu, Xiaoyu, Ding, Zhexu, Xue, Chao, Liu, Yong-Xin, Shen, Qirong &amp; Yuan, Jun (2022) ggClusterNet: An R package for microbiome network analysis and modularity-based multiple network layouts. <em>iMeta</em> 1, e32. <a href="https://doi.org/10.1002/imt2.32">https://doi.org/10.1002/imt2.32</a></p>
+</div>
+<div id="ref-Ye2016Informationleverageinterconnected">
+<p>Ye, Hao &amp; Sugihara, George (2016) Information leverage in interconnected ecosystems: Overcoming the curse of dimensionality. <em>Science</em> 353, 922–925. <a href="https://doi.org/10.1126/science.aag0863">https://doi.org/10.1126/science.aag0863</a></p>
+</div>
+<div id="ref-Zhu2023MitoFishMitoAnnotatorMiFish">
+<p>Zhu, Tao, Sato, Yukuto, Sado, Tetsuya, Miya, Masaki &amp; Iwasaki, Wataru (2023) MitoFish, MitoAnnotator, and MiFish Pipeline: Updates in 10 Years. <em>Molecular Biology and Evolution</em> 40, msad035. <a href="https://doi.org/10.1093/molbev/msad035">https://doi.org/10.1093/molbev/msad035</a></p>
+</div>
+<div id="ref-土居2011生物群集解析のための類似度とその応用Rを使った類似度の算出グラフ化">
+<p>土居秀幸 &amp; 岡村寛 (2011) 生物群集解析のための類似度とその応用: Rを使った類似度の算出、グラフ化、検定. <em>日本生態学会誌</em> 61, 3–20. <a href="https://doi.org/10.18960/seitai.61.1_3">https://doi.org/10.18960/seitai.61.1_3</a></p>
+</div>
+<div id="ref-門脇2016メタゲノムデータを用いた群集統計解析法レアファクションから仮説検定まで">
+<p>門脇浩明 (2016) メタゲノムデータを用いた群集統計解析法：レアファクションから仮説検定まで. <em>日本生態学会第63回大会講演資料</em>. <a href="https://www.fifthdimension.jp/wiki.cgi?page=%BC%AB%CD%B3%BD%B8%B2%F12016%A1%A7%A5%E1%A5%BF%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%A1%A6%B4%C4%B6%ADDNA%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%B2%F2%C0%CF%A4%CE%B5%BB%CB%A1">https://www.fifthdimension.jp/wiki.cgi?page=%BC%AB%CD%B3%BD%B8%B2%F12016%A1%A7%A5%E1%A5%BF%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%A1%A6%B4%C4%B6%ADDNA%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%B2%F2%C0%CF%A4%CE%B5%BB%CB%A1</a></p>
+</div>
+</div>
+</body>
+</html>

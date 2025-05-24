@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="田辺晶史 (東北大学大学院生命科学研究科)" />
+  <meta name="dcterms.date" content="2025-05-24" />
+  <title>Claidentを用いた定量メタバーコーディング解析</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #cccccc; background-color: #303030; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ffcfaf; } /* Alert */
+    code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+    code span.at { } /* Attribute */
+    code span.bn { color: #dca3a3; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #f0dfaf; } /* ControlFlow */
+    code span.ch { color: #dca3a3; } /* Char */
+    code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+    code span.co { color: #7f9f7f; } /* Comment */
+    code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+    code span.do { color: #7f9f7f; } /* Documentation */
+    code span.dt { color: #dfdfbf; } /* DataType */
+    code span.dv { color: #dcdccc; } /* DecVal */
+    code span.er { color: #c3bf9f; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #c0bed1; } /* Float */
+    code span.fu { color: #efef8f; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+    code span.kw { color: #f0dfaf; } /* Keyword */
+    code span.op { color: #f0efd0; } /* Operator */
+    code span.ot { color: #efef8f; } /* Other */
+    code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+    code span.sc { color: #dca3a3; } /* SpecialChar */
+    code span.ss { color: #cc9393; } /* SpecialString */
+    code span.st { color: #cc9393; } /* String */
+    code span.va { } /* Variable */
+    code span.vs { color: #cc9393; } /* VerbatimString */
+    code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Claidentを用いた定量メタバーコーディング解析</h1>
+<p class="author">田辺晶史 (東北大学大学院生命科学研究科)</p>
+<p class="date">2025-05-24</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#claidentを用いた定量メタバーコーディング解析"><span class="toc-section-number">1</span> Claidentを用いた定量メタバーコーディング解析</a>
+<ul>
+<li><a href="#claidentの動作環境およびインストール方法"><span class="toc-section-number">1.1</span> Claidentの動作環境およびインストール方法</a></li>
+<li><a href="#データ解析全体の流れと前提条件"><span class="toc-section-number">1.2</span> データ解析全体の流れと前提条件</a>
+<ul>
+<li><a href="#claidentにおけるサンプルidについて"><span class="toc-section-number">1.2.1</span> Claidentにおける「サンプルID」について</a></li>
+<li><a href="#otuとasvについて"><span class="toc-section-number">1.2.2</span> OTUとASVについて</a></li>
+<li><a href="#必要なファイル群とディレクトリ構造"><span class="toc-section-number">1.2.3</span> 必要なファイル群とディレクトリ構造</a>
+<ul>
+<li><a href="#ブランクリストblanklist.txt"><span class="toc-section-number">1.2.3.1</span> ブランクリスト(blanklist.txt)</a></li>
+<li><a href="#濾過水量表watervoltable.tsv"><span class="toc-section-number">1.2.3.2</span> 濾過水量表(watervoltable.tsv)</a></li>
+<li><a href="#抽出dna溶液量表solutionvoltable.tsv"><span class="toc-section-number">1.2.3.3</span> 抽出DNA溶液量表(solutionvoltable.tsv)</a></li>
+<li><a href="#内部標準dna塩基配列standard.fasta"><span class="toc-section-number">1.2.3.4</span> 内部標準DNA塩基配列(standard.fasta)</a></li>
+<li><a href="#内部標準dna濃度表stdconctable.tsv"><span class="toc-section-number">1.2.3.5</span> 内部標準DNA濃度表(stdconctable.tsv)</a></li>
+<li><a href="#シーケンサの読み始めになる部分配列forwardprimer.fastareverseprimer.fasta"><span class="toc-section-number">1.2.3.6</span> シーケンサの読み始めになる部分配列(forwardprimer.fasta・reverseprimer.fasta)</a></li>
+<li><a href="#インデックスとして読まれる部分配列index1.fastaindex2.fasta"><span class="toc-section-number">1.2.3.7</span> インデックスとして読まれる部分配列(index1.fasta・index2.fasta)</a></li>
+<li><a href="#未デマルチプレックスfastq"><span class="toc-section-number">1.2.3.8</span> 未デマルチプレックスFASTQ</a></li>
+<li><a href="#ディレクトリ構造"><span class="toc-section-number">1.2.3.9</span> ディレクトリ構造</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#塩基配列データ処理"><span class="toc-section-number">1.3</span> 塩基配列データ処理</a>
+<ul>
+<li><a href="#clsplitseqによるデマルチプレックス"><span class="toc-section-number">1.3.1</span> clsplitseqによるデマルチプレックス</a></li>
+<li><a href="#clconcatpairvによるペアエンド配列の連結"><span class="toc-section-number">1.3.2</span> clconcatpairvによるペアエンド配列の連結</a></li>
+<li><a href="#clfilterseqvによる低品質配列の除去"><span class="toc-section-number">1.3.3</span> clfilterseqvによる低品質配列の除去</a></li>
+<li><a href="#cldenoiseseqdによるデノイジング"><span class="toc-section-number">1.3.4</span> cldenoiseseqdによるデノイジング</a></li>
+<li><a href="#clremovechimevによるキメラ除去1回目"><span class="toc-section-number">1.3.5</span> clremovechimevによるキメラ除去1回目</a></li>
+<li><a href="#clclusterstdvによる内部標準配列クラスタリング"><span class="toc-section-number">1.3.6</span> clclusterstdvによる内部標準配列クラスタリング</a></li>
+<li><a href="#clremovechimevによるキメラ除去2回目"><span class="toc-section-number">1.3.7</span> clremovechimevによるキメラ除去2回目</a></li>
+<li><a href="#clremovecontamによるインデックスホッピング除去"><span class="toc-section-number">1.3.8</span> clremovecontamによるインデックスホッピング除去</a></li>
+<li><a href="#clremovecontamとネガティブコントロールを利用したデコンタミネーション"><span class="toc-section-number">1.3.9</span> clremovecontamとネガティブコントロールを利用したデコンタミネーション</a></li>
+</ul></li>
+<li><a href="#分子同定"><span class="toc-section-number">1.4</span> 分子同定</a>
+<ul>
+<li><a href="#分子同定用参照配列データベース"><span class="toc-section-number">1.4.1</span> 分子同定用参照配列データベース</a></li>
+<li><a href="#clmakecachedbによるキャッシュデータベースの生成"><span class="toc-section-number">1.4.2</span> clmakecachedbによるキャッシュデータベースの生成</a></li>
+<li><a href="#qcauto法による分子同定"><span class="toc-section-number">1.4.3</span> QCauto法による分子同定</a>
+<ul>
+<li><a href="#clidentseqによる近隣配列群の取得"><span class="toc-section-number">1.4.3.1</span> clidentseqによる近隣配列群の取得</a></li>
+<li><a href="#classigntaxによる分類群の割り当て"><span class="toc-section-number">1.4.3.2</span> classigntaxによる分類群の割り当て</a></li>
+</ul></li>
+<li><a href="#nn法による分子同定"><span class="toc-section-number">1.4.4</span> 95%-3NN法による分子同定</a>
+<ul>
+<li><a href="#clidentseqによる近隣配列群の取得-1"><span class="toc-section-number">1.4.4.1</span> clidentseqによる近隣配列群の取得</a></li>
+<li><a href="#classigntaxによる分類群の割当"><span class="toc-section-number">1.4.4.2</span> classigntaxによる分類群の割当</a></li>
+</ul></li>
+<li><a href="#clmakeidentdbによる分子同定結果の再利用"><span class="toc-section-number">1.4.5</span> clmakeidentdbによる分子同定結果の再利用</a></li>
+<li><a href="#clmergeassignによる複数の分子同定結果のマージ"><span class="toc-section-number">1.4.6</span> clmergeassignによる複数の分子同定結果のマージ</a></li>
+<li><a href="#clfillassignによる分子同定結果の穴埋め"><span class="toc-section-number">1.4.7</span> clfillassignによる分子同定結果の穴埋め</a></li>
+</ul></li>
+<li><a href="#otu組成表の作成"><span class="toc-section-number">1.5</span> OTU組成表の作成</a>
+<ul>
+<li><a href="#clfiltersumによるotu組成表の加工"><span class="toc-section-number">1.5.1</span> clfiltersumによるOTU組成表の加工</a></li>
+<li><a href="#clrarefysumによるotu組成表のカバレッジベースレアファクション"><span class="toc-section-number">1.5.2</span> clrarefysumによるOTU組成表のカバレッジベースレアファクション</a></li>
+<li><a href="#clestimateconcと内部標準dnaリード数を用いたdna濃度の推定"><span class="toc-section-number">1.5.3</span> clestimateconcと内部標準DNAリード数を用いたDNA濃度の推定</a></li>
+<li><a href="#otu組成表からの種組成表の作成"><span class="toc-section-number">1.5.4</span> OTU組成表からの種組成表の作成</a></li>
+</ul></li>
+<li><a href="#otu組成表を用いた群集生態学解析に向けて"><span class="toc-section-number">1.6</span> OTU組成表を用いた群集生態学解析に向けて</a></li>
+</ul></li>
+<li><a href="#引用文献">引用文献</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="claidentを用いた定量メタバーコーディング解析"><span class="header-section-number">1</span> Claidentを用いた定量メタバーコーディング解析</h1>
+<p>Claidentは、筆者が開発・メンテナンスしている、メタバーコーディングやDNAバーコーディングのための塩基配列データ解析プログラム集です。 Claidentの読みは「クライデン」です(末尾の<em>t</em>は発音しません)。 名前の由来は「CLAssification」と「IDENTification」です。 MiFish pipeline <span class="citation" data-cites="Sato2018MitoFishMiFishPipeline Zhu2023MitoFishMitoAnnotatorMiFish">(Sato <em>et al.</em> 2018; Zhu <em>et al.</em> 2023)</span>との違いは、大まかには以下の通りです。</p>
+<ul>
+<li>MiFishプライマー <span class="citation" data-cites="Miya2015MiFishsetuniversal Miya2020MiFishmetabarcodinghighthroughput">(Miya <em>et al.</em> 2020, 2015)</span> を用いた魚類メタバーコードデータだけでなく、全生物・ウィルスのあらゆる遺伝子座のデータに対応</li>
+<li>非定量および定量メタバーコーディング <span class="citation" data-cites="Ushio2018Quantitativemonitoringmultispecies">(Ushio <em>et al.</em> 2018a)</span> をサポート</li>
+<li>より柔軟で詳細な解析に対応</li>
+<li>Webサービスはなく、自前のコンピュータで解析を行う</li>
+<li>使用のための前提知識・必要な物品は多い</li>
+</ul>
+<p>ここでは、Claidentのインストールから内部標準DNAを利用した定量メタバーコーディングの方法を解説します。 本書のサポートページを下記URLに設置していますので、適宜ご参照下さい。</p>
+<ul>
+<li><a href="https://github.com/astanabe/eDNAmanual" class="uri">https://github.com/astanabe/eDNAmanual</a></li>
+</ul>
+<p>サンプルデータ、サンプルファイル、本書の原稿ファイル等が置いてあります。</p>
+<p>Claidentの詳細については下記URLをご参照下さい。</p>
+<ul>
+<li><a href="https://www.claident.org/" class="uri">https://www.claident.org/</a></li>
+</ul>
+<p>以下では、Linux・macOSの<strong>ターミナル環境での作業に習熟している方向けに</strong>解説を行っていきます。 ターミナル環境での作業に不慣れな方は、予め習得しておく必要があります。</p>
+<h2 data-number="1.1" id="claidentの動作環境およびインストール方法"><span class="header-section-number">1.1</span> Claidentの動作環境およびインストール方法</h2>
+<p>Claidentは、以下の環境で動作するように作成されています。</p>
+<ul>
+<li>Debian 11以降 (Windows上のWSL環境を含む)</li>
+<li>Ubuntu 20.04以降 (Windows上のWSL環境を含む)</li>
+<li>Linux Mint 20以降</li>
+<li>RedHat Enterprise Linux 8以降</li>
+<li>AlmaLinux 8以降 (Windows上のWSL環境を含む)</li>
+<li>Rocky Linux 8以降</li>
+<li>HomebrewをインストールしたmacOS</li>
+<li>MacPortsをインストールしたmacOS</li>
+</ul>
+<p>Windowsをご使用の方は、下記のMicrosoft公式ページを参照してWSLとUbuntuをインストールして下さい。</p>
+<ul>
+<li><a href="https://learn.microsoft.com/ja-jp/windows/wsl/install" class="uri">https://learn.microsoft.com/ja-jp/windows/wsl/install</a></li>
+</ul>
+<p>ただし、Windows上にインストールしたUbuntuは、標準では最大250GB程度しかディスク容量を使用できません(執筆時点)。 メモリも搭載しているうちの半分しか使用できません。 大きなデータ解析にはディスクやメモリの容量が不足する可能性が高いので、専用の解析マシンを用意することをお勧めします。 分子同定の際に大きな参照配列データベースを使用すると膨大なメモリを必要とするため、できるだけメモリを多く搭載したマシンが望ましいでしょう。 ディスクアクセス速度がボトルネックになることも多いため、高速なSSDを搭載したマシンを用意して下さい。</p>
+<p>なお、AnacondaやMinicondaなど、環境を改変してしまうプログラムがインストールされていると、Claidentを正常にインストールすることができません。 一時的に無効化するか、それらのプログラムを一切使用していない別のユーザーアカウントでコンピュータにログインしてインストールする必要があります。</p>
+<p>Debian・Ubuntu・Linux MintおよびWindows上にインストールしたUbuntuの場合、ターミナル上で以下のコマンドを実行することでClaidentをインストールすることができます。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>sudo apt install wget</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>mkdir temporary</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>cd temporary</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>wget https://www.claident.org/installClaident_Debian.sh</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>wget https://www.claident.org/installOptions_Debian.sh</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>wget https://www.claident.org/installUCHIMEDB_Debian.sh</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>wget https://www.claident.org/installDB_Debian.sh</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>sh installClaident_Debian.sh</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>sh installOptions_Debian.sh</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>sh installUCHIMEDB_Debian.sh</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>sh installDB_Debian.sh</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>cd ..</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>rm -rf temporary</span></code></pre></div>
+<p>macOSをご利用の方は、下記のページを参照してHomebrewをインストールして下さい。</p>
+<ul>
+<li><a href="https://brew.sh/" class="uri">https://brew.sh/</a></li>
+</ul>
+<p>HomebrewをインストールしたmacOSでClaidentをインストールするには、ターミナル上で以下のコマンドを実行します。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>brew install wget</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>mkdir temporary</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>cd temporary</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>wget https://www.claident.org/installClaident_macOSHomebrew.sh</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>wget https://www.claident.org/installOptions_macOSHomebrew.sh</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>wget https://www.claident.org/installUCHIMEDB_macOSHomebrew.sh</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>wget https://www.claident.org/installDB_macOSHomebrew.sh</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>sh installClaident_macOSHomebrew.sh</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>sh installOptions_macOSHomebrew.sh</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>sh installUCHIMEDB_macOSHomebrew.sh</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>sh installDB_macOSHomebrew.sh</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>cd ..</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>rm -rf temporary</span></code></pre></div>
+<p>なお、ファイアーウォールの内側など、プロキシサーバを通してしか外部ネットワークにアクセスできない環境では、以下のコマンドをターミナル上で実行してから前述のインストールコマンドを実行する必要があります。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>export http_proxy=http://proxyaddress:portnumber</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>export https_proxy=http://proxyaddress:portnumber</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>export ftp_proxy=http://proxyaddress:portnumber</span></code></pre></div>
+<p>プロキシサーバがユーザー名とパスワードでの認証を要する場合、上記コマンドの代わりに以下のコマンドを実行します。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>export http_proxy=http://username:password@proxyaddress:portnumber</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>export https_proxy=http://username:password@proxyaddress:portnumber</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>export ftp_proxy=http://username:password@proxyaddress:portnumber</span></code></pre></div>
+<p>前述のインストールコマンドでは、いずれの環境でも「<code>/usr/local</code>」以下にインストールされますが、インストール先を変更したい場合、インストールコマンド実行前に以下のコマンドを実行します。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>export PREFIX=/home/tanabe/claident20240101</span></code></pre></div>
+<p>上記の例では、「<code>/home/tanabe/claident20240101</code>」以下にClaidentはインストールされます。 インストール先を変更した場合、実行コマンドが存在する「<code>[インストール先]/bin</code>」が環境変数<code>PATH</code>に登録されていないため、Claidentの解析コマンドが実行できません。 そこで、Claidentでの解析を行う際には以下のコマンドを実行して環境変数<code>PATH</code>に「<code>[インストール先]/bin</code>」を加えます。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>export PATH=/home/tanabe/claident20240101/bin:$PATH</span></code></pre></div>
+<p>Claidentでの解析前に上記コマンドを毎回実行するのが面倒な場合、「<code>~/.bashrc</code>」の末尾などに上記コマンドを記述すると、ターミナル起動時に毎回自動的に実行されるようになります。</p>
+<p>このようにインストール先を変更すれば、複数のバージョンのClaidentを共存させることができます。 ただし、Claidentの各コマンドは設定ファイル「<code>~/.claident</code>」を参照していますので、使用するClaidentを切り替えるには「<code>~/.claident</code>」も変更する必要があります。 「<code>.claident</code>」のテンプレートは、「<code>[インストール先]/share/claident/.claident</code>」に存在していますので、このファイルを「<code>~/.claident</code>」に上書きコピーすればClaidentが完全に切り替わります。 実際に複数のバージョンを1台のマシンにインストールして共存させる場合、異なるユーザーを作成してそれぞれでClaidentをユーザーの所有ディレクトリ内にインストールし、ユーザーを切り替えることで使用するClaidentのバージョンを切り替えるようにするのが良いでしょう。</p>
+<h2 data-number="1.2" id="データ解析全体の流れと前提条件"><span class="header-section-number">1.2</span> データ解析全体の流れと前提条件</h2>
+<p>Claidentによるデータ解析は、以下の流れで行います。</p>
+<ol type="1">
+<li>デマルチプレックス</li>
+<li>ペアエンド配列の連結</li>
+<li>低品質配列の除去 <span class="citation" data-cites="Edgar2015Errorfilteringpair">(Edgar &amp; Flyvbjerg 2015)</span></li>
+<li>デノイジング <span class="citation" data-cites="Callahan2016DADA2Highresolutionsample">(Callahan <em>et al.</em> 2016)</span></li>
+<li>キメラ除去1回目 <span class="citation" data-cites="Edgar2011UCHIMEimprovessensitivity Edgar2016UCHIME2improvedchimera Rognes2016VSEARCHversatileopen">(Edgar 2016; Edgar <em>et al.</em> 2011; Rognes <em>et al.</em> 2016)</span></li>
+<li>内部標準配列クラスタリング <span class="citation" data-cites="Edgar2010Searchclusteringorders Rognes2016VSEARCHversatileopen">(Edgar 2010; Rognes <em>et al.</em> 2016)</span></li>
+<li>キメラ除去2回目 <span class="citation" data-cites="Edgar2011UCHIMEimprovessensitivity Rognes2016VSEARCHversatileopen">(Edgar <em>et al.</em> 2011; Rognes <em>et al.</em> 2016)</span></li>
+<li>インデックスホッピング除去 <span class="citation" data-cites="Esling2015Accuratemultiplexingfiltering">(Esling <em>et al.</em> 2015)</span></li>
+<li>ネガティブコントロールを利用したデコンタミネーション</li>
+<li>分子同定 <span class="citation" data-cites="Tanabe2013TwoNewComputational">(Tanabe &amp; Toju 2013)</span></li>
+<li>OTU組成表の作成・加工</li>
+<li>カバレッジベースレアファクション <span class="citation" data-cites="Chao2012Coveragebasedrarefactionextrapolation">(Chao &amp; Jost 2012)</span></li>
+<li>内部標準DNAリード数を利用したDNA濃度の推定 <span class="citation" data-cites="Ushio2018Quantitativemonitoringmultispecies">(Ushio <em>et al.</em> 2018a)</span></li>
+</ol>
+<p>最終的に得られたOTU組成表をRやその他の統計解析環境で処理することで、作図や要約、仮説検証を行います。 Claident自体にはOTU組成表の統計解析機能はありません。</p>
+<p>Claidentは大抵のメタバーコードデータの解析に使用可能ですが、ここでは以下のようなデータを仮定して解説を進めます。 下記を満たしていないデータを解析できないわけではありませんが、本書では説明の対象としません。</p>
+<ul>
+<li>環境水を濾過して濾過フィルターから抽出した環境DNAサンプルとネガティブコントロールとしてのフィールドブランクが含まれる</li>
+<li>以下の方法でライブラリ調製
+<ul>
+<li>濃度のわかっている複数の内部標準DNAを添加してMiFishプライマーを使用してtailed PCR (1st PCR)</li>
+<li>1st PCR産物を鋳型にしてインデックスプライマーを使用してtailed PCR (2nd PCR)</li>
+<li>できあがるライブラリは、両端にインデックスがあるデュアルインデックスライブラリ</li>
+</ul></li>
+<li>各サンプルの2nd PCR産物を混合してIllumina社製シーケンサで<strong>1ランまたは1レーン専有で</strong>解読
+<ul>
+<li>オーバーラップのある、つまり連結可能なペアエンドシーケンス</li>
+<li>.bclを含むランデータまたはインデックスシーケンス分も含めて未デマルチプレックスFASTQが手元にある</li>
+</ul></li>
+</ul>
+<p>したがって、サンプル・ブランクごとに以下の情報がわかっている必要があります。</p>
+<ul>
+<li>サンプル・ブランクのいずれなのか</li>
+<li>濾過水量</li>
+<li>抽出DNA溶液量(回収液量ではなく、最後の溶出時に使用した液量)</li>
+<li>内部標準DNA塩基配列</li>
+<li>内部標準DNA濃度</li>
+<li>1st PCR時のプライマー配列のうち、シーケンサの読み始めになる部分配列</li>
+<li>2nd PCR時のプライマー配列のうち、インデックスとして読まれる部分配列</li>
+</ul>
+<p>なお、シングルエンドシーケンスやオーバーラップのないペアエンドシーケンス、ライブラリ調製時に内部標準DNA添加をしていない、デマルチプレックス済のFASTQしか手元にない、などのケースに関しては以下のページに掲載しているシェルスクリプトを参照して下さい。</p>
+<ul>
+<li><a href="https://github.com/astanabe/ClaidentTutorial" class="uri">https://github.com/astanabe/ClaidentTutorial</a></li>
+</ul>
+<p>フィールドブランクがない、または十分な数がない場合、抽出ブランクや1st PCRブランクを代わりに使用可能ですが、フィールドブランクとその他のブランクの両方を併せて利用することはできません。 <strong>ブランクの数は10以上必要</strong>です。 繰り返しますが、フィールドブランク、抽出ブランク、1st PCRブランクの合計ではなく、いずれかが10以上です。</p>
+<p>1st PCR用のプライマーは、MiFish <span class="citation" data-cites="Miya2015MiFishsetuniversal Miya2020MiFishmetabarcodinghighthroughput">(Miya <em>et al.</em> 2020, 2015)</span> 、 MiDeca <span class="citation" data-cites="Komai2019Developmentnewset">(Komai <em>et al.</em> 2019)</span> 、MiMammal <span class="citation" data-cites="Ushio2017EnvironmentalDNAenables">(Ushio <em>et al.</em> 2017)</span> 、MiBird <span class="citation" data-cites="Ushio2018Demonstrationpotentialenvironmental">(Ushio <em>et al.</em> 2018b)</span> 、Amph16S <span class="citation" data-cites="Sakata2022DevelopmentevaluationPCR">(Sakata <em>et al.</em> 2022)</span> 、MtInsects-16S <span class="citation" data-cites="Takenaka2023DevelopmentnovelPCR">(Takenaka <em>et al.</em> 2023)</span> などが既に開発されており、対象とする生物群に応じて適宜選択できるようになりつつあります。 新たに開発する場合は、対象とする生物群、遺伝子座を絞り込んだ上で公共のデータベース上から塩基配列を収集し、変異の多い領域を適度な長さで挟んでいる、変異のほとんどない領域を探して設計することになります。 また、1st PCR用プライマーには、シーケンサの読み始めとなる部分に<code>N</code>を6個程度付加することがよくあります。 これは、Illumina社製シーケンサでは読み始めの塩基多様度が低いと蛍光強度が飽和して正常に解読できなくなるためです。 一部のプライマー合成業者では、<code>N</code>のほとんどが<code>T</code>になってしまうため、業者の選定に注意する必要があります。</p>
+<p>2nd PCR用のインデックスプライマーは、Illumina社やサードパーティから既製品が販売されています。 また、筆者が開発したものを下記URLにて公開しています。</p>
+<ul>
+<li><a href="https://github.com/astanabe/TruSeqStyleIndexPrimers" class="uri">https://github.com/astanabe/TruSeqStyleIndexPrimers</a></li>
+<li><a href="https://github.com/astanabe/NexteraStyleIndexPrimers" class="uri">https://github.com/astanabe/NexteraStyleIndexPrimers</a></li>
+</ul>
+<p>インデックス部分も塩基多様度が低いと正しく解読することができないため、使用するインデックスの組み合わせは慎重に検討する必要があります。 どの位置でも<code>A/C</code>と<code>G/T</code>の比が1:1に近いことが望ましいとされています。 特に、混合するサンプルが少ないときに注意が必要です。 また、Claidentでインデックスホッピングの検出・除去を行うには、各サンプルごとに「片方のインデックスを共有する、未使用のインデックスの組み合わせ」が10以上必要です。</p>
+<p>内部標準DNA溶液は、合成業者から受け取った内部標準DNAをTEバッファーなどで溶解し、蛍光色素を使用した濃度測定やデジタルPCRによって絶対定量して意図した濃度になるように希釈、混合したものを使用します。 二本鎖DNA合成サービスとしては、ThermoFisher社のStrings DNA FragmentsやIntegrated DNA Technologies社のgBlocksといったものがあります。 内部標準DNAとして使用する塩基配列は、使用するプライマーで解読できるインサート部分を公共のデータベースから収集し、変異が多い部分をGC含量が変化しないようにしつつ無作為に10%以上変異させ、両端にプライマー配列を連結することで作成します。 既知のどの生物からも10%以上、できれば15%以上異なるようになっていれば理想的です。 MiFishプライマー用の内部標準DNA塩基配列であれば、 <span class="citation" data-cites="Ushio2022efficientearlypoolingprotocol">Ushio <em>et al.</em> (2022)</span> のAppendix S1に掲載されています。</p>
+<p>この先のデータ解析は、<strong>1ランまたは1レーン専有で解読したもの1ランまたは1レーン分</strong>を仮定して説明します。 複数ランまたは複数レーン分のデータがある場合は、後述するインデックスホッピング除去までは1ランまたは1レーン分のデータごとに解析を行い、それらの結果を<code>clclassseqv</code>コマンドを使用して統合します。</p>
+<h3 data-number="1.2.1" id="claidentにおけるサンプルidについて"><span class="header-section-number">1.2.1</span> Claidentにおける「サンプルID」について</h3>
+<p>ここで、Claidentの内部処理におけるサンプルIDについて説明しておきます。 通常、サンプルIDはユーザーが任意に指定すればいいわけですが、メタバーコーディングでは、同一のサンプルの同一のプライマー増幅産物を複数の異なるシーケンスランでシーケンスしたり、同一のサンプルの異なる複数のプライマーの増幅産物を同一のシーケンスランでシーケンスしたりすることがあるため、これらを識別するためにClaidentでは以下の形式でサンプルIDを記述します。</p>
+<pre><code>[Run ID]__[Material ID]__[Primer ID]</code></pre>
+<p><code>[Run ID]</code>は、後述する解析コマンドの実行オプションとして指定する任意の文字列です。 シーケンスラン(またはレーン)を識別するために使用されますので、ご自分でわかりやすいものにして下さい。 <code>[Primer ID]</code>は、後述するファイルの中で指定する任意の文字列です。 こちらは使用したプライマーを識別するために使用されます。 MiFishプライマーを使用したのなら、<code>MiFish</code>でいいでしょう。 <code>[Material ID]</code>は、通常はサンプルIDとして扱われる、サンプル物質に対してユーザーが割り当てた任意の文字列です。 <code>[Run ID]</code>や<code>[Primer ID]</code>は異なるが<code>[Material ID]</code>が一致する場合、現物、すなわち鋳型DNAは同一である、ということがわかります。 つまり、現物サンプルとClaidentでのサンプルは必ずしも1対1対応ではないため、上記のようなサンプルIDを使用することで対応する現物サンプルがサンプルIDのみでわかるように設計されています。</p>
+<p>サンプルにテクニカルレプリケートを設けていることがあると思いますが、DNA抽出・ライブラリ調製・シーケンスの全ての段階で区別している場合は別サンプルとして扱い、どこかの段階で区別しなく・できなくなるのであれば、同一のサンプルとして扱います。 別サンプルとして扱う場合は、<code>[Material ID]</code>の末尾に<code>-R1</code>や<code>-R2</code>などと付加することで、テクニカルレプリケートであることがわかるようにしておくのが良いでしょう。</p>
+<p>なお、<code>[Run ID]</code>・<code>[Primer ID]</code>・<code>[Material ID]</code>には<code>__</code>(2個以上連続するアンダーバー)を含めることはできません。 また、使用できる文字列は英数字とハイフンとアンダーバーのみです。 その他の文字列が使用されていた場合、予期しないエラーが起きる可能性があります。</p>
+<h3 data-number="1.2.2" id="otuとasvについて"><span class="header-section-number">1.2.2</span> OTUとASVについて</h3>
+<p>Amplicon Sequence Variant (ASV)あるいはExact Sequence Variant (ESV)は、「完全一致する配列、および完全一致すると推定された配列をまとめた分類単位」です。 それに対して、Operational Taxonomic Unit (OTU: 操作的分類単位)は、その名の通り、「分析者が任意に設定した分類単位」です。 なお、OTUは「塩基配列の類似度でクラスタリングした分類単位」であるという誤解がよくありますが、明らかに語義に反しているので注意して下さい。 分析者がASVを分類単位として解析する、と決めたのであれば、そのASVはOTUです。 Claidentの中ではほとんどの場合OTUはASVになりますが、この先、OTUがASVでない可能性がある処理ではOTUと記述することがあります。</p>
+<h3 data-number="1.2.3" id="必要なファイル群とディレクトリ構造"><span class="header-section-number">1.2.3</span> 必要なファイル群とディレクトリ構造</h3>
+<p>ここでは、解析の前に用意する必要のあるファイル群を説明します。 ファイル名は任意ですが、後述するコマンドの中で仮定しているファイル名を記してあります。</p>
+<h4 data-number="1.2.3.1" id="ブランクリストblanklist.txt"><span class="header-section-number">1.2.3.1</span> ブランクリスト(blanklist.txt)</h4>
+<p>1行に一つのブランクのサンプルIDを記述したテキストファイルです。 以下のような形式で記述する必要があります。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>[Run ID]__[Blank Material ID 1]__[Primer ID]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>[Run ID]__[Blank Material ID 2]__[Primer ID]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>[Run ID]__[Blank Material ID 3]__[Primer ID]</span></code></pre></div>
+<p>Claidentは、このファイルに記載されているものをブランクとして認識します。 なお、<code>[Run ID]</code>と<code>[Primer ID]</code>を省略し、以下の形式で記述することもできます。</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>[Blank Material ID 1]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>[Blank Material ID 2]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>[Blank Material ID 3]</span></code></pre></div>
+<h4 data-number="1.2.3.2" id="濾過水量表watervoltable.tsv"><span class="header-section-number">1.2.3.2</span> 濾過水量表(watervoltable.tsv)</h4>
+<p>1行に一つのサンプルIDとタブ文字で区切って濾過水量の数値を記述したタブ区切りテキストファイルです。 濾過フィルターが複数あって区別して記述したい場合、タブ文字で区切って複数記述します(濃度推定時は合算して処理されます)。</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>[Run ID]__[Sample Material ID 1]__[Primer ID]  1000  1000</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>[Run ID]__[Sample Material ID 2]__[Primer ID]  1000  500</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>[Run ID]__[Sample Material ID 3]__[Primer ID]  1500</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>[Run ID]__[Blank Material ID 1]__[Primer ID]   500</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>[Run ID]__[Blank Material ID 2]__[Primer ID]   500</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>[Run ID]__[Blank Material ID 3]__[Primer ID]   500</span></code></pre></div>
+<p>なお、<code>[Run ID]</code>と<code>[Primer ID]</code>を省略し、以下の形式で記述することもできます。</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>[Sample Material ID 1]  1000  1000</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>[Sample Material ID 2]  1000  500</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>[Sample Material ID 3]  1500</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>[Blank Material ID 1]   500</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>[Blank Material ID 2]   500</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a>[Blank Material ID 3]   500</span></code></pre></div>
+<p>この数値を使用して、元の環境水サンプル中におけるDNA濃度が推定されます。 単位は任意ですが、特段の理由がない限り mL で記述しておくのが良いでしょう。 末尾にタブ文字で区切って任意の文字列を付加することはできるので、単位を書いておくことも可能です。 ただし、単位の異なる数値を換算して単位を統一するような処理には対応していません。</p>
+<h4 data-number="1.2.3.3" id="抽出dna溶液量表solutionvoltable.tsv"><span class="header-section-number">1.2.3.3</span> 抽出DNA溶液量表(solutionvoltable.tsv)</h4>
+<p>1行に一つのサンプル・ブランクIDとタブ文字で区切って抽出したDNA溶液量の数値を記述したタブ区切りテキストファイルです。 濾過フィルターが複数あり、抽出後のDNA溶液も複数あって区別して記述したい場合、タブ文字で区切って複数記述します(濃度推定時は合算して処理されます)。</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>[Run ID]__[Sample Material ID 1]__[Primer ID]  200  200</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>[Run ID]__[Sample Material ID 2]__[Primer ID]  200  200</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>[Run ID]__[Sample Material ID 3]__[Primer ID]  200</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a>[Run ID]__[Blank Material ID 1]__[Primer ID]   200</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>[Run ID]__[Blank Material ID 2]__[Primer ID]   200</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>[Run ID]__[Blank Material ID 3]__[Primer ID]   200</span></code></pre></div>
+<p>なお、<code>[Run ID]</code>と<code>[Primer ID]</code>を省略し、以下の形式で記述することもできます。</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>[Sample Material ID 1]  200  200</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>[Sample Material ID 2]  200  200</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>[Sample Material ID 3]  200</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>[Blank Material ID 1]   200</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>[Blank Material ID 2]   200</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>[Blank Material ID 3]   200</span></code></pre></div>
+<p>この数値を使用して、抽出したDNA溶液中の総DNAコピー数が推定されます。 単位は任意ですが、特段の理由がない限り μL で記述しておくのが良いでしょう。 末尾にタブ文字で区切って任意の文字列を付加することはできるので、単位を書いておくことも可能です。 ただし、単位の異なる数値を換算して単位を統一するような処理には対応していません。</p>
+<p>なお、「DNA抽出で回収できた液量」ではなく、「DNA溶出に使用した液量」であることに注意して下さい。 つまり、スピンカラムや磁気ビーズに200 μLの溶出バッファーを添加して、最終的に得られたDNA抽出液が190 μLだった場合、回収できなかっただけで実際にはさらに10 μLのDNA抽出液が存在するので、ここには200 μLと書くのが正しいことになります。 ただし、DNAの溶出前に使用したウォッシュバッファーは完全に除去したと仮定しています。</p>
+<h4 data-number="1.2.3.4" id="内部標準dna塩基配列standard.fasta"><span class="header-section-number">1.2.3.4</span> 内部標準DNA塩基配列(standard.fasta)</h4>
+<p>FASTA形式の内部標準DNA塩基配列ファイルです。 複数の配列を記述することができます。 以下は4つの内部標準DNA塩基配列を含むFASTAファイルの例です。</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>&gt;MiFish_STD_01</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>CACCGCGGTTATACGACAGGCCCAAGTTGAACGCAGTCGGCGTAAAGAGTGGTTAAAAG...</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>&gt;MiFish_STD_02</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a>CACCGCGGTTATACGACAGGCCCAAGTTGATCTTGAACGGCGTAAAGAGTGGTTAGATT...</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>&gt;MiFish_STD_03</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>CACCGCGGTTATACGACAGGCCCAAGTTGAAGCGACGCGGCGTAAAGAGTGGTTATCAC...</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>&gt;MiFish_STD_04-2</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>CACCGCGGTTATACGACAGGCCCAAGTTGAGATCCCACGGCGTAAAGAGTGGTTAGAAC...</span></code></pre></div>
+<p>この塩基配列に基づいて内部標準DNAが識別されます。 塩基配列は、合成サービスに対して注文時に使用したものと同一、つまりプライマーのアニールする部位を含んでいても構いませんし、含んでいなくても(つまり、インサートであっても)構いません。 内部標準DNAの配列名は、後述する内部標準DNA濃度表と一致している必要があります。</p>
+<h4 data-number="1.2.3.5" id="内部標準dna濃度表stdconctable.tsv"><span class="header-section-number">1.2.3.5</span> 内部標準DNA濃度表(stdconctable.tsv)</h4>
+<p>サンプルごとに、1st PCRで添加した内部標準DNAの濃度を記述したタブ区切りテキストファイルです。 以下のような表形式にします。</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>samplename                                    MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>[Run ID]__[Sample Material ID 1]__[Primer ID] 5             10            20            40</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>[Run ID]__[Sample Material ID 2]__[Primer ID] 5             10            20            40</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>[Run ID]__[Sample Material ID 3]__[Primer ID] 5             10            20            40</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>[Run ID]__[Blank Material ID 1]__[Primer ID]  5             10            20            40</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a>[Run ID]__[Blank Material ID 2]__[Primer ID]  5             10            20            40</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a>[Run ID]__[Blank Material ID 3]__[Primer ID]  5             10            20            40</span></code></pre></div>
+<p>なお、<code>[Run ID]</code>と<code>[Primer ID]</code>を省略し、以下の形式で記述することもできます。</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>samplename             MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>[Sample Material ID 1] 5             10            20            40</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>[Sample Material ID 2] 5             10            20            40</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>[Sample Material ID 3] 5             10            20            40</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a>[Blank Material ID 1]  5             10            20            40</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a>[Blank Material ID 2]  5             10            20            40</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>[Blank Material ID 3]  5             10            20            40</span></code></pre></div>
+<p>濃度の単位は 1 μL 当たりのコピー数です。 ただし、これはサンプルDNA溶液と等量の内部標準DNA溶液を添加して1st PCRを行ったと仮定しています。 したがって、サンプルDNA溶液の2倍の内部標準DNA溶液を添加した場合は数値を2倍に、サンプルDNA溶液を10倍希釈して希釈液と等量の内部標準DNA溶液を添加した場合は数値を10倍に、サンプルDNA溶液も内部標準DNA溶液もどちらも10倍希釈して混合してPCRした場合は1倍にします。 内部標準DNAの名前は、前述の内部標準DNA塩基配列の名前と一致している必要があります。</p>
+<h4 data-number="1.2.3.6" id="シーケンサの読み始めになる部分配列forwardprimer.fastareverseprimer.fasta"><span class="header-section-number">1.2.3.6</span> シーケンサの読み始めになる部分配列(forwardprimer.fasta・reverseprimer.fasta)</h4>
+<p>1st PCRにおけるフォワード側とリバース側のそれぞれのプライマー配列の一部を記述したFASTA形式ファイルです。 2nd PCRにおけるインデックスプライマーがアニールする部位を取り除くことで、シーケンサの解読対象になる部分だけにします。 つまり、1st PCRでフォワード側プライマーとしてMiFish-U-F <code>ACA CTC TTT CCC TAC ACG ACG CTC TTC CGA TCT NNN NNN GTC GGT AAA ACT CGT GCC AGC</code>を使用した場合、<code>NNN NNN GTC GGT AAA ACT CGT GCC AGC</code>を塩基配列として記述します。 いずれのファイルにも複数のプライマー配列を記述することができますが、フォワード側プライマー配列ファイルの1本目のプライマー配列はリバース側プライマー配列ファイルの1本目のプライマー配列とセットで検出されるため、リバース側プライマー配列ファイルの2本目以降のプライマー配列との組み合わせは検討されません。 塩基配列には、<code>R</code>や<code>Y</code>や<code>M</code>や<code>K</code>や<code>N</code>などの、縮重塩基コードを使用可能です。 MiFishのように僅かに異なる塩基配列のプライマーが提案されており、それらを複数混合して使用した場合、多重整列を行って縮重コンセンサス配列を記述します。 例えば、MiFish-E-v2とMiFish-UとMiFish-U2を混合して使用した場合、フォワード側プライマー配列ファイル「<code>forwardprimer.fasta</code>」の内容は以下のようになります。</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>&gt;MiFish</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>NNNNNNNGYYGGTAAAWCTCGTGCCAGC</span></code></pre></div>
+<p>上記の縮重コンセンサス配列の元になった配列は以下の通りです(見やすくするため整列してあります)。</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>&gt;MiFish-E-F-v2</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a>NNNNNNRGTTGGTAAATCTCGTGCCAGC</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a>&gt;MiFish-U-F</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a> NNNNNNGTCGGTAAAACTCGTGCCAGC</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a>&gt;MiFish-U2-F</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true"></a> NNNNNNGCCGGTAAAACTCGTGCCAGC</span></code></pre></div>
+<p>リバース側プライマー配列ファイル「<code>reverseprimer.fasta</code>」は以下のようになります。</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>&gt;MiFish</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a>NNNNNNNCATAGKRGGGTRTCTAATCCYMGTTTG</span></code></pre></div>
+<p>上記の縮重コンセンサス配列の元になった配列は以下の通りです(見やすくするため整列してあります)。</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>&gt;MiFish-E-R-v2</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a>NNNNNNGCATAGTGGGGTATCTAATCCTAGTTTG</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a>&gt;MiFish-U-R</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a> NNNNNNCATAGTGGGGTATCTAATCCCAGTTTG</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a>&gt;MiFish-U2-R</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true"></a> NNNNNNCATAGGAGGGTGTCTAATCCCCGTTTG</span></code></pre></div>
+<p>これらのファイルの塩基配列名は、ClaidentのサンプルIDにおける<code>[Primer ID]</code>として使用されますので、上述のファイル群における<code>[Primer ID]</code>と一致している必要があります。</p>
+<h4 data-number="1.2.3.7" id="インデックスとして読まれる部分配列index1.fastaindex2.fasta"><span class="header-section-number">1.2.3.7</span> インデックスとして読まれる部分配列(index1.fasta・index2.fasta)</h4>
+<p>2nd PCRにおけるインデックスプライマーのインデックスとして解読される部分のみを取り出したFASTA形式のファイルです。 index2 (i5 index)はフォワード側インデックスプライマー内のインデックスで、解読の向きは機種によって異なります。 index1 (i7 index)はリバース側インデックスプライマー内のインデックスで、発注時のプライマー配列とは逆向きに解読されます。 Illumina社シーケンサで使用される「<code>SampleSheet.csv</code>」内のインデックス配列は、解読方向が標準化されたものになっているので、これを取り出せば良いはずです。 リバース側インデックス配列ファイル「<code>index1.fasta</code>」の内容は以下のようになります。</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>&gt;[Sample Material ID 1]</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a>ACCTGCAA</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>&gt;[Sample Material ID 2]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a>GTTCCTTG</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a>&gt;[Sample Material ID 3]</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true"></a>CCAGATCT</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true"></a>&gt;[Blank Material ID 1]</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true"></a>AAGTGTGA</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true"></a>&gt;[Blank Material ID 2]</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true"></a>CCATGATC</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true"></a>&gt;[Blank Material ID 3]</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true"></a>TCATGTCT</span></code></pre></div>
+<p>フォワード側インデックス配列ファイル「<code>index2.fasta</code>」も塩基配列が異なる以外は「<code>index1.fasta</code>」と内容は同じです。 配列の名前が<code>[Material ID]</code>と一致すること、配列の並び順が完全に同一であることが必要ですので注意して下さい。</p>
+<p>なお、インデックスホッピング除去の機能を使用するためには、<strong>シーケンスランに投入された全てのインデックスの情報が必要</strong>です。 「ライブラリ調製作業中やシーケンス後に問題が発覚して廃棄することになったサンプル」が存在した場合でも、そのサンプルのデータにはインデックスホッピング除去に使用する情報が含まれています。 したがって、そのようなサンプルが存在した場合でも、インデックスホッピング除去が完了するまではデータを廃棄してはいけません。</p>
+<h4 data-number="1.2.3.8" id="未デマルチプレックスfastq"><span class="header-section-number">1.2.3.8</span> 未デマルチプレックスFASTQ</h4>
+<p>通常、受託解析業者に依頼すると「<code>SampleSheet.csv</code>」の内容に合わせてデマルチプレックス済みのFASTQファイルを納品されることが多いでしょう。 しかし、Illumina社製のデマルチプレックスプログラムはあまりに多くのサンプルを1シーケンスランや1レーンにマルチプレックスすると正常にデマルチプレックスできなかったり、インデックスの塩基の信頼性を考慮していなかったり、1塩基の読み間違い(不一致)を許容する設定であったり、「未使用のインデックスの組み合わせ」の塩基配列は全て破棄されてインデックスホッピングの検出に対応できなくなるため、Claidentでは内蔵するデマルチプレックスプログラム<code>clsplitseq</code>でのデマルチプレックスを推奨しています。</p>
+<p><code>clsplitseq</code>でのデマルチプレックスを行うには、LinuxマシンにIllumina社が提供するBCL Convertというプログラムをインストールし、シーケンサのランデータからインデックス配列を含む未デマルチプレックスFASTQを生成する必要があります。 以下の作業における作業ディレクトリは、高速なSSDに設置することを強くお勧めします。</p>
+<p>BCL Convertは下記URLからダウンロードできます。</p>
+<ul>
+<li><a href="https://jp.support.illumina.com/sequencing/sequencing_software/bcl-convert.html" class="uri">https://jp.support.illumina.com/sequencing/sequencing_software/bcl-convert.html</a></li>
+</ul>
+<p>執筆時点での最新版はv4.3.6です。 v4.2.4までは誰でもダウンロードできましたが、v4.3.6ではIllumina BasespaceというIllumina社の提供するクラウドサービスへのユーザー登録とログイン、および使用しているIllumina社シーケンサのシリアル番号がダウンロードには必要となっています。 なお、Illumina社シーケンサから得られたFASTQファイルが手元にある場合、FASTQファイルをテキストエディタまたは<code>less</code>コマンドで開けば、シーケンスデータ中にシーケンサのシリアル番号が含まれている(シーケンスの名前を示す「@」から始まる行の「@」と最初の「:」の間の文字列がシリアル番号です)ので、v4.3.6のダウンロードにはそれが使用できます。 ほとんどの場合v4.2.4で問題はないため、以下ではv4.2.4を対象に説明しますが、v4.3.6でもバージョン番号部分以外に異なる点はありません。</p>
+<p>Debian・Ubuntu・Linux MintおよびWindows上にインストールしたUbuntuの場合、「(Oracle 8)」と書かれているOracle Linux 8用配布ファイルをダウンロードして作業ディレクトリ「<code>workingdirectory</code>」に置き、ターミナルで以下のコマンドを実行することでインストールできます。</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>sudo apt install rpm2cpio cpio pstack</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>cd workingdirectory</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a>mkdir temporary</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>cd temporary</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>rpm2cpio ../bcl-convert-4.2.4-2.el8.x86_64.rpm | cpio -id</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a>sudo mkdir -p /usr/local/bin</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a>sudo cp usr/bin/bcl-convert /usr/local/bin/</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a>sudo mkdir -p /var/log/bcl-convert</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a>sudo chmod 777 /var/log/bcl-convert</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true"></a>cd ..</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true"></a>rm -rf temporary bcl-convert-4.2.4-2.el8.x86_64.rpm</span></code></pre></div>
+<p>なお、このプログラムはmacOSには対応していません。 macOS上で実行するには、仮想マシンプログラムをインストールして仮想マシン上にUbuntuをインストールし、そのUbuntu上にBCL Convertをインストールする必要があります。</p>
+<p>BCL Convertで未デマルチプレックスFASTQを生成するには、下記の内容の「<code>Dummy.csv</code>」をテキストエディタで作成します。</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a>[Header]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a>FileFormatVersion,2</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a>[BCLConvert_Settings]</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a>OverrideCycles,Y150N1;I8;I8;Y150N1</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a>CreateFastqForIndexReads,1</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a>[BCLConvert_Data]</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a>Lane,Sample_ID,index,index2</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a>1,Dummy,CCCCCCCC,CCCCCCCC</span></code></pre></div>
+<p>ターミナルで下記のコマンドを実行すれば、テキストエディタがなくても「<code>Dummy.csv</code>」を作成できます。</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>echo &#39;[Header]</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a>FileFormatVersion,2</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a>[BCLConvert_Settings]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a>OverrideCycles,Y150N1;I8;I8;Y150N1</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a>CreateFastqForIndexReads,1</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true"></a>[BCLConvert_Data]</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true"></a>Lane,Sample_ID,index,index2</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true"></a>1,Dummy,CCCCCCCC,CCCCCCCC&#39; &gt; Dummy.csv</span></code></pre></div>
+<p>これは、8塩基長のデュアルインデックスでフォワード側151サイクル(末尾1塩基破棄)、リバース側151サイクル(末尾1塩基破棄)の場合の設定ファイルですので、インデックス長やサイクル数が異なる場合は適宜変更する必要があります。 ダミーのサンプルとして、index1およびindex2が共に<code>CCCCCCCC</code>の<code>Dummy</code>というサンプルの行があります。 サンプル行が一つもないとエラーになるため、このような行を作成する必要があります。 万が一、index1およびindex2が共に<code>CCCCCCCC</code>のサンプル、index1が<code>CCCCCCCC</code>のサンプル、index2が<code>CCCCCCCC</code>のサンプルの<strong>いずれか</strong>が実在する場合は適当な配列に書き換えて下さい。 index1およびindex2が共に<code>CCCCCCCC</code>のサンプルが実在しないのにサンプル<code>Dummy</code>のFASTQにいくらかデータが出力されることがありますが、index1およびindex2が共に<code>CCCCCCCC</code>のサンプルが本当に実在しないのなら、シーケンスエラーによるものなので問題はありません。 なお、インデックスの長さが8塩基ではない場合は、<code>OverrideCycles</code>の行と<code>CCCCCCCC</code>は書き換える必要があります。 例えば10塩基長のデュアルインデックスでフォワード側301サイクル(末尾1塩基破棄)、リバース側301サイクル(末尾1塩基破棄)の場合、<code>OverrideCycles,Y300N1;I10;I10;Y300N1</code>および<code>CCCCCCCCCC</code>とします。</p>
+<p>FASTQ生成の際にこのファイルを<code>--sample-sheet</code>に指定することで、BCL Convertに内蔵されているデマルチプレックス機能を無効化し、未デマルチプレックスFASTQを作成することができます。 以下のコマンドでは、未デマルチプレックスFASTQを「<code>01_undemultiplexed</code>」ディレクトリに出力することができます。</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>bcl-convert \</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a>--sample-sheet Dummy.csv \</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a>--bcl-input-directory [Runデータディレクトリ] \</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a>--output-directory 01_undemultiplexed</span></code></pre></div>
+<p>ここで、<code>[Runデータディレクトリ]</code>は、シーケンサ本体、またはシーケンサに付属の解析マシンに保存されている、シーケンスランのデータが保存されているディレクトリです。 通常は「<code>Data</code>」というディレクトリが含まれているはずです。 このディレクトリを予めBCL Convertをインストールしたマシンにコピーしておく必要があります。 なお、使用するCPU数はデフォルトで自動的に決定されます(搭載されている全CPUを使用します)。</p>
+<p>上記の例ではレーンが一つしかない機種を想定しています。 レーンが複数ある機種のデータを扱う場合、「<code>Dummy.csv</code>」の<code>[BCLConvert_Data]</code>セクションに記述するサンプルは下記のようにレーン数に合わせて増やす必要があります。</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>[Header]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>FileFormatVersion,2</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a>[BCLConvert_Settings]</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a>OverrideCycles,Y150N1;I8;I8;Y150N1</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a>CreateFastqForIndexReads,1</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true"></a>[BCLConvert_Data]</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true"></a>Lane,Sample_ID,index,index2</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true"></a>1,Dummy1,CCCCCCCC,CCCCCCCC</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true"></a>2,Dummy2,CCCCCCCC,CCCCCCCC</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true"></a>3,Dummy3,CCCCCCCC,CCCCCCCC</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true"></a>4,Dummy4,CCCCCCCC,CCCCCCCC</span></code></pre></div>
+<p>また、<code>--bcl-only-lane</code>オプションを使用することで、特定のレーンのみのデータから未デマルチプレックスFASTQを生成できます。 1番目のレーンのデータだけを未デマルチプレックスFASTQにする場合、<code>--bcl-only-lane 1</code>とします。 このオプションを指定しない場合は全レーンのデータがレーンごとに異なるファイルに出力されます。</p>
+<p>上述の通りにBCL Convertを実行すると、サンプル<code>Dummy</code>のファイル以外に以下の4ファイルが生成されます(第1レーンのみ出力した場合)。</p>
+<dl>
+<dt>Undetermined_S0_L001_I1_001.fastq.gz</dt>
+<dd>index1の未デマルチプレックスFASTQ (長さ8塩基)
+</dd>
+<dt>Undetermined_S0_L001_I2_001.fastq.gz</dt>
+<dd>index2の未デマルチプレックスFASTQ (長さ8塩基)
+</dd>
+<dt>Undetermined_S0_L001_R1_001.fastq.gz</dt>
+<dd>インサートのフォワード側リードの未デマルチプレックスFASTQ (長さ150塩基)
+</dd>
+<dt>Undetermined_S0_L001_R2_001.fastq.gz</dt>
+<dd>インサートのリバース側リードの未デマルチプレックスFASTQ (長さ150塩基)
+</dd>
+</dl>
+<p>ファイル名のうち、「<code>L001</code>」がレーン番号を表していますので、第2レーン以降を出力した場合はファイル名が異なります。</p>
+<h4 data-number="1.2.3.9" id="ディレクトリ構造"><span class="header-section-number">1.2.3.9</span> ディレクトリ構造</h4>
+<p>Claidentでの解析開始前の作業ディレクトリ内のファイルとディレクトリは以下の通りです。</p>
+<ul>
+<li>作業ディレクトリ
+<ul>
+<li>blanklist.txt</li>
+<li>watervoltable.tsv</li>
+<li>solutionvoltable.tsv</li>
+<li>standard.fasta</li>
+<li>stdconctable.tsv</li>
+<li>forwardprimer.fasta</li>
+<li>reverseprimer.fasta</li>
+<li>index1.fasta</li>
+<li>index2.fasta</li>
+<li>01_undemultiplexed (ディレクトリ)
+<ul>
+<li>Undetermined_S0_L001_I1_001.fastq.gz</li>
+<li>Undetermined_S0_L001_I2_001.fastq.gz</li>
+<li>Undetermined_S0_L001_R1_001.fastq.gz</li>
+<li>Undetermined_S0_L001_R2_001.fastq.gz</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 data-number="1.3" id="塩基配列データ処理"><span class="header-section-number">1.3</span> 塩基配列データ処理</h2>
+<p>ここから実際の塩基配列データ処理の方法を説明していきます。 全てのコマンドはターミナル上で実行します。 作業ディレクトリがカレントディレクトリになっていると仮定しています。 コマンドのオプションに含まれている<code>[CPUコア数]</code>は処理中に使用するCPUコア数の整数値で置き換えて下さい。 これ以前に説明済みのファイルに関しては改めて説明しません。 また、いくつかの処理ではディスクに激しくアクセスするため、低速なディスクに作業ディレクトリを設置していると大きく影響を受けます。 そのため、作業ディレクトリは高速なSSDに設置することを強くお勧めします。</p>
+<h3 data-number="1.3.1" id="clsplitseqによるデマルチプレックス"><span class="header-section-number">1.3.1</span> clsplitseqによるデマルチプレックス</h3>
+<p>デマルチプレックスを行うには、以下のコマンドを実行します。</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>clsplitseq \</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a>--runname=[Run ID] \</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a>--forwardprimerfile=forwardprimer.fasta \</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true"></a>--reverseprimerfile=reverseprimer.fasta \</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true"></a>--truncateN=enable \</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true"></a>--index1file=index1.fasta \</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true"></a>--index2file=index2.fasta \</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true"></a>--minqualtag=30 \</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true"></a>--compress=xz \</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true"></a>--seqnamestyle=illumina \</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true"></a>01_undemultiplexed/Undetermined_S0_L001_R1_001.fastq.gz \</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true"></a>01_undemultiplexed/Undetermined_S0_L001_I1_001.fastq.gz \</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true"></a>01_undemultiplexed/Undetermined_S0_L001_I2_001.fastq.gz \</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true"></a>01_undemultiplexed/Undetermined_S0_L001_R2_001.fastq.gz \</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true"></a>02_demultiplexed</span></code></pre></div>
+<p>それぞれのコマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--runname</code></dt>
+<dd>任意の<code>[Run ID]</code>を与える
+</dd>
+<dt><code>--forwardprimerfile</code></dt>
+<dd>フォワード側プライマー配列ファイル
+</dd>
+<dt><code>--reverseprimerfile</code></dt>
+<dd>リバース側プライマー配列ファイル
+</dd>
+<dt><code>--truncateN</code></dt>
+<dd>プライマー配列の一致度を算出する際にプライマー配列先頭の<code>N</code>群を除外するか否か
+</dd>
+<dt><code>--index1file</code></dt>
+<dd>リバース側インデックス配列ファイル
+</dd>
+<dt><code>--index2file</code></dt>
+<dd>フォワード側インデックス配列ファイル
+</dd>
+<dt><code>--minqualtag</code></dt>
+<dd>インデックス配列の品質値下限
+</dd>
+<dt><code>--compress</code></dt>
+<dd>圧縮形式の指定(GZIP | BZIP2 | XZ | DISABLEから選択)
+</dd>
+<dt><code>--seqnamestyle</code></dt>
+<dd>塩基配列名の形式(ILLUMINA | MGI | OTHER | NOCHANGEから選択)
+</dd>
+</dl>
+<p>コマンドラインオプション後に入力ファイル群、出力フォルダ名を与えます。</p>
+<p>なお、入力ファイルは以下の順で指定します。</p>
+<ol type="1">
+<li>インサートのフォワード側リードの未デマルチプレックスFASTQ</li>
+<li>index1の未デマルチプレックスFASTQ</li>
+<li>index2の未デマルチプレックスFASTQ</li>
+<li>インサートのリバース側リードの未デマルチプレックスFASTQ</li>
+</ol>
+<p>これは、Illumina社シーケンサがデュアルインデックスでペアエンド解読する順になっています。</p>
+<p>このコマンドでは、インデックス配列だけでなくプライマー配列も使用してデマルチプレックスを行うため、インデックス配列のみを使う場合よりも細かくデマルチプレックスすることが可能です。 したがって、他のプライマーの増幅産物が混入しているデータでも、プライマー配列が十分異なっていればそれらを分けることができます。</p>
+<p>このコマンドでは、「未使用のインデックスの組み合わせ」を<code>[Material ID]</code>とするサンプルの塩基配列も出力されます。 後述するインデックスホッピングの検出・除去処理においてそれらのサンプルが使用されます。</p>
+<p>出力されたファイルからは、プライマー配列のマッチした部分は除去されています。 これは、その部分はプライマーの塩基配列であって、実際の生物の塩基配列ではないからです。</p>
+<p>データサイズが大きいと、この処理は非常に長い時間がかかります。</p>
+<p>なお、未デマルチプレックスFASTQが手元になく、デマルチプレックス済FASTQしかない場合、<code>cltruncprimer</code>が使用できます。 <code>--minqualtag</code>オプションが無効(書いても構わないが影響しない)、入力はデマルチプレックス済FASTQを置いているフォルダにする、という点以外は<code>clsplitseq</code>コマンドと使用方法は同じです。 ただし、インデックス配列ファイル内の<code>[Material ID]</code>がデマルチプレックス済FASTQのファイル名に含まれている必要があります。 デマルチプレックス済FASTQは「未使用のインデックスの組み合わせ」の塩基配列は全て破棄されているためインデックスホッピングの検出には対応できません。 予め「未使用のインデックスの組み合わせ」の塩基配列を保存してあっても、Claidentが「未使用のインデックスの組み合わせ」を「未使用のインデックスの組み合わせ」として認識させる方法が存在しませんので、対応は不可能です。</p>
+<p>また、<code>clsplitseq</code>でデマルチプレックスを行った場合でも、各サンプルごとに「片方のインデックスを共有する、未使用のインデックスの組み合わせ」が10以上になるようなライブラリ調製を行っていない場合、インデックスホッピング除去は適用できません。 インデックスホッピング除去を適用するには、各サンプルごとに「片方のインデックスを共有する、未使用のインデックスの組み合わせ」が10以上になるライブラリ調製と、1ランまたは1レーン専有でのシーケンス、<code>clsplitseq</code>によるデマルチプレックスを行うこと、を全て満たす必要があります。</p>
+<h3 data-number="1.3.2" id="clconcatpairvによるペアエンド配列の連結"><span class="header-section-number">1.3.2</span> clconcatpairvによるペアエンド配列の連結</h3>
+<p>デマルチプレックスが終わったら、以下のコマンドでペアエンド配列を連結します。</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a>clconcatpairv \</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>--mode=ovl \</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a>--compress=xz \</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true"></a>02_demultiplexed \</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true"></a>03_concatenated</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--mode</code></dt>
+<dd>Overlapped Paired-EndかNon-overlapped Paired-Endなのか(OVL | NONから選択)
+</dd>
+<dt><code>--compress</code></dt>
+<dd>圧縮形式の指定(GZIP | BZIP2 | XZ | DISABLEから選択)
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。</p>
+<h3 data-number="1.3.3" id="clfilterseqvによる低品質配列の除去"><span class="header-section-number">1.3.3</span> clfilterseqvによる低品質配列の除去</h3>
+<p>以下のコマンドで連結した配列に対して品質値から予想される期待エラー数を算出し、低品質の配列を除去します <span class="citation" data-cites="Edgar2015Errorfilteringpair">(Edgar &amp; Flyvbjerg 2015)</span> 。</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>clfilterseqv \</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a>--maxqual=41 \</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a>--minlen=100 \</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a>--maxlen=250 \</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a>--maxnee=2.0 \</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true"></a>--maxnNs=0 \</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true"></a>--compress=xz \</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true"></a>03_concatenated \</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true"></a>04_filtered</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--maxqual</code></dt>
+<dd>品質値の上限(超えた値はこの値になる)
+</dd>
+<dt><code>--minlen</code></dt>
+<dd>塩基配列長の下限
+</dd>
+<dt><code>--maxlen</code></dt>
+<dd>塩基配列長の上限
+</dd>
+<dt><code>--maxnee</code></dt>
+<dd>期待エラー数上限
+</dd>
+<dt><code>--maxnNs</code></dt>
+<dd>塩基配列中の<code>N</code>の数の上限
+</dd>
+<dt><code>--compress</code></dt>
+<dd>圧縮形式の指定(GZIP | BZIP2 | XZ | DISABLEから選択)
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。</p>
+<p>ここで品質値の上限を指定しているのは、後述するデノイジングの際にあまりに品質値が大きい配列があるとエラーになることがあるためです。 期待エラー数の多い配列や<code>N</code>を含む配列を除外しているのも同じ理由です。 塩基配列長の上限下限は事前に予想されるインサート長に基づいて決定します。 データから期待エラー数上限や塩基配列長の上限下限を決めたい場合、<code>clcalcfastqstatv</code>コマンドの出力を参考にすると良いかもしれません。</p>
+<h3 data-number="1.3.4" id="cldenoiseseqdによるデノイジング"><span class="header-section-number">1.3.4</span> cldenoiseseqdによるデノイジング</h3>
+<p>以下のコマンドでDADA2 <span class="citation" data-cites="Callahan2016DADA2Highresolutionsample">(Callahan <em>et al.</em> 2016)</span> によるデノイジング処理を適用します。</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a>cldenoiseseqd \</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a>--pool=pseudo \</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a>04_filtered \</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a>05_denoised</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--pool</code></dt>
+<dd>サンプルのプール方法を指定(ENABLE | DISABLE | PSEUDOから選択)
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。</p>
+<p>サンプルのプールを有効化すると、デノイジング効率は向上しますが、サンプル数が多いほど計算量が膨大になります。 無効化すればデノイジング効率が低下してしまうため、DADA2開発者が用意しているPseudo-pooling法をここでは使用しています(Priorは使用していません)。 Pseudo-pooling法に関してはDADA2の公式Webサイトをご参照下さい。</p>
+<h3 data-number="1.3.5" id="clremovechimevによるキメラ除去1回目"><span class="header-section-number">1.3.5</span> clremovechimevによるキメラ除去1回目</h3>
+<p>以下のコマンドで、VSEARCH <span class="citation" data-cites="Rognes2016VSEARCHversatileopen">(Rognes <em>et al.</em> 2016)</span> に実装されているUCHIME3アルゴリズム <span class="citation" data-cites="Edgar2016UCHIME2improvedchimera">(Edgar 2016)</span> に基づくデノボキメラ配列検出と、UCHIMEアルゴリズム <span class="citation" data-cites="Edgar2011UCHIMEimprovessensitivity">(Edgar <em>et al.</em> 2011)</span> に基づく参照配列データベースを用いるキメラ検出を併用してキメラ除去を行います。</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>clremovechimev \</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a>--mode=both \</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a>--uchimedenovo=3 \</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true"></a>--referencedb=cdu12s \</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true"></a>--addtoref=standard.fasta \</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true"></a>05_denoised \</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true"></a>06_chimeraremoved</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--mode</code></dt>
+<dd>動作モード(BOTH | DENOVO | REFから選択)
+</dd>
+<dt><code>--uchimedenovo</code></dt>
+<dd>UCHIME de novoのバージョン(1 | 2 | 3から選択)
+</dd>
+<dt><code>--referencedb</code></dt>
+<dd>参照配列データベース
+</dd>
+<dt><code>--addtoref</code></dt>
+<dd>参照配列データベースに追加する参照配列ファイル
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。</p>
+<p><code>--mode=both</code>では、参照配列データベースを用いないキメラ除去と参照配列データベースを用いるキメラ除去の両方をそれぞれ実行して、どちらにおいてもキメラではないと判定された配列を残して、それ以外は除去します。 参照配列データベースを用いないキメラ除去法であるUCHIME de novoは異なる3つのバージョンがありますが、デノイジングした塩基配列に対して最適化されているのはUCHIME3なので、<code>--uchimedenovo</code>ではそれを選択しています。 参照配列データベースを用いたキメラ除去モードでは、参照配列データベースを指定してやる必要があります。 Claidentのインストーラで自動インストールされる参照配列データベースは以下の通りです。</p>
+<dl>
+<dt>cdu12s</dt>
+<dd>ミトコンドリア12S用
+</dd>
+<dt>cdu16s</dt>
+<dd>ミトコンドリア16S用
+</dd>
+<dt>cducox1</dt>
+<dd>ミトコンドリアCOX1(COI)用
+</dd>
+<dt>cducytb</dt>
+<dd>ミトコンドリアCyt-b用
+</dd>
+<dt>cdudloop</dt>
+<dd>ミトコンドリアD-loop(調節領域)用
+</dd>
+<dt>cdumatk</dt>
+<dd>葉緑体matK用
+</dd>
+<dt>cdurbcl</dt>
+<dd>葉緑体rbcL用
+</dd>
+<dt>cdutrnhpsba</dt>
+<dd>葉緑体trnH-psbA用
+</dd>
+</dl>
+<p>キメラ除去用参照配列データベースは「<code>[インストール先]/share/claident/uchimedb</code>」にあるため、このフォルダの内容を見ればインストールされている参照配列データベースがわかります。</p>
+<p>手動でインストールする必要がありますが、細菌16SにはSILVAのSSURefやSSUParc、真菌ITSにはUNITEの「Full UNITE+INSD dataset for eukaryotes」を推奨します。 MiFishで増幅されるのはミトコンドリア12S領域の一部なので、cdu12sを使用します。 名前がcduから始まるキメラ検出用参照配列データベースは、筆者が公共データベースの完全長または完全長に近い長さのミトコンドリアゲノム・葉緑体ゲノム配列から当該領域を切り出したものです。 完全長または完全長に近いデータはキメラである可能性は低いだろうという仮定に基づいています。</p>
+<p>内部標準DNAを添加して行うPCRでは、生物のDNAと生物のDNA間のキメラに加えて、内部標準DNAと内部標準DNA間のキメラや、内部標準DNAと生物のDNA間のキメラも形成されます。 そこで、内部標準DNA配列(「<code>standard.fasta</code>」に含まれている)を<code>--addtoref</code>で参照配列に追加することで、キメラの検出力向上を狙っています。</p>
+<p>参照配列データベースに適したものがなく、内部標準DNAを混合してPCRするライブラリ調製を行っている場合は、内部標準DNA配列(「<code>standard.fasta</code>」に含まれている)を<code>--referencedb</code>に指定して<code>--mode=both</code>でキメラ除去を行って下さい。 その際は<code>--addtoref</code>は不要です。</p>
+<p>参照配列データベースに適したものがなく、内部標準DNAを混合してPCRするライブラリ調製を行っていない場合は<code>--mode=both</code>の代わりに<code>--mode=denovo</code>として参照配列データベースを用いないキメラ除去だけを実行します。 この場合も<code>--addtoref</code>は不要です。 ただし、内部標準DNAを混合してPCRするライブラリ調製を行ったことのあるラボでライブラリ調製を行っている場合、増幅された内部標準DNAでラボが汚染されていて、PCRの際に混入する可能性があります。 そのため、内部標準DNAを混合してPCRするライブラリ調製を行った場合と同様のデータ解析を念のため行っておいた方が良いかもしれません。</p>
+<h3 data-number="1.3.6" id="clclusterstdvによる内部標準配列クラスタリング"><span class="header-section-number">1.3.6</span> clclusterstdvによる内部標準配列クラスタリング</h3>
+<p>以下のコマンドでVSEARCH <span class="citation" data-cites="Rognes2016VSEARCHversatileopen">(Rognes <em>et al.</em> 2016)</span> に実装されているUCLUSTアルゴリズム <span class="citation" data-cites="Edgar2010Searchclusteringorders">(Edgar 2010)</span> を使用して内部標準配列にマッチする塩基配列をひとまとめにします。</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a>clclusterstdv \</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a>--standardseq=standard.fasta \</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a>--minident=0.9 \</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a>06_chimeraremoved \</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true"></a>07_stdclustered</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--standardseq</code></dt>
+<dd>内部標準DNA塩基配列ファイル
+</dd>
+<dt><code>--minident</code></dt>
+<dd>内部標準DNAと判定する類似度の下限
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。</p>
+<p>内部標準DNAと判定する類似度の下限は、内部標準配列と実在する生物の塩基配列の類似度最大値が低い(0.85未満)場合には0.9程度で問題ないでしょう。 <span class="citation" data-cites="Ushio2022efficientearlypoolingprotocol">Ushio <em>et al.</em> (2022)</span> のAppendix S1に掲載されているMiFish用内部標準配列はこの条件を満たしています。 内部標準配列と実在する生物の塩基配列の類似度が高く(0.85以上)、内部標準DNAの合成エラー率が低いと期待できる場合は0.97程度まで値を大きくしても構いません。 内部標準DNAの合成エラー率が低いと期待できるかどうかは、合成業者の公称エラー率や合成方法などから判断します。 判断が難しい場合は、値を0.90～0.97の範囲で0.01間隔で変化させ、内部標準DNAと判定されるリード数が急激に変化するところを探し、変化点の小さい方に設定します。 内部標準DNAと判定されるリード数が急激に変化するところが見つからない場合、内部標準DNAの合成エラー率が非常に高い、または内部標準配列に似た配列を持った生物の配列が含まれている、またはその両方であり定量は不可能と考えられるため、内部標準DNAの合成を業者に依頼するところから全てやり直す必要があります。 合成された内部標準DNAと生物のDNAの区別ができないので、非定量メタバーコーディングとしてもデータを使用することはできません。</p>
+<p>なお、内部標準DNAを混合してPCRするライブラリ調製を行っていない場合はこの処理は飛ばします。 ただし、内部標準DNAを混合してPCRするライブラリ調製を行ったことのあるラボでライブラリ調製を行っている場合、増幅された内部標準DNAでラボが汚染されていて、PCRの際に混入する可能性があります。 そのため、内部標準DNAを混合してPCRするライブラリ調製を行った場合と同様のデータ解析を念のため行っておいた方が良いかもしれません。</p>
+<h3 data-number="1.3.7" id="clremovechimevによるキメラ除去2回目"><span class="header-section-number">1.3.7</span> clremovechimevによるキメラ除去2回目</h3>
+<p>以下のコマンドでVSEARCH <span class="citation" data-cites="Rognes2016VSEARCHversatileopen">(Rognes <em>et al.</em> 2016)</span> に実装されているUCHIMEアルゴリズム <span class="citation" data-cites="Edgar2011UCHIMEimprovessensitivity">(Edgar <em>et al.</em> 2011)</span> に基づいて参照配列データベースを用いるキメラ配列検出・除去を適用します。</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>clremovechimev \</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a>--mode=ref \</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true"></a>--referencedb=cdu12s \</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true"></a>--addtoref=07_stdclustered/stdvariations.fasta \</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true"></a>07_stdclustered \</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true"></a>08_chimeraremoved</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--mode</code></dt>
+<dd>動作モードを指定(BOTH | DENOVO | REFから選択)
+</dd>
+<dt><code>--referencedb</code></dt>
+<dd>参照配列データベース
+</dd>
+<dt><code>--addtoref</code></dt>
+<dd>参照配列データベースに追加する参照配列ファイル
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。</p>
+<p><code>--mode=ref</code>は参照配列データベースを用いたキメラ除去モードを指します。 キメラ除去用参照配列データベースについてはキメラ除去1回目の節を参照して下さい。</p>
+<p>内部標準DNAを添加して行うPCRでは、内部標準DNAと内部標準DNA間のキメラや、内部標準DNAと生物のDNA間のキメラも形成されます。 そこで、内部標準DNAと判定された配列群(「<code>07_stdclustered/stdvariations.fasta</code>」に含まれている)を<code>--addtoref</code>で参照配列に追加することで、キメラの検出力向上を狙っています。 「<code>standard.fasta</code>」 (合成業者に依頼した際の配列、すなわち合成エラーを一切含まない配列)ではなく「<code>07_stdclustered/stdvariations.fasta</code>」 (不一致をある程度許容して内部標準配列と判定された配列、すなわち合成エラーを含む内部標準配列)を使用するのは、合成エラーのある内部標準DNAと合成エラーのある内部標準DNA間のキメラや合成エラーのある内部標準DNAと生物のDNA間のキメラをできるだけ検出するためです。</p>
+<p>参照配列データベースに適したものがなく、内部標準DNAを混合してPCRするライブラリ調製を行っている場合は、内部標準DNAと判定された配列群(「<code>07_stdclustered/stdvariations.fasta</code>」に含まれている)を<code>--referencedb</code>に指定してキメラ除去を行って下さい。 その際は<code>--addtoref</code>は不要です。</p>
+<p>参照配列データベースに適したものがなく、内部標準DNAを混合してPCRするライブラリ調製を行っていない場合はこの処理は不要です。 ただし、内部標準DNAを混合してPCRするライブラリ調製を行ったことのあるラボでライブラリ調製を行っている場合、増幅された内部標準DNAでラボが汚染されていて、PCRの際に混入する可能性があります。 そのため、内部標準DNAを混合してPCRするライブラリ調製を行った場合と同様のデータ解析を念のため行っておいた方が良いかもしれません。</p>
+<h3 data-number="1.3.8" id="clremovecontamによるインデックスホッピング除去"><span class="header-section-number">1.3.8</span> clremovecontamによるインデックスホッピング除去</h3>
+<p>以下のコマンドで、 <span class="citation" data-cites="Esling2015Accuratemultiplexingfiltering">Esling <em>et al.</em> (2015)</span> の方法に基づくインデックスホッピング除去を適用します。</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a>clremovecontam \</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a>--test=thompson \</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a>--ignoresamplelist=blanklist.txt \</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a>--index1file=index1.fasta \</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true"></a>--index2file=index2.fasta \</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true"></a>08_chimeraremoved \</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true"></a>09_hoppingremoved</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--test</code></dt>
+<dd>検定方法を指定(THOMPSON | BINOMIALから選択)
+</dd>
+<dt><code>--ignoresamplelist</code></dt>
+<dd>インデックスホッピング除去の対象外にするサンプルIDリストを記したテキストファイル
+</dd>
+<dt><code>--index1file</code></dt>
+<dd>リバース側インデックス配列ファイル(<code>clsplitseq</code>に与えたものと同じ)
+</dd>
+<dt><code>--index2file</code></dt>
+<dd>フォワード側インデックス配列ファイル(<code>clsplitseq</code>に与えたものと同じ)
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。</p>
+<p>このコマンドは、各サンプルに対して、「片方のインデックスを共有する、未使用のインデックスの組み合わせ」(共有していない方のインデックスのインデックスホッピングによって生じたものである可能性がある)におけるそのASVのリード数に対して、サンプルにおけるASVのリード数が外れ値でないのであれば、それはインデックスホッピング由来であると判定して0に置換します。</p>
+<p>なお、ブランクからインデックスホッピングを除去してしまうと、次節で行うネガティブコントロールを利用したデコンタミネーションの際に使用する情報が失われてしまい支障を来すため、<code>--ignoresamplelist</code>を使用して処理の対象外とします。</p>
+<p>インデックスホッピング除去の要件を満たしていない場合はこの処理は飛ばします。</p>
+<h3 data-number="1.3.9" id="clremovecontamとネガティブコントロールを利用したデコンタミネーション"><span class="header-section-number">1.3.9</span> clremovecontamとネガティブコントロールを利用したデコンタミネーション</h3>
+<p>以下のコマンドでは、サンプルとフィールドブランクにおける環境水中の各ASVのDNA濃度を算出し、サンプルにおけるDNA濃度がブランクにおける濃度に対して外れ値でないならば、それはコンタミネーション由来であると判定して0に置換します。</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>clremovecontam \</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a>--test=thompson \</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a>--blanklist=blanklist.txt \</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a>--ignoreotuseq=standard.fasta \</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true"></a>--stdconctable=stdconctable.tsv \</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true"></a>--solutionvoltable=solutionvoltable.tsv \</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true"></a>--watervoltable=watervoltable.tsv \</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true"></a>09_hoppingremoved \</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true"></a>10_decontaminated</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--test</code></dt>
+<dd>検定方法を指定(THOMPSON | BINOMIALから選択)
+</dd>
+<dt><code>--blanklist</code></dt>
+<dd>ブランクのサンプルIDリストを記したテキストファイル
+</dd>
+<dt><code>--ignoreotuseq</code></dt>
+<dd>デコンタミネーションの対象外にするOTUの塩基配列ファイル
+</dd>
+<dt><code>--stdconctable</code></dt>
+<dd>内部標準DNA濃度表のタブ区切りテキスト
+</dd>
+<dt><code>--solutionvoltable</code></dt>
+<dd>抽出DNA溶液量表のタブ区切りテキスト
+</dd>
+<dt><code>--watervoltable</code></dt>
+<dd>濾過水量表のタブ区切りテキスト
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力フォルダ、出力フォルダを指定します。</p>
+<p>滅多に起きることはありませんが、内部標準配列が誤って除去されることを防ぐため、上記の例では内部標準配列をデコンタミネーションの対象外とするように<code>--ignoreotuseq</code>を使用しています。</p>
+<p>なお、抽出DNA溶液量表と濾過水量表がなく、内部標準DNA濃度表のみが与えられた場合、環境水中のDNA濃度の代わりに抽出DNA溶液中のDNA濃度を算出し、その値に基づいてデコンタミネーションを行います。 抽出DNA溶液量表も濾過水量表も内部標準DNA濃度表もない場合、リード数の値をそのまま使用してデコンタミネーションを行います。 内部標準DNA濃度を使用した濃度推定値を使用する場合、ライブラリ調製において濃度均一化処理などを行っていても適用可能ですが、リード数の値をそのまま使用する場合、1) ライブラリ調製の過程で濃度均一化処理を一切行っていない、2) PCRの合計サイクル数は最小限に留めている(どのサンプルもプラトーに達していない)、必要があります。</p>
+<p>もし、野外での採集からDNA抽出およびライブラリ調製の過程で大量のコンタミネーションが起こっていた場合、フィールドブランクからも多くのDNAが検出され、結果としてサンプルから検出されたDNAがことごとくコンタミネーション由来であると判定されて0に置換される可能性があります。 これは意図した動作なのですが、0に置換される件数があまりにも多いと、群集生態学的な分析を一切行うことができなくなります。 せっかく多くの費用と労力を費やして得たデータがコンタミネーションだらけで使用できない、ということがここで判明するのはあまりにも悲しいことですので、採集からライブラリ調製におけるコンタミネーション防止には細心の注意を払うようにしましょう。</p>
+<p>塩基配列データ処理はここまでとなりますが、ここまでで得られたASVをさらにクラスタリングしてまとめたい場合があると思います。 そのような場合は、<code>clclassseqv</code>コマンドで追加のクラスタリングを行うことができます。 また、複数のシーケンスランの結果をまとめて解析を行いたい場合にも、ここまでの結果を<code>clclassseqv</code>を用いて統合することができます。</p>
+<p>デノイジング以降、以下のようなファイルが出力フォルダには作成されています(ただし～は3ファイルで共通)。</p>
+<dl>
+<dt>～.fasta</dt>
+<dd>この時点でのASV・OTUの塩基配列ファイル
+</dd>
+<dt>～.otu.gz</dt>
+<dd>この時点でのASV・OTUの所属を記録したファイル
+</dd>
+<dt>～.tsv</dt>
+<dd>この時点でのASV・OTUの各サンプルでのリード数表のタブ区切りテキスト
+</dd>
+</dl>
+<p>上記タブ区切りテキストの内容を追跡することで、各処理によって起きた変化がわかります。</p>
+<h2 data-number="1.4" id="分子同定"><span class="header-section-number">1.4</span> 分子同定</h2>
+<p>ここでは、QCauto法と95%-3NN法 <span class="citation" data-cites="Tanabe2013TwoNewComputational">(Tanabe &amp; Toju 2013)</span> に基づく分子同定の手順を示します。 QCauto法は誤同定の非常に少ない方法ですが、その代わり種や属などの低レベル分類階層が「unidentified」になりやすい性質があります。 95%-3NN法は種や属などの低レベル分類階層まで同定できることが多いですが、参照配列データベースの整備状況次第では誤同定が多くなってしまう性質があります。 MiFishによるメタバーコーディングを日本の淡水域や日本近海のサンプルで行う場合、千葉県立博物館のグループによって参照配列データベースがよく整備されているため、95%-3NN法でもそれほど問題は生じません。 しかし、それ以外の参照配列データベースの網羅度が十分でない状況では、QCauto法の結果を使用することを推奨します。</p>
+<p>この先に進む前に、以下のコマンドで作業ディレクトリに分子同定の出力ディレクトリを作成しておきます。</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a>mkdir 11_taxonomy</span></code></pre></div>
+<h3 data-number="1.4.1" id="分子同定用参照配列データベース"><span class="header-section-number">1.4.1</span> 分子同定用参照配列データベース</h3>
+<p>Claidentでは、標準で多数の分子同定用参照配列データベースが添付されています。 Claidentに添付されているデータベースは、以下の形式で命名されています。</p>
+<pre><code>[分類群]_[遺伝子座]_[参照配列同定情報の分類階層]</code></pre>
+<p><code>[分類群]_[遺伝子座]</code>には以下のものがあります。</p>
+<dl>
+<dt>overall</dt>
+<dd>全生物全遺伝子座
+</dd>
+<dt>animals_12S</dt>
+<dd>動物12S
+</dd>
+<dt>animals_16S</dt>
+<dd>動物16S
+</dd>
+<dt>animals_COX1</dt>
+<dd>動物COX1(COI)
+</dd>
+<dt>animals_CytB</dt>
+<dd>動物CytB
+</dd>
+<dt>animals_D-loop</dt>
+<dd>動物D-loop
+</dd>
+<dt>animals_mt</dt>
+<dd>動物ミトコンドリアDNA
+</dd>
+<dt>eukaryota_LSU</dt>
+<dd>真核生物LSU(28S)
+</dd>
+<dt>eukaryota_SSU</dt>
+<dd>真核生物SSU(18S)
+</dd>
+<dt>fungi_all</dt>
+<dd>真菌全遺伝子座
+</dd>
+<dt>fungi_ITS</dt>
+<dd>真菌ITS
+</dd>
+<dt>plants_cp</dt>
+<dd>植物葉緑体DNA
+</dd>
+<dt>plants_matK</dt>
+<dd>植物matK
+</dd>
+<dt>plants_rbcL</dt>
+<dd>植物rbcL
+</dd>
+<dt>plants_trnH-psbA</dt>
+<dd>植物trnH-psbA
+</dd>
+<dt>prokaryota_16S</dt>
+<dd>原核生物16S
+</dd>
+<dt>prokaryota_all</dt>
+<dd>原核生物全遺伝子座
+</dd>
+</dl>
+<p><code>[参照配列同定情報の分類階層]</code>には以下のものがあります。</p>
+<dl>
+<dt>class</dt>
+<dd>綱以下の同定情報のある参照配列を含む(overallのみ)
+</dd>
+<dt>order</dt>
+<dd>目以下の同定情報のある参照配列を含む(overallのみ)
+</dd>
+<dt>family</dt>
+<dd>科以下の同定情報のある参照配列を含む(overallのみ)
+</dd>
+<dt>genus</dt>
+<dd>属以下の同定情報のある参照配列を含む
+</dd>
+<dt>species_wsp</dt>
+<dd>種以下の同定情報がある参照配列を含む。種名に「sp.」が含まれる参照配列は除外されていない
+</dd>
+<dt>species</dt>
+<dd>種以下の同定情報がある参照配列を含むが、種名の末尾に「sp.」が含まれる参照配列は除外されている
+</dd>
+<dt>species_wosp</dt>
+<dd>種以下の同定情報がある参照配列を含むが、種名に「sp.」が含まれる参照配列は除外されている
+</dd>
+<dt>genus_man</dt>
+<dd>属以下の同定情報があり、属名が空欄でない参照配列を含む
+</dd>
+<dt>species_wsp_man</dt>
+<dd>種以下の同定情報がある参照配列を含む。種名に「sp.」が含まれる参照配列は除外されていないが、属名が空欄の参照配列は除外されている
+</dd>
+<dt>species_man</dt>
+<dd>種以下の同定情報がある参照配列を含むが、種名の末尾に「sp.」が含まれる、または属名が空欄の参照配列は除外されている
+</dd>
+<dt>species_wosp_man</dt>
+<dd>種以下の同定情報がある参照配列を含むが、種名に「sp.」が含まれる、または属名が空欄の参照配列は除外されている
+</dd>
+</dl>
+<p>分子同定用参照配列データベースは「<code>[インストール先]/share/claident/blastdb</code>」にあるため、このフォルダの内容を見ればインストールされている参照配列データベースがわかります。</p>
+<p>データベースの種類が多すぎて使い分けが難しいのですが、どれが最適なのかは分類群や研究目的によって異なります。 MiFishによるメタバーコーディングを日本の淡水域や日本近海のサンプルで行う場合、動物以外の配列やミトコンドリアゲノム以外の配列も同定したいなら、「<code>overall_species_wsp</code>」を推奨します。 しかし、<code>overall</code>系データベースは巨大で、搭載しているメモリが少ないマシンではメモリ不足になってしまいます。 そのような場合、動物以外の配列や対象外の配列は同定できなくなりますが、「<code>animals_12S_species_wsp</code>」や「<code>animals_mt_species_wsp</code>」が良いでしょう。 真菌や細菌などで属レベルの同定が非常に重要なケースでは、「<code>～_species_wsp_man</code>」を使うと良いかもしれません。 使い分けに悩んだ場合は、各データベースを使用して同定した結果をマージしていいとこ取りすることができますので、全部やってしまえばいいでしょう。</p>
+<h3 data-number="1.4.2" id="clmakecachedbによるキャッシュデータベースの生成"><span class="header-section-number">1.4.2</span> clmakecachedbによるキャッシュデータベースの生成</h3>
+<p>Claidentで分子同定を行うには、まず初めにキャッシュデータベースの生成を行うことが推奨されます。 以下のコマンドは、デコンタミネーションを通過した配列用のキャッシュデータベースを生成します。</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a>clmakecachedb \</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true"></a>--blastdb=animals_mt_species_wsp \</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true"></a>--ignoreotuseq=standard.fasta \</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true"></a>10_decontaminated/decontaminated.fasta \</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true"></a>11_taxonomy/cachedb_species_wsp</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--blastdb</code></dt>
+<dd>使用する分子同定用参照配列データベース
+</dd>
+<dt><code>--ignoreotuseq</code></dt>
+<dd>指定したFASTA配列ファイルに含まれる配列名と一致するOTUは無視する
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル、出力フォルダを指定します。</p>
+<p>大量のメモリを使用する可能性があるため、実行中はもう一つターミナルを起動して空きメモリ量を<code>top</code>コマンドなどを実行して監視し、もし空きメモリがなくなるようであればCtrl+Cキーを押して強制終了して使用するデータベースを変更したりマシンにメモリを増設することを検討して下さい。</p>
+<h3 data-number="1.4.3" id="qcauto法による分子同定"><span class="header-section-number">1.4.3</span> QCauto法による分子同定</h3>
+<h4 data-number="1.4.3.1" id="clidentseqによる近隣配列群の取得"><span class="header-section-number">1.4.3.1</span> clidentseqによる近隣配列群の取得</h4>
+<p>以下のコマンドで、QCauto法に基づいて近隣配列をキャッシュデータベースから取得します。</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a>clidentseq \</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true"></a>--method=QC \</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true"></a>--blastdb=11_taxonomy/cachedb_species_wsp \</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true"></a>--ignoreotuseq=standard.fasta \</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true"></a>10_decontaminated/decontaminated.fasta \</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true"></a>11_taxonomy/neighborhoods_qcauto_species_wsp.txt</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--method</code></dt>
+<dd>使用する分子同定アルゴリズム
+</dd>
+<dt><code>--blastdb</code></dt>
+<dd>使用する分子同定用参照配列データベースまたはキャッシュデータベース
+</dd>
+<dt><code>--ignoreotuseq</code></dt>
+<dd>指定したFASTA配列ファイルに含まれる配列名と一致するOTUは無視する
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。</p>
+<h4 data-number="1.4.3.2" id="classigntaxによる分類群の割り当て"><span class="header-section-number">1.4.3.2</span> classigntaxによる分類群の割り当て</h4>
+<p>以下のコマンドで、取得した近隣配列の同定情報からLCAアルゴリズム <span class="citation" data-cites="Huson2007MEGANanalysismetagenomic">(Huson <em>et al.</em> 2007)</span> を用いて各OTUに分類群を割り当てます。</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a>classigntax \</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true"></a>--taxdb=animals_mt_species_wsp \</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true"></a>11_taxonomy/neighborhoods_qcauto_species_wsp.txt \</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true"></a>11_taxonomy/taxonomy_qcauto_species_wsp.tsv</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--taxdb</code></dt>
+<dd>使用する参照配列の同定情報データベース(<code>clmakecachedb</code>の<code>--blastdb</code>と一致させる)
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。</p>
+<p>出力ファイルは、OTUごとに1行の同定結果を記録したタブ区切りテキストになっています。</p>
+<p>LCAアルゴリズム <span class="citation" data-cites="Huson2007MEGANanalysismetagenomic">(Huson <em>et al.</em> 2007)</span> では、全ての近隣配列が同一の分類群を支持するまで分類階層を引き上げていき、条件を満たさなかった分類階層は「unidentified」となります。 言い換えると、近隣配列の厳密合意分類群を採用する、ということになります。 この方法では、1本でも誤同定された配列が近隣配列に混入すると同定できなくなってしまいます。 ここで、同定結果を支持する配列を「supporter」、支持しない配列を「opposer」と呼びます。 <code>classigntax</code>では、<code>--maxpopposer=0.05 --minsoratio=19</code>をコマンドラインオプションに追加することで「opposer」の存在を5%まで許容し、95%多数決合意分類群を採用することで、誤同定された配列が近隣配列に混入してもそれが僅かであれば同定できるようにすることができます。 なお<code>--minsoratio=19</code>は「supporter」数と「opposer」数の比を19以上とするオプションですが、「その分類階層の情報がないためsupporterでもopposerでもない配列」が存在し得るため必要となります。</p>
+<h3 data-number="1.4.4" id="nn法による分子同定"><span class="header-section-number">1.4.4</span> 95%-3NN法による分子同定</h3>
+<h4 data-number="1.4.4.1" id="clidentseqによる近隣配列群の取得-1"><span class="header-section-number">1.4.4.1</span> clidentseqによる近隣配列群の取得</h4>
+<p>以下のコマンドで、95%-3NN法に基づいて近隣配列をキャッシュデータベースから取得します。</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a>clidentseq \</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a>--method=3,95% \</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true"></a>--blastdb=11_taxonomy/cachedb_species_wsp \</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true"></a>--ignoreotuseq=standard.fasta \</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true"></a>10_decontaminated/decontaminated.fasta \</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true"></a>11_taxonomy/neighborhoods_95p3nn_species_wsp.txt</span></code></pre></div>
+<h4 data-number="1.4.4.2" id="classigntaxによる分類群の割当"><span class="header-section-number">1.4.4.2</span> classigntaxによる分類群の割当</h4>
+<p>以下のコマンドで、取得した近隣配列の同定情報からLCAアルゴリズム <span class="citation" data-cites="Huson2007MEGANanalysismetagenomic">(Huson <em>et al.</em> 2007)</span> を用いて各OTUに分類群を割り当てます。</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a>classigntax \</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true"></a>--taxdb=animals_mt_species_wsp \</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true"></a>--minnsupporter=3 \</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true"></a>11_taxonomy/neighborhoods_95p3nn_species_wsp.txt \</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true"></a>11_taxonomy/taxonomy_95p3nn_species_wsp.tsv</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--minnsupporter</code></dt>
+<dd>結果を支持する近隣配列数の下限
+</dd>
+</dl>
+<p>この方法では、OTUの塩基配列が95%以上一致する参照配列を類似度上位3位タイまで取得して近隣配列とし、LCAアルゴリズム <span class="citation" data-cites="Huson2007MEGANanalysismetagenomic">(Huson <em>et al.</em> 2007)</span> を用いて各OTUに分類群を割り当てています。</p>
+<h3 data-number="1.4.5" id="clmakeidentdbによる分子同定結果の再利用"><span class="header-section-number">1.4.5</span> clmakeidentdbによる分子同定結果の再利用</h3>
+<p>以下のコマンドを使用してQCauto法による分子同定結果データベースを作成することができます。</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a>clmakeidentdb \</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a>--append \</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true"></a>11_taxonomy/neighborhoods_qcauto_species_wsp.txt \</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true"></a>11_taxonomy/qcauto_species_wsp.identdb</span></code></pre></div>
+<p>以下のコマンドでは、95%-3NN法による分子同定結果データベースを作成することができます。</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a>clmakeidentdb \</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true"></a>--append \</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true"></a>11_taxonomy/neighborhoods_95p3nn_species_wsp.txt \</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true"></a>11_taxonomy/95p3nn_species_wsp.identdb</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--append</code></dt>
+<dd>出力ファイルが既に存在している場合は結果を追加する
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。</p>
+<p>出力ファイル内には分子同定結果(実際には<code>clidentseq</code>の結果)が記録されており、<code>clmakecachedb</code>と<code>clidentseq</code>の実行時に<code>--identdb</code>オプションで指定することで、このデータベース内に結果が既にあるOTUにおいて参照配列データベースの検索を飛ばし、無駄な計算を省きます。 なお、手法やデータベースが異なれば分子同定結果は当然ながら異なり得ます。 したがって、<code>clmakeidentdb</code>を<code>--append</code>付きで実行する際は同定手法やデータベースの異なる分子同定結果を混ぜてしまわないように注意が必要です(コマンド側で検証はしていません)。</p>
+<h3 data-number="1.4.6" id="clmergeassignによる複数の分子同定結果のマージ"><span class="header-section-number">1.4.6</span> clmergeassignによる複数の分子同定結果のマージ</h3>
+<p>ここまでの解析によって、OTUごとに少なくともQCauto法による分子同定結果と95%-3NN法による分子同定結果が得られているはずです。 複数のデータベースでそれぞれ分子同定を行い、同一のOTUに対してより多くの分子同定結果が得られている場合もあるでしょう。 そのような場合、それらの結果からOTUごとに「最も低レベルの分類階層まで同定できているものを採用する」という形で同定結果をマージすることができます。 下記コマンドを実行すると、より保守的で誤同定が少ないと考えられるQCauto法の結果を優先しつつ、95%-3NN法でQCauto法の結果と矛盾せず、より低レベルの分類階層まで同定できていたら採用する、という形で結果をマージできます(95%-3NN法の結果がより低レベルの分類階層まで同定できていても、QCauto法の結果と矛盾するなら却下します)。</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a>clmergeassign \</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true"></a>--preferlower \</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true"></a>--priority=descend \</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true"></a>11_taxonomy/taxonomy_qcauto_species_wsp.tsv \</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true"></a>11_taxonomy/taxonomy_95p3nn_species_wsp.tsv \</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true"></a>11_taxonomy/taxonomy_merged.tsv</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--preferlower</code></dt>
+<dd>より低レベルの分類階層まで同定できている結果を優先的に採用する
+</dd>
+<dt><code>--priority</code></dt>
+<dd>入力ファイルの優先順位(ASCEND | DESCEND | EQUAL | 式による指定から選択)
+</dd>
+<dd>式を記述するには、入力ファイルの記述順に0から始まる数値を割り振り、「<code>0&lt;1=2&lt;3&lt;4</code>」という風に指定します。
+</dd>
+<dd>この優先順位は<code>--preferlower</code>よりも優先されます
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル群、出力ファイルを指定します。</p>
+<p><code>--priority=descend</code>を指定している場合、入力ファイル群は後の方よりも最初の方が優先されます。</p>
+<h3 data-number="1.4.7" id="clfillassignによる分子同定結果の穴埋め"><span class="header-section-number">1.4.7</span> clfillassignによる分子同定結果の穴埋め</h3>
+<p><code>classigntax</code>の出力は、そのままでは同定情報のない分類階層は空欄のままとなっています。 そこで、以下のコマンドでそのような空欄を全て埋めることができます。</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a>clfillassign \</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true"></a>--fullfill=enable \</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true"></a>11_taxonomy/taxonomy_merged.tsv \</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true"></a>11_taxonomy/taxonomy_merged_filled.tsv</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--fullfill</code></dt>
+<dd>ファイル中に存在しない分類階層も含めてClaidentがサポートしている全分類階層を穴埋めするか否か(ENABLE | DISABLEから選択)
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。</p>
+<p>穴埋めは、より低レベルの分類階層の結果が存在する場合はその値で、より低レベルの分類階層の結果が存在しない場合は最も低レベルの分類階層の結果に「<code>unidentified</code>」を付加たもので行います。 つまり、orderが「<code>Foo</code>」でinfraorderが「<code>Bar</code>」、その中間のsuborderが空欄の場合、suborderは「<code>Bar</code>」になり、parvorder以下の分類階層が全て空欄ならそれらは「<code>unidentified Bar</code>」となります。</p>
+<h2 data-number="1.5" id="otu組成表の作成"><span class="header-section-number">1.5</span> OTU組成表の作成</h2>
+<p>ここで言うOTU組成表とは、各サンプルにおける各OTUのリード数の表のことを指します。 以下のような形式で表せるものです。</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a>samplename  OTU1  OTU2  OTU3  OTU4</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a>Sample1     3813   130  1949 34959</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true"></a>Sample2    18389    19   194  1948</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true"></a>Sample3       18     1   148   184</span></code></pre></div>
+<p>この表を元データとして、統計的な解析を行うことになります。 ここでは、実際に統計的な解析に入る前に必要な前処理について説明します。</p>
+<p>その前に、以下のコマンドで作業ディレクトリにOTU組成表の出力ディレクトリを作成しておきます。</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a>mkdir 12_community</span></code></pre></div>
+<p>また、加工の出発点となるOTU組成表は実は既に「<code>10_decontaminated/decontaminated.tsv</code>」として存在しているため、以下のコマンドでこれを先程作成したディレクトリにコピーしておきます。</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a>cp \</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a>10_decontaminated/decontaminated.tsv \</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv</span></code></pre></div>
+<h3 data-number="1.5.1" id="clfiltersumによるotu組成表の加工"><span class="header-section-number">1.5.1</span> clfiltersumによるOTU組成表の加工</h3>
+<p>以下のコマンドで、内部標準OTUのみの表を作成することができます(他のOTUは除外される)。</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a>clfiltersum \</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true"></a>--otuseq=standard.fasta \</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true"></a>12_community/sample_otu_matrix_standard.tsv</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--otuseq</code></dt>
+<dd>指定したFASTA配列ファイルに含まれる配列名と一致するOTUのデータを取り出す
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。</p>
+<p>以下のコマンドを実行すると、分子同定結果に基づいて、<code>--includetaxa</code>で指定した分類群(ここでは魚類)のOTUの表を作成することができます。</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a>clfiltersum \</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true"></a>--includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true"></a>--includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true"></a>--includetaxa=subclass,Dipnomorpha \</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes.tsv</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--negativeotuseq</code></dt>
+<dd>指定したFASTA配列ファイルに含まれる配列名と一致するOTUのデータを除外する
+</dd>
+<dt><code>--taxfile</code></dt>
+<dd>分子同定結果のタブ区切りテキストファイル(<code>classigntax</code>の出力フォーマットのもの)
+</dd>
+<dt><code>--includetaxa</code></dt>
+<dd>該当する分類群名のOTUのデータを取り出す
+</dd>
+<dd>分類群名を検索する分類階層を限定することも可能
+</dd>
+<dd>複数指定可
+</dd>
+</dl>
+<p>下記のように<code>--includetaxa</code>を<code>--excludetaxa</code>に置き換えることで、魚類以外のOTUの表を作成できます。</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a>clfiltersum \</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true"></a>--excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true"></a>--excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true"></a>--excludetaxa=subclass,Dipnomorpha \</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true"></a>12_community/sample_otu_matrix_nonfishes.tsv</span></code></pre></div>
+<p>同じことを別のやり方でやってみます。 下記のコマンドでは、魚類のOTUの表からOTU名だけを取り出して「<code>12_community/fishotus.txt</code>」に保存しています。</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true"></a>head -n 1 12_community/sample_otu_matrix_fishes.tsv \</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true"></a>| perl -ne &#39;@row=split(/\t/);shift(@row);print(join(&quot;\n&quot;,@row).&quot;\n&quot;);&#39; \</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true"></a>&gt; 12_community/fishotus.txt</span></code></pre></div>
+<p><code>clfiltersum</code>には、与えたテキストファイルに名前が含まれていないOTUを取り出すオプションがあるので、先程作成したファイルを使用して下記のように魚類以外のOTUの表を作成することができます。</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a>clfiltersum \</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true"></a>--negativeotulist=12_community/fishotus.txt \</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true"></a>12_community/sample_otu_matrix_nonfishes2.tsv</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--negativeotulist</code></dt>
+<dd>除外するOTU名のリストを記したテキストファイル
+</dd>
+</dl>
+<h3 data-number="1.5.2" id="clrarefysumによるotu組成表のカバレッジベースレアファクション"><span class="header-section-number">1.5.2</span> clrarefysumによるOTU組成表のカバレッジベースレアファクション</h3>
+<p>OTU組成表があれば群集生態学解析はできますが、このままではサンプル間のカバレッジ(サンプリング調査の網羅具合)にばらつきがあるため、本来種数の少ない高カバレッジのサンプルの方が本当は種数が多い低カバレッジのサンプルよりも種数が多いと誤判定してしまいかねません。 そこで、サンプル間でカバレッジを揃えることで、このような問題を回避する処理がカバレッジベースレアファクションです <span class="citation" data-cites="Chao2012Coveragebasedrarefactionextrapolation">(Chao &amp; Jost 2012)</span> 。 なお、レアファクションが「レアファクションしたOTU組成表を得る」ことを指す場合と「レアファクションカーブを得る」ことを指す場合がありますが、本書では前者を指すものとお考え下さい。</p>
+<p>カバレッジベースレアファクションを行う手法としては、「そのサンプルで一度しか観測されていないOTU (シングルトン)の数」と「そのサンプルで二度しか観測されていないOTU (ダブルトン)の数」に基づいてカバレッジを推定して行う方法があります <span class="citation" data-cites="Chao2012Coveragebasedrarefactionextrapolation">(Chao &amp; Jost 2012)</span> 。 しかし、メタバーコードデータではシーケンスエラーが大量に存在するために、これらの数が十分信用できるものとは考えられていません <span class="citation" data-cites="Chiu2016Estimatingcomparingmicrobial">(Chiu &amp; Chao 2016)</span> 。 デノイジングしたデータなら問題ないのではとも思えるかもしれませんが、その証拠も十分でないのが現状です。 <span class="citation" data-cites="Chiu2016Estimatingcomparingmicrobial">Chiu &amp; Chao (2016)</span> はそのようなシーケンスエラーのあるデータでもシングルトン数を修正する方法を提案しており、metagMiscというRパッケージの<code>phyloseq_coverage_raref()</code>関数で<code>correct_singletons</code>を有効にしてレアファクションすることで、この方法が適用できます。</p>
+<p>ただし、 <span class="citation" data-cites="Chiu2016Estimatingcomparingmicrobial">Chiu &amp; Chao (2016)</span> の方法は未デノイジングデータを前提とした方法です。 デノイジングを適用すると、リード数の少ないASV (シングルトンを含む)は、処理過程で捨てられたり近隣のリード数がより大きいASVのシーケンスエラー由来とみなされ、未デノイジングデータから激減します。 このため、 <span class="citation" data-cites="Chiu2016Estimatingcomparingmicrobial">Chiu &amp; Chao (2016)</span> の方法をデノイジングしたデータにそのまま適用することは問題があると考えられます。</p>
+<p>ここで、 <span class="math inline">(1 − <em>レ</em><em>ア</em><em>フ</em><em>ァ</em><em>ク</em><em>シ</em><em>ョ</em><em>ン</em><em>カ</em><em>ー</em><em>ブ</em><em>の</em><em>傾</em><em>き</em>)</span> はカバレッジそのものと捉えることができます <span class="citation" data-cites="Chao2012Coveragebasedrarefactionextrapolation">(Chao &amp; Jost 2012)</span> 。 これに基づいて、Claidentではレアファクションカーブの端点の傾きをサンプル間で揃えるレアファクションをサポートしています。 シングルトン数の影響が薄くなるレアファクションカーブの傾きを使用しているため、シングルトン数とダブルトン数からカバレッジを推定する方法よりもシーケンスエラーに対して頑健であると期待できます。 ただし計算量は多くなるため、並列化を用いた最適化を行っています。</p>
+<p>以下のコマンドは、リード数1000未満のサンプルを除去し、残ったサンプルでそれぞれカバレッジを計算し、カバレッジが最も低いサンプルと同じカバレッジに揃うように全サンプルでレアファクションを行います。 ただし、カバレッジが最も低いサンプルのカバレッジが0.99未満だった場合は0.99に揃え、カバレッジが0.99未満のサンプルは除去します。 レアファクションの際には無作為にリードを捨てることになるため、反復すれば結果が変動する可能性があります。 そこで、レアファクションを10反復行い、それぞれ結果を保存します。</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a>clrarefysum \</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a>--minpcov=0.99 \</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true"></a>--minntotalseqsample=1000 \</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true"></a>--nreplicate=10 \</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true"></a>12_community/sample_otu_matrix_all.tsv \</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true"></a>12_community/sample_otu_matrix_all_rarefied</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--minpcov</code></dt>
+<dd>揃えるカバレッジの下限(下回るサンプルは捨てる)
+</dd>
+<dt><code>--minntotalseqsample</code></dt>
+<dd>レアファクション前のリード数下限(下回るサンプルは捨てる)
+</dd>
+<dt><code>--nreplicate</code></dt>
+<dd>レアファクションの反復数
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル、出力ファイルの接頭辞を指定します。</p>
+<p>実行後に生成される出力ファイルは以下の通りです。</p>
+<dl>
+<dt><code>[出力ファイルの接頭辞]-r[数字].tsv</code></dt>
+<dd>レアファクションされたOTU組成表のタブ区切りテキスト
+</dd>
+<dt><code>[出力ファイルの接頭辞]_inputpcov.tsv</code></dt>
+<dd>入力された各サンプルのカバレッジ推定値のタブ区切りテキスト
+</dd>
+<dt><code>[出力ファイルの接頭辞]_inputnseq.tsv</code></dt>
+<dd>入力された各サンプルの合計リード数のタブ区切りテキスト
+</dd>
+<dt><code>[出力ファイルの接頭辞]_outputpcov.tsv</code></dt>
+<dd>出力された各サンプルのカバレッジ推定値のタブ区切りテキスト
+</dd>
+<dt><code>[出力ファイルの接頭辞]_outputnseq.tsv</code></dt>
+<dd>出力された各サンプルの合計リード数のタブ区切りテキスト
+</dd>
+</dl>
+<p>レアファクションが終わったら、以下のコマンドにより10反復全てで内部標準OTUのみを取り出します。</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true"></a>for n in `seq -w 1 10`</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true"></a>do clfiltersum \</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true"></a>--otuseq=standard.fasta \</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true"></a>12_community/sample_otu_matrix_all_rarefied-r$n.tsv \</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true"></a>12_community/sample_otu_matrix_standard_rarefied-r$n.tsv</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true"></a>done</span></code></pre></div>
+<p>以下のコマンドでは魚類OTUのみを取り出します。</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true"></a>for n in `seq -w 1 10`</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true"></a>do clfiltersum \</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true"></a>--includetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true"></a>--includetaxa=superclass,Actinopterygii,order,Coelacanthiformes \</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true"></a>--includetaxa=subclass,Dipnomorpha \</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true"></a>12_community/sample_otu_matrix_all_rarefied-r$n.tsv \</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_rarefied-r$n.tsv</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true"></a>done</span></code></pre></div>
+<p>以下のコマンドでは魚類以外のOTUを取り出します。</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true"></a>for n in `seq -w 1 10`</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true"></a>do clfiltersum \</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true"></a>--negativeotuseq=standard.fasta \</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true"></a>--excludetaxa=class,Hyperoartia,class,Myxini,class,Chondrichthyes \</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true"></a>--excludetaxa=superclass,Actinopterygii,order,Coelacanthiformes \</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true"></a>--excludetaxa=subclass,Dipnomorpha \</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true"></a>12_community/sample_otu_matrix_all_rarefied-r$n.tsv \</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true"></a>12_community/sample_otu_matrix_nonfishes_rarefied-r$n.tsv</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true"></a>done</span></code></pre></div>
+<p>上記の例では全分類群のOTU組成表を用いてカバレッジベースレアファクションを行い、レアファクション後に魚類OTUと魚類以外のOTUに分けていますが、最初から魚類以外に興味がない場合や、事前知識により魚類以外はコンタミネーションの可能性が高いと思われる場合、魚類のみのOTU組成表を用いてカバレッジベースレアファクションを行う方が良いかもしれません。</p>
+<p>metagMiscにしろClaidentにしろ、これらのカバレッジベースレアファクションで行えるのはあくまで「群集に対するシーケンシングカバレッジの均一化」に過ぎないことは注意が必要です。 「採水した水の、群集に対するカバレッジの均一化」や「濾過フィルター上に捕集したDNAの、群集に対するカバレッジの均一化」や「PCRに投入するDNA溶液の、群集に対するカバレッジの均一化」はなされていません。 メタバーコーディングではサンプリング、つまり「一部を取り出す」ステップが多数存在するため、均一性が問題になるのはシーケンシングカバレッジだけではありません。 しかし、それらは全て飽和している(カバレッジがほぼ1.0)という仮定のもとでこの先の解析は行われます。 もし何か異常な結果が得られた際には、この仮定が満たされていない可能性について検討すべきかもしれません。</p>
+<h3 data-number="1.5.3" id="clestimateconcと内部標準dnaリード数を用いたdna濃度の推定"><span class="header-section-number">1.5.3</span> clestimateconcと内部標準DNAリード数を用いたDNA濃度の推定</h3>
+<p>以下のコマンドでは、予め濃度がわかっている内部標準DNAリード数に基づいて他のOTUの環境水サンプル中のDNA濃度を推定します。</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true"></a>clestimateconc \</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true"></a>--stdtable=12_community/sample_otu_matrix_standard.tsv \</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true"></a>--stdconctable=stdconctable.tsv \</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true"></a>--solutionvoltable=solutionvoltable.tsv \</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true"></a>--watervoltable=watervoltable.tsv \</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes.tsv \</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_concentration.tsv</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--stdtable</code></dt>
+<dd>内部標準OTUリード数表のタブ区切りテキスト(入力ファイルに内部標準OTUリード数が含まれている場合は不要)
+</dd>
+<dt><code>--stdconctable</code></dt>
+<dd>内部標準DNA濃度表のタブ区切りテキスト
+</dd>
+<dt><code>--solutionvoltable</code></dt>
+<dd>抽出DNA溶液量表のタブ区切りテキスト
+</dd>
+<dt><code>--watervoltable</code></dt>
+<dd>濾過水量表のタブ区切りテキスト
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。</p>
+<p>10反復のレアファクションを行ったデータでもそれぞれDNA濃度を推定するには、以下のコマンドを実行します。</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true"></a>for n in `seq -w 1 10`</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true"></a>do clestimateconc \</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true"></a>--stdtable=12_community/sample_otu_matrix_standard_rarefied-r$n.tsv \</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true"></a>--stdconctable=stdconctable.tsv \</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true"></a>--solutionvoltable=solutionvoltable.tsv \</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true"></a>--watervoltable=watervoltable.tsv \</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true"></a>--numthreads=[CPUコア数] \</span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_rarefied-r$n.tsv \</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_rarefied-r$n_concentration.tsv</span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true"></a>done</span></code></pre></div>
+<p>カバレッジの揃っていないデータでは、推定されるDNA濃度の信頼性がサンプル間でばらつきます。 DNA濃度情報しかないデータからは値の信頼性のばらつきを考慮した解析を行うことはできないので、DNA濃度を利用した分析の際にはレアファクションしてから推定したDNA濃度データを使用する方が良いことが多いのではないでしょうか。 ただ、分析方法によってはレアファクション前の元データから推定したDNA濃度データの方が適している場合もあるかもしれません。</p>
+<h3 data-number="1.5.4" id="otu組成表からの種組成表の作成"><span class="header-section-number">1.5.4</span> OTU組成表からの種組成表の作成</h3>
+<p>OTU組成表は群集生態学解析には適していますが、作図などの際には種組成表や属組成表の方がわかりやすいことがあるでしょう。 そのような場合、OTU組成表と分子同定結果から、種組成表や属組成表を作成することができます。 以下のコマンドでは、魚類のOTU組成表から種組成表を作成しています。</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true"></a>clsumtaxa \</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true"></a>--targetrank=species \</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true"></a>--taxnamereplace=enable \</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true"></a>--fuseotu=enable \</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true"></a>--numbering=enable \</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true"></a>--sortkey=abundance \</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes.tsv \</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true"></a>12_community/sample_species_matrix_fishes.tsv</span></code></pre></div>
+<p>コマンドラインオプションの意味は以下の通りです。</p>
+<dl>
+<dt><code>--taxfile</code></dt>
+<dd>分子同定結果のタブ区切りテキストファイル(<code>classigntax</code>の出力フォーマットのもの)
+</dd>
+<dt><code>--targetrank</code></dt>
+<dd>指定した分類階層の情報を使用する
+</dd>
+<dt><code>--taxnamereplace</code></dt>
+<dd>出力OTU名内で使用されているスペースやコロンをアンダーバーに置換(ENABLE | DISABLEから選択)
+</dd>
+<dt><code>--fuseotu</code></dt>
+<dd>分類群名が同じOTUをまとめるか否か(ENABLE | DISABLEから選択)
+</dd>
+<dd>まとめない場合は出力OTU名を「<code>[入力OTU名]:[分類群名]</code>」とし、組成の内容は維持する
+</dd>
+<dd>ただし<code>--taxnamereplace</code>が有効の場合は出力OTU名は「<code>[入力OTU名]_[分類群名]</code>」となる
+</dd>
+<dt><code>--numbering</code></dt>
+<dd>出力OTU名にソート順で番号を接頭辞として付加するか否か(ENABLE | DISABLEから選択)
+</dd>
+<dd>出力OTUが100ある場合は<code>001</code>～<code>100</code>という風に幅を揃えた番号をコロン「<code>:</code>」で区切って付加する
+</dd>
+<dd><code>--taxnamereplace</code>が有効の場合はコロンではなくアンダーバー「<code>_</code>」で区切って付加する
+</dd>
+<dd><code>--fuseotu</code>と<code>--taxnamereplace</code>が有効の場合は「<code>[番号]_[分類群名]</code>」となる
+</dd>
+<dd><code>--fuseotu</code>が有効、<code>--taxnamereplace</code>が無効の場合は「<code>[番号]:[分類群名]</code>」となる
+</dd>
+<dd><code>--fuseotu</code>が無効、<code>--taxnamereplace</code>が有効の場合は「<code>[番号]_[入力OTU名]_[分類群名]</code>」となる
+</dd>
+<dd><code>--fuseotu</code>と<code>--taxnamereplace</code>が無効の場合は「<code>[番号]:[入力OTU名]:[分類群名]</code>」となる
+</dd>
+<dt><code>--sortkey</code></dt>
+<dd>ソート順を決めるキー(ABUNDANCE | RANKNAMEから選択)
+</dd>
+<dd>RANKNAMEは「<code>familyname</code>」、「<code>classname</code>」、「<code>&quot;species group name&quot;</code>」(スペースが含まれる場合はクォートする)などとする
+</dd>
+</dl>
+<p>コマンドラインオプションに引き続いて、入力ファイル、出力ファイルを指定します。</p>
+<p>以下のコマンドでは、DNA濃度を値とするOTU組成表から種組成表を作成しています。</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true"></a>clsumtaxa \</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true"></a>--taxfile=11_taxonomy/taxonomy_merged_filled.tsv \</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true"></a>--targetrank=species \</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true"></a>--taxnamereplace=enable \</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true"></a>--taxranknamereplace=enable \</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true"></a>--fuseotu=enable \</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true"></a>--numbering=enable \</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true"></a>--sortkey=abundance \</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true"></a>12_community/sample_otu_matrix_fishes_concentration.tsv \</span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true"></a>12_community/sample_species_matrix_fishes_concentration.tsv</span></code></pre></div>
+<p>なお、<code>--fuseotu</code>を有効化した場合、分類群名だけでOTUがまとめられてしまうため、<code>--targetrank=species</code>であっても「<code>unidentified [高次分類群名]</code>」という種が存在し、これには多数の種がまとめられてしまう可能性があります。 これは、低レベルの分類階層が同定できなかったOTUを<code>clfillassign</code>で「<code>unidentified [高次分類群名]</code>」としたためです。 したがって、複数の種が誤ってまとめられたOTUを含む種組成表となってしまいます。 このような種組成表は作図に使用することはできますが、統計的分析にはASVや配列の類似度に基づいてクラスタリングを行ったOTUを単位とするOTU組成表を使用するようにしましょう。</p>
+<h2 data-number="1.6" id="otu組成表を用いた群集生態学解析に向けて"><span class="header-section-number">1.6</span> OTU組成表を用いた群集生態学解析に向けて</h2>
+<p>ここまでの内容で群集生態学解析に必要なOTU組成表が得られますが、未レアファクションのリード数データ、レアファクション済リード数データ、未レアファクションのDNA濃度データ、レアファクション済DNA濃度データの少なくとも4種類があるはずです。 これらは目的や解析手法に応じて適宜使い分ける必要があります。 ここではOTU組成表を使用してR <span class="citation" data-cites="RCoreTeam2023LanguageEnvironmentStatistical">(R Core Team 2023)</span> で群集生態学解析を行う際に役立つパッケージを簡単に紹介します。</p>
+<p>まず、レアファクションカーブやヒル数(有効種数) <span class="citation" data-cites="Chao2014RarefactionextrapolationHill">(Chao <em>et al.</em> 2014)</span> の推定・描画には未レアファクションのリード数データを用います。 以下のRパッケージが役に立つでしょう。</p>
+<ul>
+<li>vegan <a href="https://github.com/vegandevs/vegan" class="uri">https://github.com/vegandevs/vegan</a></li>
+<li>iNEXT <a href="https://github.com/JohnsonHsieh/iNEXT" class="uri">https://github.com/JohnsonHsieh/iNEXT</a> <span class="citation" data-cites="Hsieh2016iNEXTpackagerarefaction">(Hsieh <em>et al.</em> 2016)</span></li>
+</ul>
+<p>レアファクション済リード数データはサンプル間での定量性を必要としないほとんどの分析(クラスター分析・NMDS・PerMANOVA・群集系統学解析)に利用できます。 以下のRパッケージについて調べることをお勧めします。</p>
+<ul>
+<li>vegan <a href="https://github.com/vegandevs/vegan" class="uri">https://github.com/vegandevs/vegan</a></li>
+<li>picante <a href="https://cran.r-project.org/web/packages/picante/" class="uri">https://cran.r-project.org/web/packages/picante/</a> <span class="citation" data-cites="Kembel2010Picantetoolsintegrating">(Kembel <em>et al.</em> 2010)</span></li>
+<li>MicEco <a href="https://github.com/Russel88/MicEco" class="uri">https://github.com/Russel88/MicEco</a></li>
+<li>iNEXT.beta3D <a href="https://github.com/KaiHsiangHu/iNEXT.beta3D" class="uri">https://github.com/KaiHsiangHu/iNEXT.beta3D</a> <span class="citation" data-cites="Chao2023Rarefactionextrapolationbeta">(Chao <em>et al.</em> 2023)</span></li>
+<li>bipartite <a href="https://github.com/biometry/bipartite" class="uri">https://github.com/biometry/bipartite</a></li>
+<li>pvclust <a href="https://github.com/shimo-lab/pvclust" class="uri">https://github.com/shimo-lab/pvclust</a> <span class="citation" data-cites="Suzuki2006Pvclustpackageassessing">(Suzuki &amp; Shimodaira 2006)</span></li>
+<li>mpmcorrelogram <a href="https://cran.r-project.org/web/packages/mpmcorrelogram/" class="uri">https://cran.r-project.org/web/packages/mpmcorrelogram/</a></li>
+<li>boral <a href="https://cran.r-project.org/web/packages/boral/" class="uri">https://cran.r-project.org/web/packages/boral/</a> <span class="citation" data-cites="Hui2016boralBayesianOrdination">(Hui 2016)</span></li>
+<li>gllvm <a href="https://github.com/JenniNiku/gllvm" class="uri">https://github.com/JenniNiku/gllvm</a> <span class="citation" data-cites="Niku2019gllvmFastanalysis">(Niku <em>et al.</em> 2019)</span></li>
+</ul>
+<p>DNA濃度データはサンプル間での定量性が必要な解析方法に使用することができます。 その代わり、整数値を要求する手法を適用することができません。 以下のRパッケージでは時系列因果推論を行うことができます。</p>
+<ul>
+<li>rEDM <a href="https://ha0ye.github.io/rEDM/" class="uri">https://ha0ye.github.io/rEDM/</a> <span class="citation" data-cites="Ye2016Informationleverageinterconnected">(Ye &amp; Sugihara 2016)</span></li>
+<li>rUIC <a href="https://github.com/yutakaos/rUIC" class="uri">https://github.com/yutakaos/rUIC</a> <span class="citation" data-cites="Osada2023unifiedframeworknonparametric">(Osada <em>et al.</em> 2023)</span></li>
+</ul>
+<p>空間を対象とした場合、結合種分布モデリング(Joint Species Distribution Modeling)によって多種の生息適地の同時推定や多様性の高い重要地域の推定が可能です。 下記のRパッケージではそのような複雑なモデルの当てはめに対応しています。</p>
+<ul>
+<li>jSDM <a href="https://ecology.ghislainv.fr/jSDM/" class="uri">https://ecology.ghislainv.fr/jSDM/</a> <span class="citation" data-cites="Warton2015ManyVariablesJoint">(Warton <em>et al.</em> 2015)</span></li>
+<li>HMSC <a href="https://github.com/hmsc-r/HMSC" class="uri">https://github.com/hmsc-r/HMSC</a> <span class="citation" data-cites="Tikhonov2020Jointspeciesdistribution">(Tikhonov <em>et al.</em> 2020)</span></li>
+</ul>
+<p>OTU組成からOTU間関係のネットワークを推定する手法も近年活発に開発されています。 下記はOTU間関係ネットワークの推定と描画をサポートしたRパッケージです。</p>
+<ul>
+<li>SpiecEasi <a href="https://github.com/zdk123/SpiecEasi" class="uri">https://github.com/zdk123/SpiecEasi</a> <span class="citation" data-cites="Kurtz2015SparseCompositionallyRobust">(Kurtz <em>et al.</em> 2015)</span></li>
+<li>NetCoMi <a href="https://github.com/stefpeschel/NetCoMi" class="uri">https://github.com/stefpeschel/NetCoMi</a> <span class="citation" data-cites="Peschel2021NetCoMinetworkconstruction">(Peschel <em>et al.</em> 2021)</span></li>
+<li>ggClusterNet <a href="https://github.com/taowenmicro/ggClusterNet" class="uri">https://github.com/taowenmicro/ggClusterNet</a> <span class="citation" data-cites="Wen2022ggClusterNetpackagemicrobiome">(Wen <em>et al.</em> 2022)</span></li>
+</ul>
+<p>ここで紹介したRパッケージとそれらに実装されている手法は新しいものも多く、筆者も十分に把握できているとは言えません。 特に、それぞれの手法の前提として要求するデータの性質(在不在か、整数値か小数値か実数値か、サンプル内定量性やサンプル間定量性があるかなど)を論文やマニュアルでよく検討して使用するようにして下さい。</p>
+<p>最後に、 <span class="citation" data-cites="土居2011生物群集解析のための類似度とその応用Rを使った類似度の算出グラフ化">土居 ・ 岡村 (2011)</span> 、 <span class="citation" data-cites="門脇2016メタゲノムデータを用いた群集統計解析法レアファクションから仮説検定まで">門脇 (2016)</span> および <span class="citation" data-cites="Kadowaki2023primercommunityecology">Kadowaki (2023)</span> ではR上での群集生態学分析の入門的な解説がなされていますので、一読をお勧めします。</p>
+<h1 class="unnumbered" data-number id="引用文献">引用文献</h1>
+<div id="refs" class="references hanging-indent" role="doc-bibliography">
+<div id="ref-Callahan2016DADA2Highresolutionsample">
+<p>Callahan, Benjamin J., McMurdie, Paul J., Rosen, Michael J., Han, Andrew W., Johnson, Amy Jo A. &amp; Holmes, Susan P. (2016) DADA2: High-resolution sample inference from Illumina amplicon data. <em>Nature Methods</em> 13, 581–583. <a href="https://doi.org/10.1038/nmeth.3869">https://doi.org/10.1038/nmeth.3869</a></p>
+</div>
+<div id="ref-Chao2014RarefactionextrapolationHill">
+<p>Chao, Anne, Gotelli, Nicholas J., Hsieh, T. C., Sander, Elizabeth L., Ma, K. H., Colwell, Robert K. &amp; Ellison, Aaron M. (2014) Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies. <em>Ecological Monographs</em> 84, 45–67. <a href="https://doi.org/10.1890/13-0133.1">https://doi.org/10.1890/13-0133.1</a></p>
+</div>
+<div id="ref-Chao2012Coveragebasedrarefactionextrapolation">
+<p>Chao, Anne &amp; Jost, Lou (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. <em>Ecology</em> 93, 2533–2547. <a href="https://doi.org/10.1890/11-1952.1">https://doi.org/10.1890/11-1952.1</a></p>
+</div>
+<div id="ref-Chao2023Rarefactionextrapolationbeta">
+<p>Chao, Anne, Thorn, Simon, Chiu, Chun-Huo, Moyes, Faye, Hu, Kai-Hsiang, Chazdon, Robin L., Wu, Jessie, Magnago, Luiz Fernando S., Dornelas, Maria, Zelený, David, Colwell, Robert K. &amp; Magurran, Anne E. (2023) Rarefaction and extrapolation with beta diversity under a framework of Hill numbers: The iNEXT.beta3D standardization. <em>Ecological Monographs</em> 93, e1588. <a href="https://doi.org/10.1002/ecm.1588">https://doi.org/10.1002/ecm.1588</a></p>
+</div>
+<div id="ref-Chiu2016Estimatingcomparingmicrobial">
+<p>Chiu, Chun-Huo &amp; Chao, Anne (2016) Estimating and comparing microbial diversity in the presence of sequencing errors. <em>PeerJ</em> 4, e1634. <a href="https://doi.org/10.7717/peerj.1634">https://doi.org/10.7717/peerj.1634</a></p>
+</div>
+<div id="ref-Edgar2010Searchclusteringorders">
+<p>Edgar, Robert C. (2010) Search and clustering orders of magnitude faster than BLAST. <em>Bioinformatics</em> 26, 2460–2461. <a href="https://doi.org/10.1093/bioinformatics/btq461">https://doi.org/10.1093/bioinformatics/btq461</a></p>
+</div>
+<div id="ref-Edgar2016UCHIME2improvedchimera">
+<p>Edgar, Robert C. (2016) UCHIME2: improved chimera prediction for amplicon sequencing., 074252.</p>
+</div>
+<div id="ref-Edgar2015Errorfilteringpair">
+<p>Edgar, Robert C. &amp; Flyvbjerg, Henrik (2015) Error filtering, pair assembly and error correction for next-generation sequencing reads. <em>Bioinformatics</em> 31, 3476–3482. <a href="https://doi.org/10.1093/bioinformatics/btv401">https://doi.org/10.1093/bioinformatics/btv401</a></p>
+</div>
+<div id="ref-Edgar2011UCHIMEimprovessensitivity">
+<p>Edgar, Robert C., Haas, Brian J., Clemente, Jose C., Quince, Christopher &amp; Knight, Rob (2011) UCHIME improves sensitivity and speed of chimera detection. <em>Bioinformatics</em> 27, 2194–2200. <a href="https://doi.org/10.1093/bioinformatics/btr381">https://doi.org/10.1093/bioinformatics/btr381</a></p>
+</div>
+<div id="ref-Esling2015Accuratemultiplexingfiltering">
+<p>Esling, Philippe, Lejzerowicz, Franck &amp; Pawlowski, Jan (2015) Accurate multiplexing and filtering for high-throughput amplicon-sequencing. <em>Nucleic Acids Research</em> 43, 2513–2524. <a href="https://doi.org/10.1093/nar/gkv107">https://doi.org/10.1093/nar/gkv107</a></p>
+</div>
+<div id="ref-Hsieh2016iNEXTpackagerarefaction">
+<p>Hsieh, T. C., Ma, K. H. &amp; Chao, Anne (2016) iNEXT: an R package for rarefaction and extrapolation of species diversity (Hill numbers). <em>Methods in Ecology and Evolution</em> 7, 1451–1456. <a href="https://doi.org/10.1111/2041-210X.12613">https://doi.org/10.1111/2041-210X.12613</a></p>
+</div>
+<div id="ref-Hui2016boralBayesianOrdination">
+<p>Hui, Francis K. C. (2016) boral – Bayesian Ordination and Regression Analysis of Multivariate Abundance Data in r. <em>Methods in Ecology and Evolution</em> 7, 744–750. <a href="https://doi.org/10.1111/2041-210X.12514">https://doi.org/10.1111/2041-210X.12514</a></p>
+</div>
+<div id="ref-Huson2007MEGANanalysismetagenomic">
+<p>Huson, Daniel H., Auch, Alexander F., Qi, Ji &amp; Schuster, Stephan C. (2007) MEGAN analysis of metagenomic data. <em>Genome Research</em> 17, 377–386. <a href="https://doi.org/10.1101/gr.5969107">https://doi.org/10.1101/gr.5969107</a></p>
+</div>
+<div id="ref-Kadowaki2023primercommunityecology">
+<p>Kadowaki, Kohmei (2023) A primer of community ecology using the R language. <em>Population Ecology</em> 65, 240–256. <a href="https://doi.org/10.1002/1438-390X.12158">https://doi.org/10.1002/1438-390X.12158</a></p>
+</div>
+<div id="ref-Kembel2010Picantetoolsintegrating">
+<p>Kembel, Steven W., Cowan, Peter D., Helmus, Matthew R., Cornwell, William K., Morlon, Helene, Ackerly, David D., Blomberg, Simon P. &amp; Webb, Campbell O. (2010) Picante: R tools for integrating phylogenies and ecology. <em>Bioinformatics</em> 26, 1463–1464. <a href="https://doi.org/10.1093/bioinformatics/btq166">https://doi.org/10.1093/bioinformatics/btq166</a></p>
+</div>
+<div id="ref-Komai2019Developmentnewset">
+<p>Komai, Tomoyuki, Gotoh, Ryo O., Sado, Tetsuya &amp; Miya, Masaki (2019) Development of a new set of PCR primers for eDNA metabarcoding decapod crustaceans. <em>Metabarcoding and Metagenomics</em> 3, e33835. <a href="https://doi.org/10.3897/mbmg.3.33835">https://doi.org/10.3897/mbmg.3.33835</a></p>
+</div>
+<div id="ref-Kurtz2015SparseCompositionallyRobust">
+<p>Kurtz, Zachary D., Müller, Christian L., Miraldi, Emily R., Littman, Dan R., Blaser, Martin J. &amp; Bonneau, Richard A. (2015) Sparse and Compositionally Robust Inference of Microbial Ecological Networks. <em>PLOS Computational Biology</em> 11, e1004226. <a href="https://doi.org/10.1371/journal.pcbi.1004226">https://doi.org/10.1371/journal.pcbi.1004226</a></p>
+</div>
+<div id="ref-Miya2020MiFishmetabarcodinghighthroughput">
+<p>Miya, Masaki, Gotoh, Ryo O. &amp; Sado, Tetsuya (2020) MiFish metabarcoding: a high-throughput approach for simultaneous detection of multiple fish species from environmental DNA and other samples. <em>Fisheries Science</em> 86, 939–970. <a href="https://doi.org/10.1007/s12562-020-01461-x">https://doi.org/10.1007/s12562-020-01461-x</a></p>
+</div>
+<div id="ref-Miya2015MiFishsetuniversal">
+<p>Miya, M., Sato, Y., Fukunaga, T., Sado, T., Poulsen, J. Y., Sato, K., Minamoto, T., Yamamoto, S., Yamanaka, H., Araki, H., Kondoh, M. &amp; Iwasaki, W. (2015) MiFish, a set of universal PCR primers for metabarcoding environmental DNA from fishes: detection of more than 230 subtropical marine species. <em>Royal Society Open Science</em> 2, 150088. <a href="https://doi.org/10.1098/rsos.150088">https://doi.org/10.1098/rsos.150088</a></p>
+</div>
+<div id="ref-Niku2019gllvmFastanalysis">
+<p>Niku, Jenni, Hui, Francis K. C., Taskinen, Sara &amp; Warton, David I. (2019) gllvm: Fast analysis of multivariate abundance data with generalized linear latent variable models in r. <em>Methods in Ecology and Evolution</em> 10, 2173–2182. <a href="https://doi.org/10.1111/2041-210X.13303">https://doi.org/10.1111/2041-210X.13303</a></p>
+</div>
+<div id="ref-Osada2023unifiedframeworknonparametric">
+<p>Osada, Yutaka, Ushio, Masayuki &amp; Michio, Kondoh (2023) A unified framework for nonparametric causality detection., 2023.04.20.537743.</p>
+</div>
+<div id="ref-Peschel2021NetCoMinetworkconstruction">
+<p>Peschel, Stefanie, Müller, Christian L, von Mutius, Erika, Boulesteix, Anne-Laure &amp; Depner, Martin (2021) NetCoMi: network construction and comparison for microbiome data in R. <em>Briefings in Bioinformatics</em> 22, bbaa290. <a href="https://doi.org/10.1093/bib/bbaa290">https://doi.org/10.1093/bib/bbaa290</a></p>
+</div>
+<div id="ref-RCoreTeam2023LanguageEnvironmentStatistical">
+<p>R Core Team (2023) R: A Language and Environment for Statistical Computing. <a href="https://www.R-project.org">https://www.R-project.org</a></p>
+</div>
+<div id="ref-Rognes2016VSEARCHversatileopen">
+<p>Rognes, Torbjørn, Flouri, Tomáš, Nichols, Ben, Quince, Christopher &amp; Mahé, Frédéric (2016) VSEARCH: a versatile open source tool for metagenomics. <em>PeerJ</em> 4, e2584. <a href="https://doi.org/10.7717/peerj.2584">https://doi.org/10.7717/peerj.2584</a></p>
+</div>
+<div id="ref-Sakata2022DevelopmentevaluationPCR">
+<p>Sakata, Masayuki K., Kawata, Mone U., Kurabayashi, Atsushi, Kurita, Takaki, Nakamura, Masatoshi, Shirako, Tomoyasu, Kakehashi, Ryosuke, Nishikawa, Kanto, Hossman, Mohamad Yazid, Nishijima, Takashi, Kabamoto, Junichi, Miya, Masaki &amp; Minamoto, Toshifumi (2022) Development and evaluation of PCR primers for environmental DNA (eDNA) metabarcoding of Amphibia. <em>Metabarcoding and Metagenomics</em> 6, e76534. <a href="https://doi.org/10.3897/mbmg.6.76534">https://doi.org/10.3897/mbmg.6.76534</a></p>
+</div>
+<div id="ref-Sato2018MitoFishMiFishPipeline">
+<p>Sato, Yukuto, Miya, Masaki, Fukunaga, Tsukasa, Sado, Tetsuya &amp; Iwasaki, Wataru (2018) MitoFish and MiFish Pipeline: A Mitochondrial Genome Database of Fish with an Analysis Pipeline for Environmental DNA Metabarcoding. <em>Molecular Biology and Evolution</em> 35, 1553–1555. <a href="https://doi.org/10.1093/molbev/msy074">https://doi.org/10.1093/molbev/msy074</a></p>
+</div>
+<div id="ref-Suzuki2006Pvclustpackageassessing">
+<p>Suzuki, Ryota &amp; Shimodaira, Hidetoshi (2006) Pvclust: an R package for assessing the uncertainty in hierarchical clustering. <em>Bioinformatics</em> 22, 1540–1542. <a href="https://doi.org/10.1093/bioinformatics/btl117">https://doi.org/10.1093/bioinformatics/btl117</a></p>
+</div>
+<div id="ref-Takenaka2023DevelopmentnovelPCR">
+<p>Takenaka, Masaki, Yano, Koki, Suzuki, Tomoya &amp; Tojo, Koji (2023) Development of novel PCR primer sets for DNA barcoding of aquatic insects, and the discovery of some cryptic species. <em>Limnology</em> 24, 121–136. <a href="https://doi.org/10.1007/s10201-022-00710-5">https://doi.org/10.1007/s10201-022-00710-5</a></p>
+</div>
+<div id="ref-Tanabe2013TwoNewComputational">
+<p>Tanabe, Akifumi S. &amp; Toju, Hirokazu (2013) Two New Computational Methods for Universal DNA Barcoding: A Benchmark Using Barcode Sequences of Bacteria, Archaea, Animals, Fungi, and Land Plants. <em>PLOS ONE</em> 8, e76910. <a href="https://doi.org/10.1371/journal.pone.0076910">https://doi.org/10.1371/journal.pone.0076910</a></p>
+</div>
+<div id="ref-Tikhonov2020Jointspeciesdistribution">
+<p>Tikhonov, Gleb, Opedal, Øystein H., Abrego, Nerea, Lehikoinen, Aleksi, de Jonge, Melinda M. J., Oksanen, Jari &amp; Ovaskainen, Otso (2020) Joint species distribution modelling with the r-package Hmsc. <em>Methods in Ecology and Evolution</em> 11, 442–447. <a href="https://doi.org/10.1111/2041-210X.13345">https://doi.org/10.1111/2041-210X.13345</a></p>
+</div>
+<div id="ref-Ushio2017EnvironmentalDNAenables">
+<p>Ushio, Masayuki, Fukuda, Hisato, Inoue, Toshiki, Makoto, Kobayashi, Kishida, Osamu, Sato, Keiichi, Murata, Koichi, Nikaido, Masato, Sado, Tetsuya, Sato, Yukuto, Takeshita, Masamichi, Iwasaki, Wataru, Yamanaka, Hiroki, Kondoh, Michio &amp; Miya, Masaki (2017) Environmental DNA enables detection of terrestrial mammals from forest pond water. <em>Molecular Ecology Resources</em> 17, e63–e75. <a href="https://doi.org/10.1111/1755-0998.12690">https://doi.org/10.1111/1755-0998.12690</a></p>
+</div>
+<div id="ref-Ushio2022efficientearlypoolingprotocol">
+<p>Ushio, Masayuki, Furukawa, Saori, Murakami, Hiroaki, Masuda, Reiji &amp; Nagano, Atsushi J. (2022) An efficient early-pooling protocol for environmental DNA metabarcoding. <em>Environmental DNA</em> 4, 1212–1228. <a href="https://doi.org/10.1002/edn3.337">https://doi.org/10.1002/edn3.337</a></p>
+</div>
+<div id="ref-Ushio2018Quantitativemonitoringmultispecies">
+<p>Ushio, Masayuki, Murakami, Hiroaki, Masuda, Reiji, Sado, Tetsuya, Miya, Masaki, Sakurai, Sho, Yamanaka, Hiroki, Minamoto, Toshifumi &amp; Kondoh, Michio (2018a) Quantitative monitoring of multispecies fish environmental DNA using high-throughput sequencing. <em>Metabarcoding and Metagenomics</em> 2, e23297. <a href="https://doi.org/10.3897/mbmg.2.23297">https://doi.org/10.3897/mbmg.2.23297</a></p>
+</div>
+<div id="ref-Ushio2018Demonstrationpotentialenvironmental">
+<p>Ushio, Masayuki, Murata, Koichi, Sado, Tetsuya, Nishiumi, Isao, Takeshita, Masamichi, Iwasaki, Wataru &amp; Miya, Masaki (2018b) Demonstration of the potential of environmental DNA as a tool for the detection of avian species. <em>Scientific Reports</em> 8, 4493. <a href="https://doi.org/10.1038/s41598-018-22817-5">https://doi.org/10.1038/s41598-018-22817-5</a></p>
+</div>
+<div id="ref-Warton2015ManyVariablesJoint">
+<p>Warton, David I., Blanchet, F. Guillaume, O’Hara, Robert B., Ovaskainen, Otso, Taskinen, Sara, Walker, Steven C. &amp; Hui, Francis K. C. (2015) So Many Variables: Joint Modeling in Community Ecology. <em>Trends in Ecology &amp; Evolution</em> 30, 766–779. <a href="https://doi.org/10.1016/j.tree.2015.09.007">https://doi.org/10.1016/j.tree.2015.09.007</a></p>
+</div>
+<div id="ref-Wen2022ggClusterNetpackagemicrobiome">
+<p>Wen, Tao, Xie, Penghao, Yang, Shengdie, Niu, Guoqing, Liu, Xiaoyu, Ding, Zhexu, Xue, Chao, Liu, Yong-Xin, Shen, Qirong &amp; Yuan, Jun (2022) ggClusterNet: An R package for microbiome network analysis and modularity-based multiple network layouts. <em>iMeta</em> 1, e32. <a href="https://doi.org/10.1002/imt2.32">https://doi.org/10.1002/imt2.32</a></p>
+</div>
+<div id="ref-Ye2016Informationleverageinterconnected">
+<p>Ye, Hao &amp; Sugihara, George (2016) Information leverage in interconnected ecosystems: Overcoming the curse of dimensionality. <em>Science</em> 353, 922–925. <a href="https://doi.org/10.1126/science.aag0863">https://doi.org/10.1126/science.aag0863</a></p>
+</div>
+<div id="ref-Zhu2023MitoFishMitoAnnotatorMiFish">
+<p>Zhu, Tao, Sato, Yukuto, Sado, Tetsuya, Miya, Masaki &amp; Iwasaki, Wataru (2023) MitoFish, MitoAnnotator, and MiFish Pipeline: Updates in 10 Years. <em>Molecular Biology and Evolution</em> 40, msad035. <a href="https://doi.org/10.1093/molbev/msad035">https://doi.org/10.1093/molbev/msad035</a></p>
+</div>
+<div id="ref-土居2011生物群集解析のための類似度とその応用Rを使った類似度の算出グラフ化">
+<p>土居秀幸 ・ 岡村寛 (2011) 生物群集解析のための類似度とその応用: Rを使った類似度の算出、グラフ化、検定. 日本生態学会誌 61, 3–20. <a href="https://doi.org/10.18960/seitai.61.1_3">https://doi.org/10.18960/seitai.61.1_3</a></p>
+</div>
+<div id="ref-門脇2016メタゲノムデータを用いた群集統計解析法レアファクションから仮説検定まで">
+<p>門脇浩明 (2016) メタゲノムデータを用いた群集統計解析法：レアファクションから仮説検定まで. 日本生態学会第63回大会講演資料. <a href="https://www.fifthdimension.jp/wiki.cgi?page=%BC%AB%CD%B3%BD%B8%B2%F12016%A1%A7%A5%E1%A5%BF%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%A1%A6%B4%C4%B6%ADDNA%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%B2%F2%C0%CF%A4%CE%B5%BB%CB%A1">https://www.fifthdimension.jp/wiki.cgi?page=%BC%AB%CD%B3%BD%B8%B2%F12016%A1%A7%A5%E1%A5%BF%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%A1%A6%B4%C4%B6%ADDNA%A5%D0%A1%BC%A5%B3%A1%BC%A5%C7%A5%A3%A5%F3%A5%B0%B2%F2%C0%CF%A4%CE%B5%BB%CB%A1</a></p>
+</div>
+</div>
+</body>
+</html>

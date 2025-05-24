@@ -3,7 +3,7 @@ title: Claidentを用いた定量メタバーコーディング解析
 author: 田辺晶史 (東北大学大学院生命科学研究科)
 date: 2025-05-24
 output: 
-  pdf_document:
+  pdf_document: 
     latex_engine: lualatex
 documentclass: bxjsarticle
 classoption: pandoc
@@ -134,8 +134,8 @@ export PREFIX=/home/tanabe/claident20240101
 ```
 
 上記の例では、「`/home/tanabe/claident20240101`」以下にClaidentはインストールされます。
-インストール先を変更した場合、実行コマンドが存在する「`インストール先/bin`」が環境変数`PATH`に登録されていないため、Claidentの解析コマンドが実行できません。
-そこで、Claidentでの解析を行う際には以下のコマンドを実行して環境変数`PATH`に「`インストール先/bin`」を加えます。
+インストール先を変更した場合、実行コマンドが存在する「`[インストール先]/bin`」が環境変数`PATH`に登録されていないため、Claidentの解析コマンドが実行できません。
+そこで、Claidentでの解析を行う際には以下のコマンドを実行して環境変数`PATH`に「`[インストール先]/bin`」を加えます。
 
 ```default
 export PATH=/home/tanabe/claident20240101/bin:$PATH
@@ -145,7 +145,7 @@ Claidentでの解析前に上記コマンドを毎回実行するのが面倒な
 
 このようにインストール先を変更すれば、複数のバージョンのClaidentを共存させることができます。
 ただし、Claidentの各コマンドは設定ファイル「`~/.claident`」を参照していますので、使用するClaidentを切り替えるには「`~/.claident`」も変更する必要があります。
-「`.claident`」のテンプレートは、「`インストール先/share/claident/.claident`」に存在していますので、このファイルを「`~/.claident`」に上書きコピーすればClaidentが完全に切り替わります。
+「`.claident`」のテンプレートは、「`[インストール先]/share/claident/.claident`」に存在していますので、このファイルを「`~/.claident`」に上書きコピーすればClaidentが完全に切り替わります。
 実際に複数のバージョンを1台のマシンにインストールして共存させる場合、異なるユーザーを作成してそれぞれでClaidentをユーザーの所有ディレクトリ内にインストールし、ユーザーを切り替えることで使用するClaidentのバージョンを切り替えるようにするのが良いでしょう。
 
 ## データ解析全体の流れと前提条件
@@ -231,22 +231,22 @@ MiFishプライマー用の内部標準DNA塩基配列であれば、 @Ushio2022
 通常、サンプルIDはユーザーが任意に指定すればいいわけですが、メタバーコーディングでは、同一のサンプルの同一のプライマー増幅産物を複数の異なるシーケンスランでシーケンスしたり、同一のサンプルの異なる複数のプライマーの増幅産物を同一のシーケンスランでシーケンスしたりすることがあるため、これらを識別するためにClaidentでは以下の形式でサンプルIDを記述します。
 
 ```
-RunID__MaterialID__PrimerID
+[Run ID]__[Material ID]__[Primer ID]
 ```
 
-RunIDは、後述する解析コマンドの実行オプションとして指定する任意の文字列です。
+`[Run ID]`は、後述する解析コマンドの実行オプションとして指定する任意の文字列です。
 シーケンスラン(またはレーン)を識別するために使用されますので、ご自分でわかりやすいものにして下さい。
-PrimerIDは、後述するファイルの中で指定する任意の文字列です。
+`[Primer ID]`は、後述するファイルの中で指定する任意の文字列です。
 こちらは使用したプライマーを識別するために使用されます。
 MiFishプライマーを使用したのなら、`MiFish`でいいでしょう。
-MaterialIDは、通常はサンプルIDとして扱われる、サンプル物質に対してユーザーが割り当てた任意の文字列です。
-RunIDやPrimerIDは異なるがMaterialIDが一致する場合、現物、すなわち鋳型DNAは同一である、ということがわかります。
+`[Material ID]`は、通常はサンプルIDとして扱われる、サンプル物質に対してユーザーが割り当てた任意の文字列です。
+`[Run ID]`や`[Primer ID]`は異なるが`[Material ID]`が一致する場合、現物、すなわち鋳型DNAは同一である、ということがわかります。
 つまり、現物サンプルとClaidentでのサンプルは必ずしも1対1対応ではないため、上記のようなサンプルIDを使用することで対応する現物サンプルがサンプルIDのみでわかるように設計されています。
 
 サンプルにテクニカルレプリケートを設けていることがあると思いますが、DNA抽出・ライブラリ調製・シーケンスの全ての段階で区別している場合は別サンプルとして扱い、どこかの段階で区別しなく・できなくなるのであれば、同一のサンプルとして扱います。
-別サンプルとして扱う場合は、MaterialIDの末尾に`-R1`や`-R2`などと付加することで、テクニカルレプリケートであることがわかるようにしておくのが良いでしょう。
+別サンプルとして扱う場合は、`[Material ID]`の末尾に`-R1`や`-R2`などと付加することで、テクニカルレプリケートであることがわかるようにしておくのが良いでしょう。
 
-なお、RunID・PrimerID・MaterialIDには`__`(2個以上連続するアンダーバー)を含めることはできません。
+なお、`[Run ID]`・`[Primer ID]`・`[Material ID]`には`__`(2個以上連続するアンダーバー)を含めることはできません。
 また、使用できる文字列は英数字とハイフンとアンダーバーのみです。
 その他の文字列が使用されていた場合、予期しないエラーが起きる可能性があります。
 
@@ -269,18 +269,18 @@ Claidentの中ではほとんどの場合OTUはASVになりますが、この先
 以下のような形式で記述する必要があります。
 
 ```default
-RunID__BlankMaterialID1__PrimerID
-RunID__BlankMaterialID2__PrimerID
-RunID__BlankMaterialID3__PrimerID
+[Run ID]__[Blank Material ID 1]__[Primer ID]
+[Run ID]__[Blank Material ID 2]__[Primer ID]
+[Run ID]__[Blank Material ID 3]__[Primer ID]
 ```
 
 Claidentは、このファイルに記載されているものをブランクとして認識します。
-なお、RunIDとPrimerIDを省略し、以下の形式で記述することもできます。
+なお、`[Run ID]`と`[Primer ID]`を省略し、以下の形式で記述することもできます。
 
 ```default
-BlankMaterialID1
-BlankMaterialID2
-BlankMaterialID3
+[Blank Material ID 1]
+[Blank Material ID 2]
+[Blank Material ID 3]
 ```
 
 #### 濾過水量表(watervoltable.tsv)
@@ -289,23 +289,23 @@ BlankMaterialID3
 濾過フィルターが複数あって区別して記述したい場合、タブ文字で区切って複数記述します(濃度推定時は合算して処理されます)。
 
 ```default
-RunID__SampleMaterialID1__PrimerID  1000  1000
-RunID__SampleMaterialID2__PrimerID  1000  500
-RunID__SampleMaterialID3__PrimerID  1500
-RunID__BlankMaterialID1__PrimerID   500
-RunID__BlankMaterialID2__PrimerID   500
-RunID__BlankMaterialID3__PrimerID   500
+[Run ID]__[Sample Material ID 1]__[Primer ID]  1000  1000
+[Run ID]__[Sample Material ID 2]__[Primer ID]  1000  500
+[Run ID]__[Sample Material ID 3]__[Primer ID]  1500
+[Run ID]__[Blank Material ID 1]__[Primer ID]   500
+[Run ID]__[Blank Material ID 2]__[Primer ID]   500
+[Run ID]__[Blank Material ID 3]__[Primer ID]   500
 ```
 
-なお、RunIDとPrimerIDを省略し、以下の形式で記述することもできます。
+なお、`[Run ID]`と`[Primer ID]`を省略し、以下の形式で記述することもできます。
 
 ```default
-SampleMaterialID1  1000  1000
-SampleMaterialID2  1000  500
-SampleMaterialID3  1500
-BlankMaterialID1   500
-BlankMaterialID2   500
-BlankMaterialID3   500
+[Sample Material ID 1]  1000  1000
+[Sample Material ID 2]  1000  500
+[Sample Material ID 3]  1500
+[Blank Material ID 1]   500
+[Blank Material ID 2]   500
+[Blank Material ID 3]   500
 ```
 
 この数値を使用して、元の環境水サンプル中におけるDNA濃度が推定されます。
@@ -319,23 +319,23 @@ BlankMaterialID3   500
 濾過フィルターが複数あり、抽出後のDNA溶液も複数あって区別して記述したい場合、タブ文字で区切って複数記述します(濃度推定時は合算して処理されます)。
 
 ```default
-RunID__SampleMaterialID1__PrimerID  200  200
-RunID__SampleMaterialID2__PrimerID  200  200
-RunID__SampleMaterialID3__PrimerID  200
-RunID__BlankMaterialID1__PrimerID   200
-RunID__BlankMaterialID2__PrimerID   200
-RunID__BlankMaterialID3__PrimerID   200
+[Run ID]__[Sample Material ID 1]__[Primer ID]  200  200
+[Run ID]__[Sample Material ID 2]__[Primer ID]  200  200
+[Run ID]__[Sample Material ID 3]__[Primer ID]  200
+[Run ID]__[Blank Material ID 1]__[Primer ID]   200
+[Run ID]__[Blank Material ID 2]__[Primer ID]   200
+[Run ID]__[Blank Material ID 3]__[Primer ID]   200
 ```
 
-なお、RunIDとPrimerIDを省略し、以下の形式で記述することもできます。
+なお、`[Run ID]`と`[Primer ID]`を省略し、以下の形式で記述することもできます。
 
 ```default
-SampleMaterialID1  200  200
-SampleMaterialID2  200  200
-SampleMaterialID3  200
-BlankMaterialID1   200
-BlankMaterialID2   200
-BlankMaterialID3   200
+[Sample Material ID 1]  200  200
+[Sample Material ID 2]  200  200
+[Sample Material ID 3]  200
+[Blank Material ID 1]   200
+[Blank Material ID 2]   200
+[Blank Material ID 3]   200
 ```
 
 この数値を使用して、抽出したDNA溶液中の総DNAコピー数が推定されます。
@@ -374,25 +374,25 @@ CACCGCGGTTATACGACAGGCCCAAGTTGAGATCCCACGGCGTAAAGAGTGGTTAGAAC...
 以下のような表形式にします。
 
 ```default
-samplename                         MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2
-RunID__SampleMaterialID1__PrimerID 5             10            20            40
-RunID__SampleMaterialID2__PrimerID 5             10            20            40
-RunID__SampleMaterialID3__PrimerID 5             10            20            40
-RunID__BlankMaterialID1__PrimerID  5             10            20            40
-RunID__BlankMaterialID2__PrimerID  5             10            20            40
-RunID__BlankMaterialID3__PrimerID  5             10            20            40
+samplename                                    MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2
+[Run ID]__[Sample Material ID 1]__[Primer ID] 5             10            20            40
+[Run ID]__[Sample Material ID 2]__[Primer ID] 5             10            20            40
+[Run ID]__[Sample Material ID 3]__[Primer ID] 5             10            20            40
+[Run ID]__[Blank Material ID 1]__[Primer ID]  5             10            20            40
+[Run ID]__[Blank Material ID 2]__[Primer ID]  5             10            20            40
+[Run ID]__[Blank Material ID 3]__[Primer ID]  5             10            20            40
 ```
 
-なお、RunIDとPrimerIDを省略し、以下の形式で記述することもできます。
+なお、`[Run ID]`と`[Primer ID]`を省略し、以下の形式で記述することもできます。
 
 ```default
-samplename        MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2
-SampleMaterialID1 5             10            20            40
-SampleMaterialID2 5             10            20            40
-SampleMaterialID3 5             10            20            40
-BlankMaterialID1  5             10            20            40
-BlankMaterialID2  5             10            20            40
-BlankMaterialID3  5             10            20            40
+samplename             MiFish_STD_01 MiFish_STD_02 MiFish_STD_03 MiFish_STD_04-2
+[Sample Material ID 1] 5             10            20            40
+[Sample Material ID 2] 5             10            20            40
+[Sample Material ID 3] 5             10            20            40
+[Blank Material ID 1]  5             10            20            40
+[Blank Material ID 2]  5             10            20            40
+[Blank Material ID 3]  5             10            20            40
 ```
 
 濃度の単位は 1 μL 当たりのコピー数です。
@@ -404,7 +404,7 @@ BlankMaterialID3  5             10            20            40
 
 1st PCRにおけるフォワード側とリバース側のそれぞれのプライマー配列の一部を記述したFASTA形式ファイルです。
 2nd PCRにおけるインデックスプライマーがアニールする部位を取り除くことで、シーケンサの解読対象になる部分だけにします。
-つまり、1st PCRでフォワード側プライマーとしてMiFish-U-F `ACACTCTTTCCCTACACGACGCTCTTCCGATCTNNNNNNGTCGGTAAAACTCGTGCCAGC`を使用した場合、`NNNNNNGTCGGTAAAACTCGTGCCAGC`を塩基配列として記述します。
+つまり、1st PCRでフォワード側プライマーとしてMiFish-U-F `ACA CTC TTT CCC TAC ACG ACG CTC TTC CGA TCT NNN NNN GTC GGT AAA ACT CGT GCC AGC`を使用した場合、`NNN NNN GTC GGT AAA ACT CGT GCC AGC`を塩基配列として記述します。
 いずれのファイルにも複数のプライマー配列を記述することができますが、フォワード側プライマー配列ファイルの1本目のプライマー配列はリバース側プライマー配列ファイルの1本目のプライマー配列とセットで検出されるため、リバース側プライマー配列ファイルの2本目以降のプライマー配列との組み合わせは検討されません。
 塩基配列には、`R`や`Y`や`M`や`K`や`N`などの、縮重塩基コードを使用可能です。
 MiFishのように僅かに異なる塩基配列のプライマーが提案されており、それらを複数混合して使用した場合、多重整列を行って縮重コンセンサス配列を記述します。
@@ -444,7 +444,7 @@ NNNNNNGCATAGTGGGGTATCTAATCCTAGTTTG
  NNNNNNCATAGGAGGGTGTCTAATCCCCGTTTG
 ```
 
-これらのファイルの塩基配列名は、ClaidentのサンプルIDにおけるPrimerIDとして使用されますので、上述のファイル群におけるPrimerIDと一致している必要があります。
+これらのファイルの塩基配列名は、ClaidentのサンプルIDにおける`[Primer ID]`として使用されますので、上述のファイル群における`[Primer ID]`と一致している必要があります。
 
 #### インデックスとして読まれる部分配列(index1.fasta・index2.fasta)
 
@@ -455,22 +455,22 @@ Illumina社シーケンサで使用される「`SampleSheet.csv`」内のイン�
 リバース側インデックス配列ファイル「`index1.fasta`」の内容は以下のようになります。
 
 ```default
->SampleMaterialID1
+>[Sample Material ID 1]
 ACCTGCAA
->SampleMaterialID2
+>[Sample Material ID 2]
 GTTCCTTG
->SampleMaterialID3
+>[Sample Material ID 3]
 CCAGATCT
->BlankMaterialID1
+>[Blank Material ID 1]
 AAGTGTGA
->BlankMaterialID2
+>[Blank Material ID 2]
 CCATGATC
->BlankMaterialID3
+>[Blank Material ID 3]
 TCATGTCT
 ```
 
 フォワード側インデックス配列ファイル「`index2.fasta`」も塩基配列が異なる以外は「`index1.fasta`」と内容は同じです。
-配列の名前がMaterialIDと一致すること、配列の並び順が完全に同一であることが必要ですので注意して下さい。
+配列の名前が`[Material ID]`と一致すること、配列の並び順が完全に同一であることが必要ですので注意して下さい。
 
 なお、インデックスホッピング除去の機能を使用するためには、**シーケンスランに投入された全てのインデックスの情報が必要**です。
 「ライブラリ調製作業中やシーケンス後に問題が発覚して廃棄することになったサンプル」が存在した場合でも、そのサンプルのデータにはインデックスホッピング除去に使用する情報が含まれています。
@@ -500,7 +500,7 @@ sudo apt install rpm2cpio cpio pstack
 cd workingdirectory
 mkdir temporary
 cd temporary
-rpm2cpio ../bcl-convert-4.2.4-2.el8.x86_64.rpm | cpio  -id
+rpm2cpio ../bcl-convert-4.2.4-2.el8.x86_64.rpm | cpio -id
 sudo mkdir -p /usr/local/bin
 sudo cp usr/bin/bcl-convert /usr/local/bin/
 sudo mkdir -p /var/log/bcl-convert
@@ -552,11 +552,11 @@ FASTQ生成の際にこのファイルを`--sample-sheet`に指定すること�
 ```default
 bcl-convert \
 --sample-sheet Dummy.csv \
---bcl-input-directory RunDataDirectory \
+--bcl-input-directory [Runデータディレクトリ] \
 --output-directory 01_undemultiplexed
 ```
 
-ここで、`RunDataDirectory`は、シーケンサ本体、またはシーケンサに付属の解析マシンに保存されている、シーケンスランのデータが保存されているディレクトリです。
+ここで、`[Runデータディレクトリ]`は、シーケンサ本体、またはシーケンサに付属の解析マシンに保存されている、シーケンスランのデータが保存されているディレクトリです。
 通常は「`Data`」というディレクトリが含まれているはずです。
 このディレクトリを予めBCL Convertをインストールしたマシンにコピーしておく必要があります。
 なお、使用するCPU数はデフォルトで自動的に決定されます(搭載されている全CPUを使用します)。
@@ -623,7 +623,7 @@ Claidentでの解析開始前の作業ディレクトリ内のファイルとデ
 ここから実際の塩基配列データ処理の方法を説明していきます。
 全てのコマンドはターミナル上で実行します。
 作業ディレクトリがカレントディレクトリになっていると仮定しています。
-コマンドのオプションに含まれている`NumberOfCPUcores`は処理中に使用するCPUコア数の整数値で置き換えて下さい。
+コマンドのオプションに含まれている`[CPUコア数]`は処理中に使用するCPUコア数の整数値で置き換えて下さい。
 これ以前に説明済みのファイルに関しては改めて説明しません。
 また、いくつかの処理ではディスクに激しくアクセスするため、低速なディスクに作業ディレクトリを設置していると大きく影響を受けます。
 そのため、作業ディレクトリは高速なSSDに設置することを強くお勧めします。
@@ -634,7 +634,7 @@ Claidentでの解析開始前の作業ディレクトリ内のファイルとデ
 
 ```default
 clsplitseq \
---runname=RunID \
+--runname=[Run ID] \
 --forwardprimerfile=forwardprimer.fasta \
 --reverseprimerfile=reverseprimer.fasta \
 --truncateN=enable \
@@ -643,7 +643,7 @@ clsplitseq \
 --minqualtag=30 \
 --compress=xz \
 --seqnamestyle=illumina \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 01_undemultiplexed/Undetermined_S0_L001_R1_001.fastq.gz \
 01_undemultiplexed/Undetermined_S0_L001_I1_001.fastq.gz \
 01_undemultiplexed/Undetermined_S0_L001_I2_001.fastq.gz \
@@ -654,7 +654,7 @@ clsplitseq \
 それぞれのコマンドラインオプションの意味は以下の通りです。
 
 `--runname`
-: 任意のRunIDを与える
+: 任意の`[Run ID]`を与える
 
 `--forwardprimerfile`
 : フォワード側プライマー配列ファイル
@@ -694,7 +694,7 @@ clsplitseq \
 このコマンドでは、インデックス配列だけでなくプライマー配列も使用してデマルチプレックスを行うため、インデックス配列のみを使う場合よりも細かくデマルチプレックスすることが可能です。
 したがって、他のプライマーの増幅産物が混入しているデータでも、プライマー配列が十分異なっていればそれらを分けることができます。
 
-このコマンドでは、「未使用のインデックスの組み合わせ」をMaterialIDとするサンプルの塩基配列も出力されます。
+このコマンドでは、「未使用のインデックスの組み合わせ」を`[Material ID]`とするサンプルの塩基配列も出力されます。
 後述するインデックスホッピングの検出・除去処理においてそれらのサンプルが使用されます。
 
 出力されたファイルからは、プライマー配列のマッチした部分は除去されています。
@@ -704,7 +704,7 @@ clsplitseq \
 
 なお、未デマルチプレックスFASTQが手元になく、デマルチプレックス済FASTQしかない場合、`cltruncprimer`が使用できます。
 `--minqualtag`オプションが無効(書いても構わないが影響しない)、入力はデマルチプレックス済FASTQを置いているフォルダにする、という点以外は`clsplitseq`コマンドと使用方法は同じです。
-ただし、インデックス配列ファイル内のMaterialIDがデマルチプレックス済FASTQのファイル名に含まれている必要があります。
+ただし、インデックス配列ファイル内の`[Material ID]`がデマルチプレックス済FASTQのファイル名に含まれている必要があります。
 デマルチプレックス済FASTQは「未使用のインデックスの組み合わせ」の塩基配列は全て破棄されているためインデックスホッピングの検出には対応できません。
 予め「未使用のインデックスの組み合わせ」の塩基配列を保存してあっても、Claidentが「未使用のインデックスの組み合わせ」を「未使用のインデックスの組み合わせ」として認識させる方法が存在しませんので、対応は不可能です。
 
@@ -719,7 +719,7 @@ clsplitseq \
 clconcatpairv \
 --mode=ovl \
 --compress=xz \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 02_demultiplexed \
 03_concatenated
 ```
@@ -746,7 +746,7 @@ clfilterseqv \
 --maxnee=2.0 \
 --maxnNs=0 \
 --compress=xz \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 03_concatenated \
 04_filtered
 ```
@@ -785,7 +785,7 @@ clfilterseqv \
 ```default
 cldenoiseseqd \
 --pool=pseudo \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 04_filtered \
 05_denoised
 ```
@@ -860,7 +860,7 @@ cdurbcl
 cdutrnhpsba
 : 葉緑体trnH-psbA用
 
-キメラ除去用参照配列データベースは「`インストール先/share/claident/uchimedb`」にあるため、このフォルダの内容を見ればインストールされている参照配列データベースがわかります。
+キメラ除去用参照配列データベースは「`[インストール先]/share/claident/uchimedb`」にあるため、このフォルダの内容を見ればインストールされている参照配列データベースがわかります。
 
 手動でインストールする必要がありますが、細菌16SにはSILVAのSSURefやSSUParc、真菌ITSにはUNITEの「Full UNITE+INSD dataset for eukaryotes」を推奨します。
 MiFishで増幅されるのはミトコンドリア12S領域の一部なので、cdu12sを使用します。
@@ -886,7 +886,7 @@ MiFishで増幅されるのはミトコンドリア12S領域の一部なので�
 clclusterstdv \
 --standardseq=standard.fasta \
 --minident=0.9 \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 06_chimeraremoved \
 07_stdclustered
 ```
@@ -922,7 +922,7 @@ clremovechimev \
 --mode=ref \
 --referencedb=cdu12s \
 --addtoref=07_stdclustered/stdvariations.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 07_stdclustered \
 08_chimeraremoved
 ```
@@ -964,7 +964,7 @@ clremovecontam \
 --ignoresamplelist=blanklist.txt \
 --index1file=index1.fasta \
 --index2file=index2.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 08_chimeraremoved \
 09_hoppingremoved
 ```
@@ -1003,7 +1003,7 @@ clremovecontam \
 --stdconctable=stdconctable.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 09_hoppingremoved \
 10_decontaminated
 ```
@@ -1077,10 +1077,10 @@ Claidentでは、標準で多数の分子同定用参照配列データベース
 Claidentに添付されているデータベースは、以下の形式で命名されています。
 
 ```
-分類群_遺伝子座_参照配列同定情報の分類階層
+[分類群]_[遺伝子座]_[参照配列同定情報の分類階層]
 ```
 
-`分類群_遺伝子座`には以下のものがあります。
+`[分類群]_[遺伝子座]`には以下のものがあります。
 
 overall
 : 全生物全遺伝子座
@@ -1133,7 +1133,7 @@ prokaryota_16S
 prokaryota_all
 : 原核生物全遺伝子座
 
-`参照配列同定情報の分類階層`には以下のものがあります。
+`[参照配列同定情報の分類階層]`には以下のものがあります。
 
 class
 : 綱以下の同定情報のある参照配列を含む(overallのみ)
@@ -1168,7 +1168,7 @@ species_man
 species_wosp_man
 : 種以下の同定情報がある参照配列を含むが、種名に「sp.」が含まれる、または属名が空欄の参照配列は除外されている
 
-分子同定用参照配列データベースは「`インストール先/share/claident/blastdb`」にあるため、このフォルダの内容を見ればインストールされている参照配列データベースがわかります。
+分子同定用参照配列データベースは「`[インストール先]/share/claident/blastdb`」にあるため、このフォルダの内容を見ればインストールされている参照配列データベースがわかります。
 
 データベースの種類が多すぎて使い分けが難しいのですが、どれが最適なのかは分類群や研究目的によって異なります。
 MiFishによるメタバーコーディングを日本の淡水域や日本近海のサンプルで行う場合、動物以外の配列やミトコンドリアゲノム以外の配列も同定したいなら、「`overall_species_wsp`」を推奨します。
@@ -1186,7 +1186,7 @@ Claidentで分子同定を行うには、まず初めにキャッシュデータ
 clmakecachedb \
 --blastdb=animals_mt_species_wsp \
 --ignoreotuseq=standard.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 10_decontaminated/decontaminated.fasta \
 11_taxonomy/cachedb_species_wsp
 ```
@@ -1214,7 +1214,7 @@ clidentseq \
 --method=QC \
 --blastdb=11_taxonomy/cachedb_species_wsp \
 --ignoreotuseq=standard.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 10_decontaminated/decontaminated.fasta \
 11_taxonomy/neighborhoods_qcauto_species_wsp.txt
 ```
@@ -1270,7 +1270,7 @@ clidentseq \
 --method=3,95% \
 --blastdb=11_taxonomy/cachedb_species_wsp \
 --ignoreotuseq=standard.fasta \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 10_decontaminated/decontaminated.fasta \
 11_taxonomy/neighborhoods_95p3nn_species_wsp.txt
 ```
@@ -1516,7 +1516,7 @@ clrarefysum \
 --minpcov=0.99 \
 --minntotalseqsample=1000 \
 --nreplicate=10 \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 12_community/sample_otu_matrix_all.tsv \
 12_community/sample_otu_matrix_all_rarefied
 ```
@@ -1536,19 +1536,19 @@ clrarefysum \
 
 実行後に生成される出力ファイルは以下の通りです。
 
-`出力ファイルの接頭辞-r数字.tsv`
+`[出力ファイルの接頭辞]-r[数字].tsv`
 : レアファクションされたOTU組成表のタブ区切りテキスト
 
-`出力ファイルの接頭辞_inputpcov.tsv`
+`[出力ファイルの接頭辞]_inputpcov.tsv`
 : 入力された各サンプルのカバレッジ推定値のタブ区切りテキスト
 
-`出力ファイルの接頭辞_inputnseq.tsv`
+`[出力ファイルの接頭辞]_inputnseq.tsv`
 : 入力された各サンプルの合計リード数のタブ区切りテキスト
 
-`出力ファイルの接頭辞_outputpcov.tsv`
+`[出力ファイルの接頭辞]_outputpcov.tsv`
 : 出力された各サンプルのカバレッジ推定値のタブ区切りテキスト
 
-`出力ファイルの接頭辞_outputnseq.tsv`
+`[出力ファイルの接頭辞]_outputnseq.tsv`
 : 出力された各サンプルの合計リード数のタブ区切りテキスト
 
 レアファクションが終わったら、以下のコマンドにより10反復全てで内部標準OTUのみを取り出します。
@@ -1610,7 +1610,7 @@ clestimateconc \
 --stdconctable=stdconctable.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 12_community/sample_otu_matrix_fishes.tsv \
 12_community/sample_otu_matrix_fishes_concentration.tsv
 ```
@@ -1640,7 +1640,7 @@ do clestimateconc \
 --stdconctable=stdconctable.tsv \
 --solutionvoltable=solutionvoltable.tsv \
 --watervoltable=watervoltable.tsv \
---numthreads=NumberOfCPUcores \
+--numthreads=[CPUコア数] \
 12_community/sample_otu_matrix_fishes_rarefied-r$n.tsv \
 12_community/sample_otu_matrix_fishes_rarefied-r$n_concentration.tsv
 done
@@ -1681,17 +1681,17 @@ clsumtaxa \
 
 `--fuseotu`
 : 分類群名が同じOTUをまとめるか否か(ENABLE | DISABLEから選択)
-: まとめない場合は出力OTU名を「`入力OTU名:分類群名`」とし、組成の内容は維持する
-: ただし`--taxnamereplace`が有効の場合は出力OTU名は「`入力OTU名_分類群名`」となる
+: まとめない場合は出力OTU名を「`[入力OTU名]:[分類群名]`」とし、組成の内容は維持する
+: ただし`--taxnamereplace`が有効の場合は出力OTU名は「`[入力OTU名]_[分類群名]`」となる
 
 `--numbering`
 : 出力OTU名にソート順で番号を接頭辞として付加するか否か(ENABLE | DISABLEから選択)
 : 出力OTUが100ある場合は`001`～`100`という風に幅を揃えた番号をコロン「`:`」で区切って付加する
 : `--taxnamereplace`が有効の場合はコロンではなくアンダーバー「`_`」で区切って付加する
-: `--fuseotu`と`--taxnamereplace`が有効の場合は「`番号_分類群名`」となる
-: `--fuseotu`が有効、`--taxnamereplace`が無効の場合は「`番号:分類群名`」となる
-: `--fuseotu`が無効、`--taxnamereplace`が有効の場合は「`番号_入力OTU名_分類群名`」となる
-: `--fuseotu`と`--taxnamereplace`が無効の場合は「`番号:入力OTU名:分類群名`」となる
+: `--fuseotu`と`--taxnamereplace`が有効の場合は「`[番号]_[分類群名]`」となる
+: `--fuseotu`が有効、`--taxnamereplace`が無効の場合は「`[番号]:[分類群名]`」となる
+: `--fuseotu`が無効、`--taxnamereplace`が有効の場合は「`[番号]_[入力OTU名]_[分類群名]`」となる
+: `--fuseotu`と`--taxnamereplace`が無効の場合は「`[番号]:[入力OTU名]:[分類群名]`」となる
 
 `--sortkey`
 : ソート順を決めるキー(ABUNDANCE | RANKNAMEから選択)
@@ -1714,8 +1714,8 @@ clsumtaxa \
 12_community/sample_species_matrix_fishes_concentration.tsv
 ```
 
-なお、`--fuseotu`を有効化した場合、分類群名だけでOTUがまとめられてしまうため、`--targetrank=species`であっても「`unidentified 高次分類群名`」という種が存在し、これには多数の種がまとめられてしまう可能性があります。
-これは、低レベルの分類階層が同定できなかったOTUを`clfillassign`で「`unidentified 高次分類群名`」としたためです。
+なお、`--fuseotu`を有効化した場合、分類群名だけでOTUがまとめられてしまうため、`--targetrank=species`であっても「`unidentified [高次分類群名]`」という種が存在し、これには多数の種がまとめられてしまう可能性があります。
+これは、低レベルの分類階層が同定できなかったOTUを`clfillassign`で「`unidentified [高次分類群名]`」としたためです。
 したがって、複数の種が誤ってまとめられたOTUを含む種組成表となってしまいます。
 このような種組成表は作図に使用することはできますが、統計的分析にはASVや配列の類似度に基づいてクラスタリングを行ったOTUを単位とするOTU組成表を使用するようにしましょう。
 
